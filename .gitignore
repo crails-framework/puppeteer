@@ -1,0 +1,11 @@
+Gemfile.lock
+build
+.tmp
+.bundle
+
+lib/
+
+.kdev
+*.kdev4
+.*.sw*
+

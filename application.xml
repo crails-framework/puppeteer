@@ -1,0 +1,92 @@
+<changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="3">
+    <alter-table name="Build">
+      <add-column name="recipe_id" type="BIGINT" null="false"/>
+      <drop-foreign-key name="recipe_fk"/>
+      <drop-column name="recipe"/>
+    </alter-table>
+    <alter-table name="Instance">
+      <add-column name="machine_id" type="BIGINT" null="false"/>
+      <add-column name="build_id" type="BIGINT" null="false"/>
+      <drop-foreign-key name="machine_fk"/>
+      <drop-foreign-key name="build_fk"/>
+      <drop-column name="machine"/>
+      <drop-column name="build"/>
+    </alter-table>
+  </changeset>
+
+  <changeset version="2">
+    <add-table name="Recipe" kind="object">
+      <column name="id" type="BIGINT" null="false"/>
+      <column name="deleted" type="BOOLEAN" null="false" default="FALSE"/>
+      <column name="created_at" type="BIGINT" null="true"/>
+      <column name="updated_at" type="BIGINT" null="true"/>
+      <column name="name" type="TEXT" null="false"/>
+      <primary-key auto="true">
+        <column name="id"/>
+      </primary-key>
+    </add-table>
+    <alter-table name="Build">
+      <add-column name="recipe" type="BIGINT" null="true"/>
+      <add-foreign-key name="recipe_fk" deferrable="DEFERRED">
+        <column name="recipe"/>
+        <references table="Recipe">
+          <column name="id"/>
+        </references>
+      </add-foreign-key>
+    </alter-table>
+  </changeset>
+
+  <model version="1">
+    <table name="Machine" kind="object">
+      <column name="id" type="BIGINT" null="false"/>
+      <column name="deleted" type="BOOLEAN" null="false" default="FALSE"/>
+      <column name="created_at" type="BIGINT" null="true"/>
+      <column name="updated_at" type="BIGINT" null="true"/>
+      <column name="name" type="TEXT" null="false"/>
+      <column name="ip" type="TEXT" null="false"/>
+      <primary-key auto="true">
+        <column name="id"/>
+      </primary-key>
+    </table>
+    <table name="Build" kind="object">
+      <column name="id" type="BIGINT" null="false"/>
+      <column name="deleted" type="BOOLEAN" null="false" default="FALSE"/>
+      <column name="created_at" type="BIGINT" null="true"/>
+      <column name="updated_at" type="BIGINT" null="true"/>
+      <column name="name" type="TEXT" null="false"/>
+      <column name="git" type="TEXT" null="false"/>
+      <column name="branch" type="TEXT" null="false"/>
+      <column name="options" type="TEXT" null="false"/>
+      <primary-key auto="true">
+        <column name="id"/>
+      </primary-key>
+    </table>
+    <table name="Instance" kind="object">
+      <column name="id" type="BIGINT" null="false"/>
+      <column name="deleted" type="BOOLEAN" null="false" default="FALSE"/>
+      <column name="created_at" type="BIGINT" null="true"/>
+      <column name="updated_at" type="BIGINT" null="true"/>
+      <column name="name" type="TEXT" null="false"/>
+      <column name="path" type="TEXT" null="false"/>
+      <column name="user" type="TEXT" null="false"/>
+      <column name="machine" type="BIGINT" null="true"/>
+      <column name="build" type="BIGINT" null="true"/>
+      <primary-key auto="true">
+        <column name="id"/>
+      </primary-key>
+      <foreign-key name="machine_fk" deferrable="DEFERRED">
+        <column name="machine"/>
+        <references table="Machine">
+          <column name="id"/>
+        </references>
+      </foreign-key>
+      <foreign-key name="build_fk" deferrable="DEFERRED">
+        <column name="build"/>
+        <references table="Build">
+          <column name="id"/>
+        </references>
+      </foreign-key>
+    </table>
+  </model>
+</changelog>

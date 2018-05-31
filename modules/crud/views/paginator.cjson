@@ -1,0 +1,12 @@
+unsigned int  @page;
+unsigned int  @items_per_page;
+unsigned long @items_count;
+
+// END LINKING
+
+json<std::function<void()> >("index", [=]()
+{
+  json("page",  page);
+  json("count", items_per_page);
+  json("total", items_count);
+});
