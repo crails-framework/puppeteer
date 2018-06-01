@@ -19,8 +19,13 @@ public:
     size_t value;
   };
 
+  static const std::string builds_path;
+
   void serialize(OArchive&);
   void serialize(IArchive&);
+
+  void collect_variables(std::map<std::string,std::string>&) const;
+  std::string get_build_path() const;
 };
 
 #endif

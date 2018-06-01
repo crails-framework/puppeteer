@@ -22,6 +22,7 @@ public:
   void serialize(OArchive&);
   void serialize(IArchive&);
 
+  void collect_variables(std::map<std::string,std::string>&) const;
   void install();
 };
 
