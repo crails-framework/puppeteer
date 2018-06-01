@@ -3,10 +3,12 @@
 
 #include <libssh/libssh.h>
 #include <memory>
-#include "channel.hpp"
 
 namespace Ssh
 {
+  class Channel;
+  class Scp;
+
   class Session
   {
   public:
@@ -22,7 +24,10 @@ namespace Ssh
     void authentify(const std::string& password);
     void authentify_with_pubkey(const std::string& password = "");
 
+    int exec(const std::string& command, std::ostream&);
+
     std::shared_ptr<Channel> make_channel();
+    std::shared_ptr<Scp>     make_scp_session(const std::string& path, int mode);
 
   private:
     void raise(const std::string& message);

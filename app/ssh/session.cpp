@@ -1,4 +1,6 @@
 #include "session.hpp"
+#include "channel.hpp"
+#include "scp.hpp"
 
 using namespace std;
 using namespace Ssh;
@@ -94,6 +96,16 @@ void Session::authentify_with_pubkey(const std::string& password)
 std::shared_ptr<Channel> Session::make_channel()
 {
   return std::make_shared<Channel>(handle);
+}
+
+std::shared_ptr<Scp> Session::make_scp_session(const std::string& path, int mode)
+{
+  return std::make_shared<Scp>(handle, path, mode);
+}
+
+int Session::exec(const string& command, ostream& output)
+{
+  return make_channel()->exec(command, output);
 }
 
 void Session::raise(const std::string& message)
