@@ -26,6 +26,7 @@ file(GLOB_RECURSE crails_app
      app/views/*.cpp
      app/faye/*.cpp
      app/ssh/*.cpp
+     app/git/*.cpp
      app/routes.cpp
      app/invalid_request.cpp
      config/*.cpp
@@ -65,6 +66,7 @@ set(dependencies ${dependencies} crails-front${crails-suffix})
 set(dependencies ${dependencies} crails-odb${crails-suffix})
 set(dependencies ${dependencies} odb)
 set(dependencies ${dependencies} ssh)
+set(dependencies ${dependencies} git2)
 
 target_link_libraries(server ${dependencies})
 target_link_libraries(tests  crails-tests${crails-suffix} ${dependencies})
