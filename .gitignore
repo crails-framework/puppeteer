@@ -9,3 +9,4 @@ lib/
 *.kdev4
 .*.sw*
 
+tasks/odb_migrate/application-schema.cxx

@@ -92,6 +92,11 @@ void Remote::fetch(const string& operation)
     throw Git::Exception(error);
 }
 
+string Remote::get_url() const
+{
+  return git_remote_url(handle);
+}
+
 Exception::Exception(int code)
 {
   const git_error* e = giterr_last();

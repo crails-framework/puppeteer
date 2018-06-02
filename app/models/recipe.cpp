@@ -4,13 +4,20 @@
 #include <crails/utils/string.hpp>
 #include "app/ssh/session.hpp"
 #include "app/ssh/scp.hpp"
+#include "app/git/git.hpp"
+#include <boost/filesystem.hpp>
+
+using namespace std;
 
 odb_instantiable_impl(Recipe)
 
-const std::string Recipe::base_path   = Crails::getenv("PUPPETEER_RECIPE_PATH", "/opt/puppeteer/recipes");
-const std::string Recipe::remote_path = Crails::getenv("PUPPETEER_REMOTE_PATH", "/opt/puppeteer/client");
+const string Recipe::base_path   = Crails::getenv("PUPPETEER_RECIPE_PATH", "/opt/puppeteer/recipes");
+const string Recipe::remote_path = Crails::getenv("PUPPETEER_REMOTE_PATH", "/opt/puppeteer/client");
 
-#include <boost/filesystem.hpp>
+void Recipe::on_change()
+{
+  fetch_recipe();
+}
 
 std::vector<std::string> list_directory(const std::string& directory_path)
 {
@@ -26,22 +33,40 @@ std::vector<std::string> list_directory(const std::string& directory_path)
   return list;
 }
 
-std::list<std::string> read_lines_from_file(const std::string& filename)
+static bool is_same_repository(const std::string& path, const std::string& url)
 {
-  std::ifstream stream(filename.c_str());
-  std::list<std::string> lines;
+  boost::filesystem::path p(path);
 
-  if (stream.is_open())
+  if (boost::filesystem::is_directory(p))
   {
-    std::string line;
+    Git::Repository repository;
 
-    while (getline(stream, line))
-      lines.push_back(line);
-    stream.close();
+    repository.open(path);
+    return repository.find_remote("origin")->get_url() == url;
   }
+  return false;
+}
+
+static void initialize_git_repository(const std::string& path, const std::string& url, const std::string& branch = "master")
+{
+  boost::filesystem::path p(path);
+  Git::Repository repository;
+
+  if (boost::filesystem::is_directory(p))
+    repository.open(path);
   else
-    throw std::runtime_error("file `" + filename + "` not found");
-  return lines;
+    repository.clone(url, path);
+  repository.checkout(branch, GIT_CHECKOUT_FORCE);
+  repository.find_remote("origin")->pull();
+}
+
+void Recipe::fetch_recipe()
+{
+  string repository_path = base_path + '/' + get_name();
+
+  if (!is_same_repository(repository_path, get_git_url()))
+    boost::filesystem::remove_all(repository_path);
+  initialize_git_repository(repository_path, get_git_url(), get_git_branch());
 }
 
 static std::string generate_variable_file(const std::map<std::string, std::string>& variables)
@@ -53,7 +78,7 @@ static std::string generate_variable_file(const std::map<std::string, std::strin
   return stream.str();
 }
 
-void Recipe::deploy_for(Instance& instance)
+void Recipe::exec_package(const std::string& package, Instance& instance)
 {
   Ssh::Session ssh;
   auto machine = instance.get_machine();
@@ -65,27 +90,27 @@ void Recipe::deploy_for(Instance& instance)
   {
     const std::string remote_folder = remote_path + '/' + instance.get_name();
     const std::string recipe_folder = base_path   + '/' + instance.get_name();
-    const std::string recipe_setup_folder = recipe_folder + "/setup";
-    const std::string remote_setup_folder = remote_folder + "/setup";
-    auto setup_files = list_directory(recipe_setup_folder);
+    const std::string recipe_package_folder = recipe_folder + '/' + package;
+    const std::string remote_package_folder = remote_folder + '/' + package;
+    auto package_files = list_directory(recipe_package_folder);
 
-    ssh.exec("mkdir -p " + remote_setup_folder, std::cout);
+    ssh.exec("mkdir -p " + remote_package_folder, std::cout);
 
     // scp recipe
     {
-      auto scp = ssh.make_scp_session(remote_setup_folder, SSH_SCP_WRITE);
+      auto scp = ssh.make_scp_session(remote_package_folder, SSH_SCP_WRITE);
 
-      for (auto setup_file : setup_files)
+      for (auto file : package_files)
       {
-        auto filename = (*Crails::split(setup_file, '/').rbegin());
+        auto filename = (*Crails::split(file, '/').rbegin());
 
-        scp->push_file(setup_file, filename);
+        scp->push_file(file, filename);
       }
     }
 
     // scp ingredients
     {
-      auto scp = ssh.make_scp_session(remote_setup_folder, SSH_SCP_WRITE);
+      auto scp = ssh.make_scp_session(remote_package_folder, SSH_SCP_WRITE);
       std::map<std::string, std::string> variables;
 
       instance.collect_variables(variables);
@@ -94,20 +119,20 @@ void Recipe::deploy_for(Instance& instance)
     }
 
     // run recipe
-    std::sort(setup_files.begin(), setup_files.end()); // must run files in an orderly fashion
-    for (auto setup_file : setup_files)
+    std::sort(package_files.begin(), package_files.end()); // must run files in an orderly fashion
+    for (auto file : package_files)
     {
-      auto filename  = (*Crails::split(setup_file, '/').rbegin());
+      auto filename  = (*Crails::split(file, '/').rbegin());
       auto extension = (*Crails::split(filename, '.').rbegin());
 
       if (extension == "sh")
       {
         int status;
 
-        status = ssh.exec("chmod +x '" + remote_setup_folder + '/' + filename + '\'', std::cout);
+        status = ssh.exec("chmod +x '" + remote_package_folder + '/' + filename + '\'', std::cout);
         if (status)
           throw std::runtime_error("Recipe(" + get_name() + "): could not chmod script: " + filename);
-        status = ssh.exec("cd '" + remote_setup_folder + "/' && ./" + filename, std::cout);
+        status = ssh.exec("cd '" + remote_package_folder + "/' && ./" + filename, std::cout);
         if (status)
         {
           std::stringstream stream;
@@ -117,4 +142,14 @@ void Recipe::deploy_for(Instance& instance)
       }
     }
   }
+}
+
+void Recipe::deploy_for(Instance& instance)
+{
+  exec_package("setup", instance);
+}
+
+void Recipe::uninstall_from(Instance& instance)
+{
+  exec_package("uninstall", instance);
 }

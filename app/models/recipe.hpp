@@ -25,7 +25,13 @@ public:
   void serialize(OArchive&);
   void serialize(IArchive&);
 
+  void on_change();
+
+  void fetch_recipe();
+
+  void exec_package(const std::string&, Instance&);
   void deploy_for(Instance&);
+  void uninstall_from(Instance&);
 };
 
 #endif

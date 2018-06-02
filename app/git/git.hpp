@@ -31,6 +31,8 @@ namespace Git
    void fetch(const std::string& operation = "fetch");
    void pull();
 
+   std::string get_url() const;
+
   private:
     git_remote* handle = nullptr;
   };

@@ -1,4 +1,13 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="5">
+    <alter-table name="Recipe">
+      <add-column name="git_url" type="TEXT" null="false"/>
+      <add-column name="git_branch" type="TEXT" null="false"/>
+    </alter-table>
+  </changeset>
+
+  <changeset version="4"/>
+
   <changeset version="3">
     <alter-table name="Build">
       <add-column name="recipe_id" type="BIGINT" null="false"/>

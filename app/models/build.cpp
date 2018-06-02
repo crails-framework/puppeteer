@@ -11,8 +11,9 @@ const std::string Build::builds_path = Crails::getenv("PUPPETEER_BUILDS_PATH", "
 
 void Build::collect_variables(map<string,string>& variables) const
 {
-  variables["BUILD_NAME"] = get_name();
-  variables["BUILD_PATH"] = get_build_path();
+  variables["BUILD_NAME"]    = get_name();
+  variables["BUILD_PATH"]    = get_build_path();
+  variables["BUILD_OPTIONS"] = get_options();
 }
 
 std::string Build::get_build_path() const
