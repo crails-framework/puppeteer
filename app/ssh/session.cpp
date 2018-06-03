@@ -7,6 +7,7 @@ using namespace Ssh;
 
 Session::Session()
 {
+  rc = SSH_ERROR;
   handle = ssh_new();
   if (handle == NULL)
     throw std::runtime_error("cannot start a new ssh session");
