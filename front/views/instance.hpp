@@ -39,7 +39,21 @@ namespace Views
 
     void deploy(client::Event*)
     {
+      Crails::Front::Ajax::query("GET", model->get_url() + "/configure").callbacks({
+        std::bind(&InstanceActionWidget::on_deployed, this, std::placeholders::_1),
+	std::bind(&InstanceActionWidget::on_deploy_failure, this, std::placeholders::_1)
+      })();
       std::cout << "make ajax query for deployment here" << std::endl;
+    }
+
+    void on_deployed(const Crails::Front::Ajax&)
+    {
+      std::cout << "deploy success" << std::endl;
+    }
+
+    void on_deploy_failure(const Crails::Front::Ajax&)
+    {
+      std::cout << "deploy failure" << std::endl;
     }
   };
 

@@ -10,9 +10,9 @@ InstanceController::InstanceController(Params& params) : Super(params)
 
 void InstanceController::configure()
 {
+  require_model();
   protect([this]()
   {
-    require_model();
     if (model)
     {
       model->configure();
@@ -23,9 +23,9 @@ void InstanceController::configure()
 
 void InstanceController::uninstall()
 {
+  require_model();
   protect([this]()
   {
-    require_model();
     if (model)
     {
       model->uninstall();
@@ -37,6 +37,7 @@ void InstanceController::uninstall()
 void InstanceController::protect(std::function<void()> callback)
 {
   try {
+    callback();
   } catch (...) {
     if (model)
     {
