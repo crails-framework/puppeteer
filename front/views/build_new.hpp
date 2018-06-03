@@ -3,6 +3,7 @@
 
 # include "utility/model_form.hpp"
 # include "utility/select.hpp"
+# include "utility/variable_list_editor.hpp"
 # include "../app/builds.hpp"
 # include "../app/recipes.hpp"
 
@@ -12,6 +13,7 @@ namespace Views
   {
     Crails::Front::Element input_name, input_git, input_branch, input_options;
     CollectionSelectWithName<Puppeteer::Recipes> input_recipe;
+    VariableListEditor input_variables;
   public:
     BuildNew() : ModelForm("New build")
     {
@@ -29,7 +31,8 @@ namespace Views
         {"recipe",        input_recipe},
         {"git url",       input_git},
         {"git branch",    input_branch},
-        {"build options", input_options}
+        {"build options", input_options},
+        {"environment variables", input_variables.get_element()}
       };
     }
 
@@ -39,7 +42,8 @@ namespace Views
       model->set_git(input_git.get_value());
       model->set_branch(input_branch.get_value());
       model->set_options(input_options.get_value());
-      model->set_recipe_id(boost::lexical_cast<unsigned long>(input_recipe.get_value()));
+      model->set_recipe_id(input_recipe.value<unsigned long>());
+      model->set_variable_list(input_variables.get_value());
     }
 
     void update_form_attributes()
@@ -48,13 +52,15 @@ namespace Views
       input_git.value(model->get_git());
       input_branch.value(model->get_branch());
       input_options.value(model->get_options());
-      input_recipe.value(boost::lexical_cast<std::string>(model->get_recipe_id()));
+      input_recipe.value(model->get_recipe_id());
+      input_variables.activate(model->get_variables());
     }
 
     void attached()
     {
       ModelForm::attached();
       input_recipe.render();
+      input_variables.render();
     }
   };
 }
