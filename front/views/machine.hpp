@@ -31,7 +31,7 @@ namespace Views
       {
         std::cout << "Fetched machine, finish activation" << std::endl;
         model = machine;
-	title.text(model->get_name());
+        title.text(model->get_name());
       });
     }
 

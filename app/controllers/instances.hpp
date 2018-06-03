@@ -12,6 +12,9 @@ public:
   InstanceController(Crails::Params&);
 
   void configure();
+  void uninstall();
+private:
+  void protect(std::function<void()>);
 };
 
 #endif

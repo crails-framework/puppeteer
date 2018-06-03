@@ -19,11 +19,19 @@ public:
     size_t value;
   };
 
+  enum State
+  {
+    Uninstalled = 0,
+    Ready       = 1,
+    Dirty       = 2
+  };
+
   void serialize(OArchive&);
   void serialize(IArchive&);
 
   void collect_variables(std::map<std::string,std::string>&) const;
-  void install();
+  void configure();
+  void uninstall();
 };
 
 #endif

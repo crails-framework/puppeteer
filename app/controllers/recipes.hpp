@@ -1,5 +1,5 @@
-#ifndef  MACHINES_CONTROLLER_HPP
-# define MACHINES_CONTROLLER_HPP
+#ifndef  RECIPE_CONTROLLER_HPP
+# define RECIPE_CONTROLLER_HPP
 
 # include "crud_controller.hpp"
 # include "app/models/recipe.hpp"

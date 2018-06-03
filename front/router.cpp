@@ -7,6 +7,9 @@
 #include "views/build_new.hpp"
 #include "views/instances.hpp"
 #include "views/instance_new.hpp"
+#include "views/instance.hpp"
+#include "views/recipes.hpp"
+#include "views/recipe_new.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <iostream>
@@ -68,6 +71,40 @@ void Puppeteer::Router::initialize()
   match("/instances/new", [](const Params&)
   {
     auto* view = new Views::InstanceNew;
+
+    MainView::instance->attach(*view);
+    view->activate();
+  });
+
+  match("/instances/:instance_id/edit", [](const Params& params)
+  {
+    auto* view = new Views::InstanceNew;
+    auto id = boost::lexical_cast<unsigned long>(params.at("instance_id"));
+
+    MainView::instance->attach(*view);
+    fetch_one<Puppeteer::Instance>(id, [view](std::shared_ptr<Puppeteer::Instance> model)
+    {
+      view->activate(model);
+    });
+  });
+
+  match("/instances/:instance_id", [](const Params& params)
+  {
+    auto* view = new Views::Instance;
+    MainView::instance->attach(*view);
+    view->activate( boost::lexical_cast<unsigned long>(params.at("instance_id")) );
+  });
+
+  match("/recipes", [](const Params&)
+  {
+    auto* view = new Views::Recipes;
+
+    MainView::instance->attach(*view);
+  });
+
+  match("/recipes/new", [](const Params&)
+  {
+    auto* view = new Views::RecipeNew;
 
     MainView::instance->attach(*view);
     view->activate();

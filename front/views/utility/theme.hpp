@@ -54,7 +54,7 @@ namespace Views
 
       return El("div", {{"class","form-group"}}).inner({
         El("label", {{"for",input_name}, {"class","form-control-label"}}).text(label),
-	input
+        input
       });
     }
 

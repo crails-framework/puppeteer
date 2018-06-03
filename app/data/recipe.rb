@@ -1,5 +1,6 @@
 Model.add "Recipe", ["Recipe", "app/models/recipe.hpp"] do
   resource_name "recipe"
+  order_by 'name'
 
   visibility :protected
   property 'std::string', 'name'

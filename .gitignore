@@ -10,3 +10,6 @@ lib/
 .*.sw*
 
 tasks/odb_migrate/application-schema.cxx
+public/assets/application.js
+public/assets/application.js.map
+front/app/data

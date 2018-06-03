@@ -10,9 +10,40 @@ InstanceController::InstanceController(Params& params) : Super(params)
 
 void InstanceController::configure()
 {
-  require_model();
-  if (model)
+  protect([this]()
   {
-    model->install();
+    require_model();
+    if (model)
+    {
+      model->configure();
+      database.save(*model);
+    }
+  });
+}
+
+void InstanceController::uninstall()
+{
+  protect([this]()
+  {
+    require_model();
+    if (model)
+    {
+      model->uninstall();
+      database.save(*model);
+    }
+  });
+}
+
+void InstanceController::protect(std::function<void()> callback)
+{
+  try {
+  } catch (...) {
+    if (model)
+    {
+      model->set_state(Instance::Dirty);
+      database.save(*model);
+      database.commit();
+      throw ;
+    }
   }
 }

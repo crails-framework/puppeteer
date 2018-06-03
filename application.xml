@@ -1,4 +1,15 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="6">
+    <alter-table name="Build">
+      <add-column name="variables" type="TEXT" null="false"/>
+    </alter-table>
+    <alter-table name="Instance">
+      <add-column name="variables" type="TEXT" null="false"/>
+      <add-column name="state" type="SMALLINT" null="false"/>
+      <add-column name="last_configure" type="BIGINT" null="false"/>
+    </alter-table>
+  </changeset>
+
   <changeset version="5">
     <alter-table name="Recipe">
       <add-column name="git_url" type="TEXT" null="false"/>
