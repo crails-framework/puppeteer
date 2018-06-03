@@ -19,5 +19,8 @@ void MainView::attach(TemplateView& new_view)
 void MainView::detach_current_view()
 {
   if (view)
+  {
     view->detached();
+    delete view;
+  }
 }
