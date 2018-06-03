@@ -24,8 +24,11 @@ public:
   void serialize(OArchive&);
   void serialize(IArchive&);
 
+  void on_change();
+
   void collect_variables(std::map<std::string,std::string>&) const;
   std::string get_build_path() const;
+  std::string get_build_config();
 };
 
 #endif

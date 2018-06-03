@@ -27,6 +27,7 @@ file(GLOB_RECURSE crails_app
      app/faye/*.cpp
      app/ssh/*.cpp
      app/git/*.cpp
+     app/jenkins/*.cpp
      app/routes.cpp
      app/invalid_request.cpp
      config/*.cpp

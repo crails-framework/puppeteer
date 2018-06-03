@@ -20,14 +20,15 @@ public:
     size_t value;
   };
 
-  static const std::string base_path, remote_path;
+  static const std::string base_path, remote_path, remote_user;
 
   void serialize(OArchive&);
   void serialize(IArchive&);
 
   void on_change();
 
-  void fetch_recipe();
+  std::string get_path() const;
+  void fetch_recipe() const;
 
   void exec_package(const std::string&, Instance&);
   void deploy_for(Instance&);

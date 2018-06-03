@@ -13,6 +13,7 @@ odb_instantiable_impl(Recipe)
 
 const string Recipe::base_path   = Crails::getenv("PUPPETEER_RECIPE_PATH", "/opt/puppeteer/recipes");
 const string Recipe::remote_path = Crails::getenv("PUPPETEER_REMOTE_PATH", "/opt/puppeteer/client");
+const string Recipe::remote_user = Crails::getenv("PUPPETEER_REMOTE_USER", "root");
 
 void Recipe::on_change()
 {
@@ -60,9 +61,14 @@ static void initialize_git_repository(const std::string& path, const std::string
   repository.find_remote("origin")->pull();
 }
 
-void Recipe::fetch_recipe()
+string Recipe::get_path() const
 {
-  string repository_path = base_path + '/' + get_name();
+  return base_path   + '/' + get_name();
+}
+
+void Recipe::fetch_recipe() const
+{
+  string repository_path = get_path();
 
   if (!is_same_repository(repository_path, get_git_url()))
     boost::filesystem::remove_all(repository_path);
@@ -74,7 +80,7 @@ static std::string generate_variable_file(const std::map<std::string, std::strin
   std::stringstream stream;
 
   for (const auto& variable : variables)
-    stream << "export " << variable.first << '=' << variable.second << '\n';
+    stream << "export " << variable.first << '=' << '"' << variable.second << '"' << '\n';
   return stream.str();
 }
 
@@ -85,11 +91,11 @@ void Recipe::exec_package(const std::string& package, Instance& instance)
   auto build   = instance.get_build();
 
   ssh.should_accept_unknown_hosts(true);
-  ssh.connect(instance.get_user(), machine->get_ip());
+  ssh.connect(remote_user, machine->get_ip());
   ssh.authentify_with_pubkey();
   {
     const std::string remote_folder = remote_path + '/' + instance.get_name();
-    const std::string recipe_folder = base_path   + '/' + instance.get_name();
+    const std::string recipe_folder = get_path();
     const std::string recipe_package_folder = recipe_folder + '/' + package;
     const std::string remote_package_folder = remote_folder + '/' + package;
     auto package_files = list_directory(recipe_package_folder);
