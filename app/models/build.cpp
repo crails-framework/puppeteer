@@ -28,15 +28,8 @@ void Build::collect_variables(map<string,string>& variables) const
 std::string Build::get_build_path() const
 {
   std::stringstream stream;
-  std::stringstream options_stream;
-  Crails::Password  options_hash;
 
-  options_stream
-    << get_git()
-    << get_branch()
-    << get_options();
-  options_hash = options_stream.str();
-  stream << builds_path << '/' << get_name() << '_' << options_hash.c_str();
+  stream << builds_path << '/' << get_name() << '_' << get_id();
   return stream.str();
 }
 

@@ -4,6 +4,8 @@
 # include <crails/server.hpp>
 # include "modules/odb/controller.hpp"
 
+class OArchive;
+
 class ApplicationController : public Odb::Controller
 {
 protected:
@@ -18,6 +20,7 @@ public:
   void respond_with(Crails::Server::HttpCode);
 
   void render(const std::string& view);
+  void render(const OArchive& archive);
 
   void require_parameters(const std::vector<std::string>& parameters) const;
 };

@@ -5,11 +5,13 @@
 #include "views/machine.hpp"
 #include "views/builds.hpp"
 #include "views/build_new.hpp"
+#include "views/build.hpp"
 #include "views/instances.hpp"
 #include "views/instance_new.hpp"
 #include "views/instance.hpp"
 #include "views/recipes.hpp"
 #include "views/recipe_new.hpp"
+#include "views/recipe.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <iostream>
@@ -18,96 +20,51 @@ using namespace Crails::Front;
 
 Puppeteer::Router* Puppeteer::Router::instance = nullptr;
 
-void Puppeteer::Router::initialize()
+template<typename INDEX, typename SHOW, typename EDIT>
+void make_routes_for(Puppeteer::Router& router, const std::string& path)
 {
-  instance = this;
-
-  match("/machines", [](const Params&)
+  router.match(path, [](const Params&)
   {
-    auto* view = new Views::Machines;
+    auto* view = new INDEX;
 
     MainView::instance->attach(*view);
   });
 
-  match("/machines/new", [](const Params&)
+  router.match(path + "/new", [](const Params&)
   {
-    auto* view = new Views::MachineNew;
+    auto* view = new EDIT;
 
     MainView::instance->attach(*view);
     view->activate();
   });
 
-  match("/machines/:machine_id", [](const Params& params)
+  router.match(path + "/:resource_id", [](const Params& params)
   {
-    auto id = boost::lexical_cast<unsigned long>(params.at("machine_id"));
-    auto* view = new Views::Machine;
+    auto* view = new SHOW;
+    auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
 
     MainView::instance->attach(*view);
     view->activate(id);
   });
 
-  match("/builds", [](const Params&)
+  router.match(path + "/:resource_id/edit", [](const Params& params)
   {
-    auto* view = new Views::Builds;
+    auto* view = new EDIT;
+    auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
 
     MainView::instance->attach(*view);
+    view->activate(id);
   });
+}
 
-  match("/builds/new", [](const Params&)
-  {
-    auto* view = new Views::BuildNew;
+void Puppeteer::Router::initialize()
+{
+  instance = this;
 
-    MainView::instance->attach(*view);
-    view->activate();
-  });
+  make_routes_for<Views::Machines,  Views::Machine,  Views::MachineNew> (*this, "/machines");
+  make_routes_for<Views::Builds,    Views::Build,    Views::BuildNew>   (*this, "/builds");
+  make_routes_for<Views::Instances, Views::Instance, Views::InstanceNew>(*this, "/instances");
+  make_routes_for<Views::Recipes,   Views::Recipe,   Views::RecipeNew>  (*this, "/recipes");
 
-  match("/instances", [](const Params&)
-  {
-    auto* view = new Views::Instances;
-
-    MainView::instance->attach(*view);
-  });
-
-  match("/instances/new", [](const Params&)
-  {
-    auto* view = new Views::InstanceNew;
-
-    MainView::instance->attach(*view);
-    view->activate();
-  });
-
-  match("/instances/:instance_id/edit", [](const Params& params)
-  {
-    auto* view = new Views::InstanceNew;
-    auto id = boost::lexical_cast<unsigned long>(params.at("instance_id"));
-
-    MainView::instance->attach(*view);
-    fetch_one<Puppeteer::Instance>(id, [view](std::shared_ptr<Puppeteer::Instance> model)
-    {
-      view->activate(model);
-    });
-  });
-
-  match("/instances/:instance_id", [](const Params& params)
-  {
-    auto* view = new Views::Instance;
-    MainView::instance->attach(*view);
-    view->activate( boost::lexical_cast<unsigned long>(params.at("instance_id")) );
-  });
-
-  match("/recipes", [](const Params&)
-  {
-    auto* view = new Views::Recipes;
-
-    MainView::instance->attach(*view);
-  });
-
-  match("/recipes/new", [](const Params&)
-  {
-    auto* view = new Views::RecipeNew;
-
-    MainView::instance->attach(*view);
-    view->activate();
-  });
   Crails::Front::Router::initialize();
 }

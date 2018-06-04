@@ -1,6 +1,7 @@
 #include "application_controller.hpp"
 #include "app/invalid_request.hpp"
 #include <crails/utils/timer.hpp>
+#include <crails/front/archive.hpp>
 
 using namespace std;
 
@@ -17,6 +18,12 @@ void ApplicationController::render(const std::string& view)
   Crails::logger << Crails::Logger::Info
     << "Render " << view << " in " << timer.GetElapsedSeconds() << "s"
     << Crails::Logger::endl;
+}
+
+void ApplicationController::render(const OArchive& archive)
+{
+  response["headers"]["Content-Type"] = Archive::mimetype;
+  response["body"] = archive.as_string();
 }
 
 void ApplicationController::require_parameters(const vector<string>& parameters) const

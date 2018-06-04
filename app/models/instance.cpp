@@ -1,8 +1,6 @@
 #include "instance.hpp"
 #include "lib/odb/application-odb.hxx"
 #include "app/ssh/session.hpp"
-#include "app/ssh/channel.hpp"
-#include "app/ssh/scp.hpp"
 #include "variable_list.hpp"
 #include "recipe.hpp"
 
@@ -34,4 +32,24 @@ void Instance::uninstall()
 
   recipe->uninstall_from(*this);
   set_state(Uninstalled);
+}
+
+void Instance::open_ssh(std::function<void (Ssh::Session&)> callback)
+{
+  Ssh::Session ssh;
+
+  ssh.should_accept_unknown_hosts(true);
+  ssh.connect(Recipe::remote_user, get_machine()->get_ip());
+  ssh.authentify_with_pubkey();
+  callback(ssh);
+}
+
+bool Instance::needs_restart()
+{
+  return false;
+}
+
+bool Instance::needs_configure()
+{
+  return state == Uninstalled || state == Dirty;
 }

@@ -13,8 +13,14 @@ public:
 
   void configure();
   void uninstall();
+
+  void fetch_state();
+  void start();
+  void stop();
+  void restart();
 private:
   void protect(std::function<void()>);
+  void open_ssh(std::function<void(Ssh::Session&)>);
 };
 
 #endif

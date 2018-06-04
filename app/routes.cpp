@@ -14,6 +14,9 @@ void Crails::Router::initialize(void)
   crudify(router, "/builds",    BuildController);
   crudify(router, "/recipes",   RecipeController);
 
-  SetRoute("GET", "/instances/:id/configure", InstanceController, configure);
-  SetRoute("GET", "/instances/:id/uninstall", InstanceController, uninstall);
+  SetRoute("GET",  "/instances/:id/state",     InstanceController, fetch_state);
+  SetRoute("POST", "/instances/:id/configure", InstanceController, configure);
+  SetRoute("POST", "/instances/:id/uninstall", InstanceController, uninstall);
+  SetRoute("POST", "/instances/:id/start",     InstanceController, restart);
+  SetRoute("POST", "/instances/:id/stop",      InstanceController, stop);
 }

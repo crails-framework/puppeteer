@@ -6,6 +6,7 @@
 
 class OArchive;
 class IArchive;
+namespace Ssh { class Session; }
 
 # pragma db object pointer(std::shared_ptr)
 class Instance : public Db::Model, public ModelData::Instance
@@ -32,6 +33,10 @@ public:
   void collect_variables(std::map<std::string,std::string>&) const;
   void configure();
   void uninstall();
+  void open_ssh(std::function<void (Ssh::Session&)>);
+
+  bool needs_restart();
+  bool needs_configure();
 };
 
 #endif

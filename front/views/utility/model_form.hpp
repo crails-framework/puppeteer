@@ -57,6 +57,14 @@ namespace Views
       update_form_attributes();
     }
 
+    void activate(unsigned long id)
+    {
+      fetch_one<MODEL>(id, [this](std::shared_ptr<MODEL> _model)
+      {
+        activate(_model);
+      });
+    }
+
     void activate(std::shared_ptr<MODEL> _model)
     {
       model = _model;
