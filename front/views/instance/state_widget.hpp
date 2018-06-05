@@ -2,12 +2,13 @@
 # define INSTANCE_STATE_WIDGET_HPP
 
 # include <crails/front/element.hpp>
+# include <crails/front/signal.hpp>
 # include "front/app/instances.hpp"
 # include "app/models/instance_state.hpp"
 
 namespace Views
 {
-  class InstanceStateWidget : public Crails::Front::Element
+  class InstanceStateWidget : public Crails::Front::Element, Crails::Listener
   {
     std::shared_ptr<Puppeteer::Instance> model;
     InstanceState state;
@@ -16,6 +17,7 @@ namespace Views
     void activate(std::shared_ptr<Puppeteer::Instance> instance);
 
     void fetch_state();
+    void render();
     void render_state();
     void render_uninstalled_state();
 

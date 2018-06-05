@@ -34,7 +34,7 @@ namespace Views
         {"recipe",        input_recipe},
         {"git url",       input_git},
         {"git branch",    input_branch},
-	{"credentials",   input_credential},
+        {"credentials",   input_credential},
         {"build options", input_options},
         {"environment variables", input_variables.get_element()}
       };

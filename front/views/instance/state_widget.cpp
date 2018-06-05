@@ -24,6 +24,12 @@ InstanceStateWidget::InstanceStateWidget()
 void InstanceStateWidget::activate(std::shared_ptr<Puppeteer::Instance> instance)
 {
   model = instance;
+  listen_to(model->remote_state_changed, std::bind(&InstanceStateWidget::render, this));
+  render();
+}
+
+void InstanceStateWidget::render()
+{
   if (model->get_state() > 0)
     fetch_state();
   else

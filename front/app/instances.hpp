@@ -15,6 +15,8 @@ namespace Puppeteer
     model_class("instances")
     model_default_constructors(Instance)
 
+    Crails::Signal<void> remote_state_changed;
+
     VariableList get_variable_list() const { return get_variables(); }
     void set_variable_list(const VariableList& list) { set_variables(list); }
   };
