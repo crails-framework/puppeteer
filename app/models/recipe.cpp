@@ -66,13 +66,21 @@ string Recipe::get_path() const
   return base_path   + '/' + get_name();
 }
 
-void Recipe::fetch_recipe() const
+void Recipe::fetch_recipe()
 {
   string repository_path = get_path();
+  string url = get_git_url();
+  auto   credential = get_credential();
 
-  if (!is_same_repository(repository_path, get_git_url()))
+  if (credential)
+  {
+    size_t pos = url.find("://");
+
+    url.replace(pos + 3, 0, credential->get_username() + ':' + credential->get_password() + '@');
+  }
+  if (!is_same_repository(repository_path, url))
     boost::filesystem::remove_all(repository_path);
-  initialize_git_repository(repository_path, get_git_url(), get_git_branch());
+  initialize_git_repository(repository_path, url, get_git_branch());
 }
 
 static std::string generate_variable_file(const std::map<std::string, std::string>& variables)

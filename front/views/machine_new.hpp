@@ -16,7 +16,7 @@ namespace Views
       input_ip   = El("input", {{"name","machine_ip"},{"type","text"},{"class","form-control"}});
     }
 
-    std::map<std::string, El> get_inputs()
+    std::unordered_map<std::string, El> get_inputs()
     {
       return {
         {"name",       input_name},

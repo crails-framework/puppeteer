@@ -19,7 +19,7 @@ namespace Views
       listen_to(form_view.sent, std::bind(&ModelForm<MODEL>::save_clicked, this, std::placeholders::_1));
     }
 
-    virtual std::map<std::string, El> get_inputs() = 0;
+    virtual std::unordered_map<std::string, El> get_inputs() = 0;
     virtual void update_model_attributes() = 0; 
     virtual void update_form_attributes() = 0;
 

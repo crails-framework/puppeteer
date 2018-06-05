@@ -1,4 +1,25 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="7">
+    <add-table name="Credential" kind="object">
+      <column name="id" type="BIGINT" null="false"/>
+      <column name="deleted" type="BOOLEAN" null="false" default="FALSE"/>
+      <column name="created_at" type="BIGINT" null="true"/>
+      <column name="updated_at" type="BIGINT" null="true"/>
+      <column name="name" type="TEXT" null="false"/>
+      <column name="username" type="TEXT" null="false"/>
+      <column name="password" type="TEXT" null="false"/>
+      <primary-key auto="true">
+        <column name="id"/>
+      </primary-key>
+    </add-table>
+    <alter-table name="Recipe">
+      <add-column name="credential_id" type="BIGINT" null="false"/>
+    </alter-table>
+    <alter-table name="Build">
+      <add-column name="credential_id" type="BIGINT" null="false"/>
+    </alter-table>
+  </changeset>
+
   <changeset version="6">
     <alter-table name="Build">
       <add-column name="variables" type="TEXT" null="false"/>

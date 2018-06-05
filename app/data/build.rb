@@ -1,5 +1,6 @@
 add_include "app/models/instance.hpp"
 add_include "app/models/recipe.hpp", true
+add_include "app/models/credential.hpp", true
 
 Model.add "Build", ["Build", "app/models/build.hpp"] do
   resource_name "build"
@@ -11,5 +12,6 @@ Model.add "Build", ["Build", "app/models/build.hpp"] do
   property 'std::string', 'branch'
   property 'std::string', 'options'
   property 'std::string', 'variables'
-  has_one "Recipe", "recipe", joined: false, dependent: :destroy
+  has_one "Recipe",     "recipe",     joined: false, dependent: :destroy
+  has_one "Credential", "credential", joined: false
 end

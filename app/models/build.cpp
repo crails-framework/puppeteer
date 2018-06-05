@@ -13,15 +13,18 @@ odb_instantiable_impl(Build)
 
 const std::string Build::builds_path = Crails::getenv("PUPPETEER_BUILDS_PATH", "/opt/puppeteer/builds");
 
-void Build::collect_variables(map<string,string>& variables) const
+void Build::collect_variables(map<string,string>& variables)
 {
   const VariableList local_variables = get_variables();
+  auto credentials = get_credential();
 
   variables["BUILD_NAME"]       = get_name();
   variables["BUILD_PATH"]       = get_build_path();
   variables["BUILD_OPTIONS"]    = get_options();
   variables["BUILD_GIT_URL"]    = get_git();
   variables["BUILD_GIT_BRANCH"] = get_branch();
+  if (credentials)
+    variables["JENKINS_CREDENTIAL_ID"] = credentials->get_jenkins_id();
   local_variables.to_map(variables);
 }
 

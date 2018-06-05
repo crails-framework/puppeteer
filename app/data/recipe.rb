@@ -1,3 +1,5 @@
+add_include "app/models/credential.hpp", true
+
 Model.add "Recipe", ["Recipe", "app/models/recipe.hpp"] do
   resource_name "recipe"
   order_by 'name'
@@ -6,4 +8,5 @@ Model.add "Recipe", ["Recipe", "app/models/recipe.hpp"] do
   property 'std::string', 'name'
   property 'std::string', 'git_url'
   property 'std::string', 'git_branch'
+  has_one "Credential", "credential", joined: false
 end

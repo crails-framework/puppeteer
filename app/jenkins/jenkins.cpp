@@ -85,3 +85,42 @@ int Jenkins::delete_job(const string& jobname)
 
   return boost::network::http::status(response);
 }
+
+int Jenkins::create_credentials(const string& id, const string& username, const string& password)
+{
+  string url = get_url() + "/credentials/store/system/domain/_/createCredentials";
+  stringstream body_stream;
+  string body;
+ 
+  body_stream << "{\n"
+    << "  \"\": \"0\",\n"
+    << "  \"credentials\": {\n"
+    << "    \"scope\": \"GLOBAL\",\n"
+    << "    \"id\": \"" << id << "\",\n"
+    << "    \"username\": \"" << username << "\",\n"
+    << "    \"password\": \"" << password << "\",\n"
+    << "    \"description\": \"puppeteer managed credential\",\n"
+    << "    \"$class\": \"com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl\"\n"
+    << "  }\n"
+    << '}';
+
+  boost::network::http::client::request request(url);
+
+  body = "json=" + body_stream.str();
+  //body = Crails::Http::Url::Encode(body);
+  prepare_query(request);
+  request << boost::network::header("Connection", "close");
+  request << boost::network::header("Content-Type", "application/x-www-form-urlencoded");
+  request << boost::network::header("Content-Length", boost::lexical_cast<string>(body.length()));
+  request << boost::network::body(body);
+
+  auto response = client.post(request);
+  int status = boost::network::http::status(response);
+
+  if (status >= 400)
+  {
+    string resp = boost::network::http::body(response);
+    std::cout << "jenkins refused to add credentials: " << resp << std::endl;
+  }
+  return status;
+}

@@ -2,13 +2,16 @@
 # define VIEW_RECIPE_NEW_HPP
 
 # include "utility/model_form.hpp"
+# include "utility/select.hpp"
 # include "../app/recipes.hpp"
+# include "../app/credentials.hpp"
 
 namespace Views
 {
   class RecipeNew : public ModelForm<Puppeteer::Recipe>
   {
     Crails::Front::Element input_name, input_git_url, input_git_branch;
+    CollectionSelectWithName<Puppeteer::Credentials> input_credential;
   public:
     RecipeNew() : ModelForm("New recipe")
     {
@@ -19,14 +22,16 @@ namespace Views
       input_git_branch = El("input", {
         {"name","recipe_git_branch"},{"type","text"},{"class","form-control"},{"placeholder","master"}
       });
+      input_credential.add_class("form-control");
     }
 
-    std::map<std::string, El> get_inputs()
+    std::unordered_map<std::string, El> get_inputs()
     {
       return {
-        {"name",       input_name},
-        {"git url",    input_git_url },
-        {"git branch", input_git_branch }
+        {"name",        input_name},
+        {"git url",     input_git_url },
+        {"git branch",  input_git_branch },
+	{"credentials", input_credential }
       };
     }
 
@@ -35,6 +40,7 @@ namespace Views
       model->set_name(input_name.get_value());
       model->set_git_url(input_git_url.get_value());
       model->set_git_branch(input_git_branch.get_value());
+      model->set_credential_id(input_credential.value<unsigned long>());
     }
 
     void update_form_attributes()
@@ -42,8 +48,14 @@ namespace Views
       input_name.value(model->get_name());
       input_git_url.value(model->get_git_url());
       input_git_branch.value(model->get_git_branch());
+      input_credential.value(model->get_credential_id());
     }
 
+    void attached()
+    {
+      ModelForm::attached();
+      input_credential.render();
+    }
   private:
   };
 }

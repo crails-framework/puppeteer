@@ -12,6 +12,9 @@
 #include "views/recipes.hpp"
 #include "views/recipe_new.hpp"
 #include "views/recipe.hpp"
+#include "views/credentials.hpp"
+#include "views/credential.hpp"
+#include "views/credential_new.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <iostream>
@@ -61,10 +64,11 @@ void Puppeteer::Router::initialize()
 {
   instance = this;
 
-  make_routes_for<Views::Machines,  Views::Machine,  Views::MachineNew> (*this, "/machines");
-  make_routes_for<Views::Builds,    Views::Build,    Views::BuildNew>   (*this, "/builds");
-  make_routes_for<Views::Instances, Views::Instance, Views::InstanceNew>(*this, "/instances");
-  make_routes_for<Views::Recipes,   Views::Recipe,   Views::RecipeNew>  (*this, "/recipes");
+  make_routes_for<Views::Machines,    Views::Machine,    Views::MachineNew>   (*this, "/machines");
+  make_routes_for<Views::Builds,      Views::Build,      Views::BuildNew>     (*this, "/builds");
+  make_routes_for<Views::Instances,   Views::Instance,   Views::InstanceNew>  (*this, "/instances");
+  make_routes_for<Views::Recipes,     Views::Recipe,     Views::RecipeNew>    (*this, "/recipes");
+  make_routes_for<Views::Credentials, Views::Credential, Views::CredentialNew>(*this, "/credentials");
 
   Crails::Front::Router::initialize();
 }

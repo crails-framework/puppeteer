@@ -4,6 +4,7 @@
 # include "template_view.hpp"
 # include "theme.hpp"
 # include <crails/front/signal.hpp>
+# include <unordered_map>
 
 namespace Views
 {
@@ -25,7 +26,7 @@ namespace Views
     {
       std::vector<Crails::Front::Element> elements;
 
-      std::for_each(inputs.rbegin(), inputs.rend(), [&elements](std::pair<std::string, El> entry)
+      std::for_each(inputs.begin(), inputs.end(), [&elements](std::pair<std::string, El> entry)
       {
         elements.push_back(Theme::form_group(entry.first, entry.second));
       });
@@ -33,7 +34,7 @@ namespace Views
       form_el.html("").inner(elements);
     }
 
-    void set_inputs(std::map<std::string, Crails::Front::Element> value)
+    void set_inputs(std::unordered_map<std::string, Crails::Front::Element> value)
     {
       inputs = value;
       initialize_form();
@@ -56,7 +57,7 @@ namespace Views
 
   private:
     Crails::Front::Element form_el, button_save;
-    std::map<std::string, Crails::Front::Element> inputs;
+    std::unordered_map<std::string, Crails::Front::Element> inputs;
     client::EventListener* button_listener;
   };
 }

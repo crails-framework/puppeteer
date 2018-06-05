@@ -23,7 +23,7 @@ namespace Views
       input_build.add_class("form-control");
     }
 
-    std::map<std::string, El> get_inputs()
+    std::unordered_map<std::string, El> get_inputs()
     {
       return {
         {"name",      input_name},

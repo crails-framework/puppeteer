@@ -26,7 +26,7 @@ public:
 
   void on_change();
 
-  void collect_variables(std::map<std::string,std::string>&) const;
+  void collect_variables(std::map<std::string,std::string>&);
   std::string get_build_path() const;
   std::string get_build_config();
 };

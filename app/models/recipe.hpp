@@ -28,7 +28,7 @@ public:
   void on_change();
 
   std::string get_path() const;
-  void fetch_recipe() const;
+  void fetch_recipe();
 
   void exec_package(const std::string&, Instance&);
   void deploy_for(Instance&);

@@ -25,6 +25,8 @@ public:
   int  push_config(const std::string& jobname, const std::string& config);
   int  delete_job(const std::string& jobname);
 
+  int create_credentials(const std::string& id, const std::string& username, const std::string& password);
+
 private:
   void prepare_query(boost::network::http::client::request&);
 
