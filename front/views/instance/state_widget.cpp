@@ -1,3 +1,4 @@
+#include <crails/front/object.hpp>
 #include "state_widget.hpp"
 #include <iostream>
 
@@ -119,5 +120,8 @@ void InstanceStateWidget::on_state_fetched(const Crails::Front::Ajax& ajax)
 void InstanceStateWidget::on_state_fetch_failed(const Crails::Front::Ajax& ajax)
 {
   std::cout << "failed to fetch state" << std::endl;
-  html("").text("Failed to fetch instance state");
+  html("").inner({
+    make_configuration_state_label(),
+    El("div").text("Failed to fetch instance state")
+  });
 }

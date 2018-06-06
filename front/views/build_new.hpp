@@ -46,8 +46,8 @@ namespace Views
       model->set_git(input_git.get_value());
       model->set_branch(input_branch.get_value());
       model->set_options(input_options.get_value());
-      model->set_recipe_id(input_recipe.value<unsigned long>());
-      model->set_credential_id(input_credential.value<unsigned long>());
+      model->set_recipe_id    ( boost::lexical_cast<unsigned long>(input_recipe.get_value()) );
+      model->set_credential_id( boost::lexical_cast<unsigned long>(input_credential.get_value()) );
       model->set_variable_list(input_variables.get_value());
     }
 
@@ -57,8 +57,8 @@ namespace Views
       input_git.value(model->get_git());
       input_branch.value(model->get_branch());
       input_options.value(model->get_options());
-      input_recipe.value(model->get_recipe_id());
-      input_credential.value(model->get_credential_id());
+      input_recipe.value    ( boost::lexical_cast<std::string>(model->get_recipe_id()) );
+      input_credential.value( boost::lexical_cast<std::string>(model->get_credential_id()) );
       input_variables.activate(model->get_variables());
     }
 

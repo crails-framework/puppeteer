@@ -38,8 +38,8 @@ namespace Views
     {
       model->set_name(input_name.get_value());
       model->set_user(input_user.get_value());
-      model->set_machine_id(input_machine.value<unsigned long>());
-      model->set_build_id  (input_build.value<unsigned long>());
+      model->set_machine_id( boost::lexical_cast<unsigned long>(input_machine.get_value()));
+      model->set_build_id  ( boost::lexical_cast<unsigned long>(input_build.get_value()));
       model->set_variable_list(input_variables.get_value());
     }
 

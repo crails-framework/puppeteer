@@ -1,6 +1,7 @@
 #ifndef  VIEW_RECIPE_NEW_HPP
 # define VIEW_RECIPE_NEW_HPP
 
+# include <boost/lexical_cast.hpp>
 # include "utility/model_form.hpp"
 # include "utility/select.hpp"
 # include "../app/recipes.hpp"
@@ -40,7 +41,7 @@ namespace Views
       model->set_name(input_name.get_value());
       model->set_git_url(input_git_url.get_value());
       model->set_git_branch(input_git_branch.get_value());
-      model->set_credential_id(input_credential.value<unsigned long>());
+      model->set_credential_id( boost::lexical_cast<unsigned long>(input_credential.get_value()) );
     }
 
     void update_form_attributes()
@@ -48,7 +49,7 @@ namespace Views
       input_name.value(model->get_name());
       input_git_url.value(model->get_git_url());
       input_git_branch.value(model->get_git_branch());
-      input_credential.value(model->get_credential_id());
+      input_credential.value( boost::lexical_cast<std::string>(model->get_credential_id()) );
     }
 
     void attached()
