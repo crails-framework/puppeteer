@@ -3,16 +3,6 @@ $: << "#{Dir.pwd}/scripts"
 $: << "#{Dir.pwd}"
 
 group :before_compile do
-  guard 'crails-archive'
-
-  guard 'crails-cheerp', include_paths: ["/usr/local/include","."],
-#   sourcemap_output: "public/assets/application.js.map",
-#   sourcemap_standalone: true,
-#   preexecute: true,
-    dummy_var: 42 do
-    watch(%r{front/.+\.(cpp|hpp)$})
-  end
-
   guard 'models', input: ["app/data"],
                   output: "lib",
                   generators: [:edit, :data, :view, :destroy, :query, :archive] do
@@ -23,6 +13,16 @@ group :before_compile do
                   output: "front",
                   generators: [:front] do
     watch(%r{app/data/.+\.rb$})
+  end
+
+  guard 'crails-archive'
+
+  guard 'crails-cheerp', include_paths: ["/usr/local/include","."],
+#   sourcemap_output: "public/assets/application.js.map",
+#   sourcemap_standalone: true,
+#   preexecute: true,
+    dummy_var: 42 do
+    watch(%r{front/.+\.(cpp|hpp)$})
   end
 
   guard 'crails-odb', backends: [:pgsql],
