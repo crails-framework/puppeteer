@@ -19,7 +19,7 @@ namespace Views
     {
       buffer.str(std::string());
       html("");
-      visible(false);
+      //visible(false);
     }
 
     template<typename T>
@@ -38,7 +38,7 @@ namespace Views
 
       for (auto line : lines)
         *this > Crails::Front::Element("div", {{"class","console-output-line"}}).text(line);
-      visible(true);
+      //visible(true);
       buffer.str(std::string());
     }
   };
