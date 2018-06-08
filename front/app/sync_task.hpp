@@ -26,7 +26,8 @@ namespace Sync
   private:
     void on_receive(Crails::Front::Object data)
     {
-      auto response = Crails::Front::Object::from_json(data);
+      Crails::Front::ObjectImpl<client::String> data_string(*data);
+      auto response = Crails::Front::Object::from_json(*data_string);
       std::string task_id = response["id"];
 
       for (const auto& entry : watchers)
