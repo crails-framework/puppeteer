@@ -131,6 +131,7 @@ void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object respons
   std::string status   = response->hasOwnProperty("status") ? (std::string)(response["status"]) : (std::string)("continue");
   float       progress = client::parseFloat((const client::String*)(*response["progress"]));
 
+  std::cout << "Task progress updated: " << progress << std::endl;
   if (response->hasOwnProperty("message"))
     console_output << (std::string)(response["message"]);
   progress_bar.set_progress(progress);

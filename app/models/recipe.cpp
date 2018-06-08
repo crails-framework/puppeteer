@@ -119,6 +119,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
     const std::string remote_package_folder = remote_folder + '/' + package;
     auto package_files = list_directory(recipe_package_folder);
 
+    std::cout << "SET TASK COUNT: " << (package_files.size() + 4) << std::endl;
     task.set_task_count(package_files.size() + 4);
     ssh.exec("mkdir -p " + remote_package_folder, stream);
 
@@ -161,6 +162,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
         status = ssh.exec("chmod +x '" + remote_package_folder + '/' + filename + '\'', stream);
         if (status)
           throw std::runtime_error("Recipe(" + get_name() + "): could not chmod script: " + filename);
+	stream << "## " << filename << ":\n";
         status = ssh.exec("cd '" + remote_package_folder + "/' && ./" + filename, stream);
         if (status)
         {
