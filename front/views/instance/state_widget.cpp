@@ -97,7 +97,7 @@ void InstanceStateWidget::render_state()
   inner({
     make_configuration_state_label(),
     El("table", {{"class","table table-borderless"}}).inner({
-      El("thead").inner({ El("tr").inner({ El("td").text("Process"), El("td").text("State")  }) }),
+      El("thead").inner({ El("tr").inner({ El("th").text("Process"), El("th").text("State")  }) }),
       El("tbody").inner(elements)
     })
   });

@@ -129,12 +129,14 @@ void InstanceActionWidget::on_deploy_start(const Crails::Front::Ajax& ajax)
 void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object response)
 {
   std::string status   = response->hasOwnProperty("status") ? (std::string)(response["status"]) : (std::string)("continue");
-  float       progress = client::parseFloat((const client::String*)(*response["progress"]));
+  float  progress      = client::parseFloat((const client::String*)(*response["progress"]));
+  double item_count    = client::parseInt((const client::String*)(*response["item_count"]));
+  double item_progress = client::parseInt((const client::String*)(*response["item_progress"]));
 
-  std::cout << "Task progress updated: " << progress << std::endl;
+  std::cout << "Task progress updated: " << progress << ", " << (item_count / item_progress) << std::endl;
   if (response->hasOwnProperty("message"))
     console_output << (std::string)(response["message"]);
-  progress_bar.set_progress(progress);
+  progress_bar.set_progress(item_count / item_progress);
   if (status == "abort" || progress == 1)
   {
     on_action_performed();
