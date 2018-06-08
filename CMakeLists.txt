@@ -63,6 +63,8 @@ set(dependencies crails-core${crails-suffix}
                  )
 
 # Custom dependencies (do not modify this line)
+set(dependencies ${dependencies} crails-sync${crails-suffix})
+set(dependencies ${dependencies} crails-sidekic${crails-suffix})
 set(dependencies ${dependencies} crails-front${crails-suffix})
 set(dependencies ${dependencies} crails-odb${crails-suffix})
 set(dependencies ${dependencies} odb)
@@ -78,3 +80,5 @@ if (ODB_WITH_PGSQL)
 endif()
 
 add_subdirectory(tasks/odb_migrate)
+
+add_subdirectory(tasks/sidekic)

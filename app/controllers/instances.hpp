@@ -19,7 +19,6 @@ public:
   void stop();
   void restart();
 private:
-  void protect(std::function<void()>);
   void open_ssh(std::function<void(Ssh::Session&)>);
 };
 

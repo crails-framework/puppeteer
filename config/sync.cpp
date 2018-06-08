@@ -1,5 +1,5 @@
 #include <crails/getenv.hpp>
-#include "app/faye/client.hpp"
+#include <crails/sync/client.hpp>
 
 thread_local Faye::Client faye({
   Crails::getenv                   ("FAYE_PROTOCOL", "http"),

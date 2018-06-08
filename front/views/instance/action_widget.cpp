@@ -1,4 +1,5 @@
 #include "action_widget.hpp"
+#include "front/app/sync_task.hpp"
 #include <iostream>
 
 using namespace Views;
@@ -6,7 +7,9 @@ using namespace std;
 
 typedef Crails::Front::Element El;
 
-InstanceActionWidget::InstanceActionWidget()
+extern Sync::Tasks* sync_tasks;
+
+InstanceActionWidget::InstanceActionWidget(ConsoleOutput& console_output) : console_output(console_output)
 {
   button_deploy   .text("Deploy")   .add_class("btn-warning");
   button_restart  .text("Restart")  .add_class("btn-primary");
@@ -31,7 +34,7 @@ void InstanceActionWidget::render()
     El("div", {{"class","btn-group"}}).inner({
       button_deploy, button_uninstall, button_restart, button_stop
     }),
-    
+    El("div", {{"class","progress mb-3"},{"style","margin-top:20px"}}).inner({progress_bar})
   });
   button_deploy   .visible(model->get_state() != 1);
   button_uninstall.visible(model->get_state()  > 0);
@@ -45,9 +48,8 @@ void InstanceActionWidget::deploy(client::Event*)
   {
     on_performing_action();
     Crails::Front::Ajax::query("POST", model->get_url() + "/configure").callbacks({
-      std::bind(&InstanceActionWidget::on_deployed,         this, std::placeholders::_1),
-      std::bind(&InstanceActionWidget::on_deploy_failure,   this, std::placeholders::_1),
-      std::bind(&InstanceActionWidget::on_action_performed, this, std::placeholders::_1)
+      std::bind(&InstanceActionWidget::on_deploy_start,     this, std::placeholders::_1),
+      std::bind(&InstanceActionWidget::on_deploy_failure,   this, std::placeholders::_1)
     })();
   }
 }
@@ -58,9 +60,8 @@ void InstanceActionWidget::uninstall(client::Event*)
   {
     on_performing_action();
     Crails::Front::Ajax::query("POST", model->get_url() + "/uninstall").callbacks({
-      std::bind(&InstanceActionWidget::on_deployed,         this, std::placeholders::_1),
-      std::bind(&InstanceActionWidget::on_deploy_failure,   this, std::placeholders::_1),
-      std::bind(&InstanceActionWidget::on_action_performed, this, std::placeholders::_1)
+      std::bind(&InstanceActionWidget::on_deploy_start,     this, std::placeholders::_1),
+      std::bind(&InstanceActionWidget::on_deploy_failure,   this, std::placeholders::_1)
     })();
   }
 }
@@ -70,10 +71,12 @@ void InstanceActionWidget::restart(client::Event*)
   if (!performing_action)
   {
     on_performing_action();
-    Crails::Front::Ajax::query("POST", model->get_url() + "/restart").callbacks({
+    Crails::Front::Ajax::query("POST", model->get_url() + "/restart")
+	    .headers({{"Accept","text/plain"}})
+	    .callbacks({
       std::bind(&InstanceActionWidget::on_restarted,        this, std::placeholders::_1),
       std::bind(&InstanceActionWidget::on_restart_failed,   this, std::placeholders::_1),
-      std::bind(&InstanceActionWidget::on_action_performed, this, std::placeholders::_1)
+      std::bind(&InstanceActionWidget::on_ajax_action_performed, this, std::placeholders::_1)
     })();
   }
 }
@@ -86,7 +89,7 @@ void InstanceActionWidget::stop(client::Event*)
     Crails::Front::Ajax::query("POST", model->get_url() + "/stop").callbacks({
       std::bind(&InstanceActionWidget::on_stopped,          this, std::placeholders::_1),
       std::bind(&InstanceActionWidget::on_stop_failed,      this, std::placeholders::_1),
-      std::bind(&InstanceActionWidget::on_action_performed, this, std::placeholders::_1)
+      std::bind(&InstanceActionWidget::on_ajax_action_performed, this, std::placeholders::_1)
     })();
   }
 }
@@ -101,19 +104,51 @@ void InstanceActionWidget::on_performing_action()
   performing_action = true;
   for (auto* button : get_buttons())
     button->attr("disabled","disabled");
+  progress_bar.set_active(true);
 }
 
-void InstanceActionWidget::on_action_performed(const Crails::Front::Ajax&)
+void InstanceActionWidget::on_action_performed()
 {
   performing_action = false;
   for (auto* button : get_buttons())
     (*button)->removeAttribute("disabled");
+  progress_bar.set_active(false);
 }
 
-void InstanceActionWidget::on_deployed(const Crails::Front::Ajax&)
+void InstanceActionWidget::on_deploy_start(const Crails::Front::Ajax& ajax)
 {
-  std::cout << "deploy success" << std::endl;
-  model->set_state(0);
+  std::string task_uid = ajax.get_response_text();
+
+  console_output.flush();
+  progress_bar.set_progress(0);
+  progress_bar.text("Deployment...");
+  sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_deploy_task_progress, this, std::placeholders::_1));
+  std::cout << "listening to deploy task " << task_uid << std::endl;
+}
+
+void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object response)
+{
+  std::string status   = response->hasOwnProperty("status") ? (std::string)(response["status"]) : (std::string)("continue");
+  float       progress = client::parseFloat((const client::String*)(*response["progress"]));
+
+  if (response->hasOwnProperty("message"))
+    console_output << (std::string)(response["message"]);
+  progress_bar.set_progress(progress);
+  if (status == "abort" || progress == 1)
+  {
+    on_action_performed();
+    if (status == "abort")
+    {
+      model->set_state(2);
+      console_output << "/!\\ Task aborted\n";
+    }
+    else
+    {
+      model->set_state(1);
+      console_output << "(!) Task successfully completed\n";
+    }
+    model->remote_state_changed.trigger();
+  }
 }
 
 void InstanceActionWidget::on_deploy_failure(const Crails::Front::Ajax&)

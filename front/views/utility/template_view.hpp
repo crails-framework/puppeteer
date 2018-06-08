@@ -14,11 +14,6 @@ public:
 
     if (tpl)
       el->set_innerHTML(tpl->get_innerHTML());
-    else
-    {
-      std::string str = "throw 'TemplateView cannot find template with id " + name + '\'';
-      client::eval(str.c_str());
-    }
   }
 
   void append_to(Crails::Front::Element& target)

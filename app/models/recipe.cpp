@@ -2,6 +2,7 @@
 #include "lib/odb/application-odb.hxx"
 #include <crails/getenv.hpp>
 #include <crails/utils/string.hpp>
+#include <crails/sync/task.hpp>
 #include "app/ssh/session.hpp"
 #include "app/ssh/scp.hpp"
 #include "app/git/git.hpp"
@@ -61,21 +62,11 @@ static void initialize_git_repository(const std::string& path, const std::string
   boost::filesystem::path p(path);
   Git::Repository repository;
 
-  std::cout << "GIT PATH:   " << path << std::endl;
-  std::cout << "GIT URL IS: " << url << std::endl;
   if (boost::filesystem::is_directory(p))
-  {
-    std::cout << "Opening repository" << std::endl;
     repository.open(path);
-  }
   else
-  {
-    std::cout << "Cloning repository" << std::endl;
     repository.clone(url, path);
-  }
-  std::cout << "Checking out repository" << std::endl;
   repository.checkout(branch, GIT_CHECKOUT_FORCE);
-  std::cout << "Pulling repository" << std::endl;
   repository.find_remote("origin")->pull();
 }
 
@@ -110,15 +101,17 @@ static std::string generate_variable_file(const std::map<std::string, std::strin
   return stream.str();
 }
 
-void Recipe::exec_package(const std::string& package, Instance& instance)
+void Recipe::exec_package(const std::string& package, Instance& instance, Sync::Task& task)
 {
   Ssh::Session ssh;
+  Sync::Stream stream(task);
   auto machine = instance.get_machine();
   auto build   = instance.get_build();
 
   ssh.should_accept_unknown_hosts(true);
   ssh.connect(remote_user, machine->get_ip());
   ssh.authentify_with_pubkey();
+  task.increment();
   {
     const std::string remote_folder = remote_path + '/' + instance.get_name();
     const std::string recipe_folder = get_path();
@@ -126,7 +119,8 @@ void Recipe::exec_package(const std::string& package, Instance& instance)
     const std::string remote_package_folder = remote_folder + '/' + package;
     auto package_files = list_directory(recipe_package_folder);
 
-    ssh.exec("mkdir -p " + remote_package_folder, std::cout);
+    task.set_task_count(package_files.size() + 4);
+    ssh.exec("mkdir -p " + remote_package_folder, stream);
 
     // scp recipe
     {
@@ -138,6 +132,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance)
 
         scp->push_file(file, filename);
       }
+      task.increment();
     }
 
     // scp ingredients
@@ -149,6 +144,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance)
       build->collect_variables(variables);
       variables["MACHINE_IP"] = machine->get_ip();
       scp->push_text(generate_variable_file(variables), "variables");
+      task.increment();
     }
 
     // run recipe
@@ -162,10 +158,10 @@ void Recipe::exec_package(const std::string& package, Instance& instance)
       {
         int status;
 
-        status = ssh.exec("chmod +x '" + remote_package_folder + '/' + filename + '\'', std::cout);
+        status = ssh.exec("chmod +x '" + remote_package_folder + '/' + filename + '\'', stream);
         if (status)
           throw std::runtime_error("Recipe(" + get_name() + "): could not chmod script: " + filename);
-        status = ssh.exec("cd '" + remote_package_folder + "/' && ./" + filename, std::cout);
+        status = ssh.exec("cd '" + remote_package_folder + "/' && ./" + filename, stream);
         if (status)
         {
           std::stringstream stream;
@@ -173,6 +169,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance)
           throw std::runtime_error(stream.str());
         }
       }
+      task.increment();
     }
 
     // deploy gate configuration
@@ -190,15 +187,16 @@ void Recipe::exec_package(const std::string& package, Instance& instance)
         ssh.make_scp_session("/etc/nginx/sites-available", SSH_SCP_WRITE)->push_file(recipe_folder + "/nginx.conf", instance.get_name());
       }
     }
+    task.increment();
   }
 }
 
-void Recipe::deploy_for(Instance& instance)
+void Recipe::deploy_for(Instance& instance, Sync::Task& task)
 {
-  exec_package("setup", instance);
+  exec_package("setup", instance, task);
 }
 
-void Recipe::uninstall_from(Instance& instance)
+void Recipe::uninstall_from(Instance& instance, Sync::Task& task)
 {
-  exec_package("uninstall", instance);
+  exec_package("uninstall", instance, task);
 }

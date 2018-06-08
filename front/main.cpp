@@ -9,14 +9,13 @@
 #include "views/utility/template_view.hpp"
 #include "views/utility/main_view.hpp"
 
-void onReady()
-{
-  std::cout << "cheerp client ready maggle" << std::endl;
-}
-
-auto onReady_callback = cheerp::Callback(onReady);
+#include "front/app/faye.hpp"
+#include "front/app/sync_task.hpp"
 
 using namespace Crails::Front;
+
+Sync::Faye*  faye;
+Sync::Tasks* sync_tasks;
 
 void webMain()
 {
@@ -37,4 +36,14 @@ void webMain()
   std::string klass = Crails::Front::body.attr("class");
   std::cout << "body has class " << klass << std::endl;
   //body.text("coucou, tu veux voir ma bite ?");
+ 
+  faye       = new Sync::Faye;
+  sync_tasks = new Sync::Tasks(*faye);
+
+  faye->subscribe("/sync", [](Crails::Front::Object response)
+  {
+    std::string text = response["text"];
+
+    std::cout << "Native faye handler says: " << text << std::endl;
+  });
 }

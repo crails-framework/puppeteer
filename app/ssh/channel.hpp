@@ -3,7 +3,7 @@
 
 # include <libssh/libssh.h>
 # include <string>
-# include <sstream>
+# include "stream.hpp"
 
 namespace Ssh
 {
@@ -15,7 +15,7 @@ namespace Ssh
 
     void open();
     void close();
-    int exec(const std::string& command, std::ostream& output);
+    int exec(const std::string& command, Sync::Stream& output);
     int exec(const std::string& command);
 
   private:

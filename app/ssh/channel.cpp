@@ -40,7 +40,7 @@ void Channel::close()
   }
 }
 
-int Channel::exec(const std::string& command, std::ostream& output)
+int Channel::exec(const std::string& command, Sync::Stream& output)
 {
   char buffer[256];
   int  nbytes;
@@ -63,8 +63,7 @@ int Channel::exec(const std::string& command, std::ostream& output)
 
 int Channel::exec(const std::string& command)
 {
-  std::stringstream stream;
+  Sync::Stream stream;
 
-  stream.setstate(std::ios_base::badbit);
   return exec(command, stream);
 }

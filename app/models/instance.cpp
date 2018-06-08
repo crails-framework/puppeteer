@@ -3,6 +3,7 @@
 #include "app/ssh/session.hpp"
 #include "variable_list.hpp"
 #include "recipe.hpp"
+#include <crails/sync/task.hpp>
 
 using namespace std;
 
@@ -18,19 +19,19 @@ void Instance::collect_variables(map<string,string>& variables) const
   local_variables.to_map(variables);
 }
 
-void Instance::configure()
+void Instance::configure(Sync::Task& task)
 {
   auto recipe = get_build()->get_recipe();
 
-  recipe->deploy_for(*this);
+  recipe->deploy_for(*this, task);
   set_state(Ready);
 }
 
-void Instance::uninstall()
+void Instance::uninstall(Sync::Task& task)
 {
   auto recipe = get_build()->get_recipe();
 
-  recipe->uninstall_from(*this);
+  recipe->uninstall_from(*this, task);
   set_state(Uninstalled);
 }
 

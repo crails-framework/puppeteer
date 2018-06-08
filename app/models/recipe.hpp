@@ -7,6 +7,7 @@
 class OArchive;
 class IArchive;
 class Instance;
+namespace Sync { class Task; }
 
 # pragma db object pointer(std::shared_ptr)
 class Recipe : public Db::Model, public ModelData::Recipe
@@ -30,9 +31,9 @@ public:
   std::string get_path() const;
   void fetch_recipe();
 
-  void exec_package(const std::string&, Instance&);
-  void deploy_for(Instance&);
-  void uninstall_from(Instance&);
+  void exec_package(const std::string&, Instance&, Sync::Task&);
+  void deploy_for(Instance&, Sync::Task&);
+  void uninstall_from(Instance&, Sync::Task&);
 };
 
 #endif

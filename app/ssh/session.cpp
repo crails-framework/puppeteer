@@ -104,7 +104,7 @@ std::shared_ptr<Scp> Session::make_scp_session(const std::string& path, int mode
   return std::make_shared<Scp>(handle, path, mode);
 }
 
-int Session::exec(const string& command, ostream& output)
+int Session::exec(const string& command, Sync::Stream& output)
 {
   return make_channel()->exec(command, output);
 }

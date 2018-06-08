@@ -3,6 +3,7 @@
 
 #include <libssh/libssh.h>
 #include <memory>
+#include "stream.hpp"
 
 namespace Ssh
 {
@@ -24,7 +25,7 @@ namespace Ssh
     void authentify(const std::string& password);
     void authentify_with_pubkey(const std::string& password = "");
 
-    int exec(const std::string& command, std::ostream&);
+    int exec(const std::string& command, Sync::Stream&);
 
     std::shared_ptr<Channel> make_channel();
     std::shared_ptr<Scp>     make_scp_session(const std::string& path, int mode);
