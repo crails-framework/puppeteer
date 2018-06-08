@@ -26,12 +26,9 @@ namespace Sync
   private:
     void on_receive(Crails::Front::Object data)
     {
-      Crails::Front::ObjectImpl<client::String> data_as_string(*data);
-      Crails::Front::Object response = client::JSON.parse(*data_as_string);
+      auto response = Crails::Front::Object::from_json(data);
       std::string task_id = response["id"];
 
-      std::cout << "Received faye tasks with id " << task_id << std::endl;
-      std::cout << "data_as_string: " << (std::string)(data_as_string) << std::endl;
       for (const auto& entry : watchers)
       {
         if (entry.first == task_id)
