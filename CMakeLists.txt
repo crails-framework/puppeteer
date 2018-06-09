@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(puppeteer)
 option(ODB_WITH_PGSQL "enables pgsql support for crails-odb" ON)
-option(DEVELOPER_MODE  "enable debugging tools" ON)
+option(DEVELOPER_MODE "enable debugging tools" ON)
+option(WITH_NGINX     "build the nginx plugin" ON)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic ")
 
@@ -43,6 +44,9 @@ file(GLOB_RECURSE tests_files
 # Add your modules here (do not modify this line)
 add_subdirectory(modules/crud)
 add_subdirectory(modules/odb)
+if (WITH_NGINX)
+  add_subdirectory(modules/nginx)
+endif()
 
 add_library(crails-app SHARED ${crails_app})
 add_executable(server ${server_files})

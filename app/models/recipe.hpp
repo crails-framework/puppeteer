@@ -7,7 +7,7 @@
 class OArchive;
 class IArchive;
 class Instance;
-namespace Sync { class Task; }
+namespace Sync { class Task; class Stream; }
 
 # pragma db object pointer(std::shared_ptr)
 class Recipe : public Db::Model, public ModelData::Recipe
@@ -21,7 +21,14 @@ public:
     size_t value;
   };
 
+  struct Plugin
+  {
+    virtual bool recipe_uses_plugin(const std::string& recipe_folder) const = 0;
+    virtual void apply(const std::string& package, const std::string& recipe_folder, Instance& instance, Sync::Stream&) const = 0;
+  };
+
   static const std::string base_path, remote_path, remote_user;
+  static const std::vector<std::shared_ptr<Plugin> > plugins;
 
   void serialize(OArchive&);
   void serialize(IArchive&);

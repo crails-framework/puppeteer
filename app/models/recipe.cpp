@@ -35,14 +35,6 @@ std::vector<std::string> list_directory(const std::string& directory_path)
   return list;
 }
 
-static bool has_nginx_configuration(const std::string& recipe_path)
-{
-  std::string nginx_conf_path = recipe_path + "/nginx.conf";
-  boost::filesystem::path p(nginx_conf_path.c_str());
-
-  return boost::filesystem::is_regular_file(p);
-}
-
 static bool is_same_repository(const std::string& path, const std::string& url)
 {
   boost::filesystem::path p(path);
@@ -174,21 +166,13 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
       task.increment();
     }
 
-    // deploy gate configuration
-    if (has_nginx_configuration(recipe_folder))
+    // run plugins
+    for (const auto plugin : plugins)
     {
-      std::string nginx_server_ip = Crails::getenv("NGINX_SERVER_IP");
-
-      if (nginx_server_ip.length())
-      {
-        Ssh::Session ssh;
-
-        ssh.should_accept_unknown_hosts(true);
-        ssh.connect(remote_user, nginx_server_ip);
-        ssh.authentify_with_pubkey();
-        ssh.make_scp_session("/etc/nginx/sites-available", SSH_SCP_WRITE)->push_file(recipe_folder + "/nginx.conf", instance.get_name());
-      }
+      if (plugin->recipe_uses_plugin(recipe_folder))
+        plugin->apply(package, recipe_folder, instance, stream);
     }
+
     task.increment();
   }
 }
