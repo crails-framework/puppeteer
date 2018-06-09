@@ -1,6 +1,7 @@
 #include <crails/front/object.hpp>
 #include "state_widget.hpp"
 #include <iostream>
+#include "front/views/utility/theme.hpp"
 
 using namespace Views;
 using namespace std;
@@ -20,7 +21,11 @@ static std::string strip_instance_name(const std::string& name, const Puppeteer:
 InstanceStateWidget::InstanceStateWidget()
 {
   text("Loading...");
-  fetch_state_button.text("Update");
+  fetch_state_button.css("float","right").inner({
+    Theme::fa_icon("refresh"),
+    El("span").text(" Refresh")
+  });
+  fetch_state_button.add_class("btn-primary");
   listen_to(fetch_state_button.clicked, std::bind(&InstanceStateWidget::on_fetch_state_clicked, this, std::placeholders::_1));
 }
 
@@ -106,6 +111,7 @@ void InstanceStateWidget::render_state()
   // Render
   html("");
   inner({
+    fetch_state_button,
     make_configuration_state_label(),
     El("table", {{"class","table table-borderless"}}).inner({
       El("thead").inner({ El("tr").inner({ El("th").text("Process"), El("th").text("State")  }) }),
@@ -133,6 +139,7 @@ void InstanceStateWidget::on_state_fetch_failed(const Crails::Front::Ajax& ajax)
 {
   std::cout << "failed to fetch state" << std::endl;
   html("").inner({
+    fetch_state_button,
     make_configuration_state_label(),
     El("div").text("Failed to fetch instance state")
   });

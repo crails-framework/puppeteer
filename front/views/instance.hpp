@@ -29,9 +29,10 @@ namespace Views
         }),
         El("div", {{"class","col-lg-12"}}).inner({
           Theme::card("Console output", console_output)
-	})
+        })
       });
       console_output.attr("class","console-output");
+      console_output.visible(false);
     }
 
     void activate(unsigned long instance_id)

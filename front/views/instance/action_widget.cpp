@@ -1,5 +1,6 @@
 #include "action_widget.hpp"
 #include "front/app/sync_task.hpp"
+#include "front/views/utility/theme.hpp"
 #include <iostream>
 
 using namespace Views;
@@ -11,10 +12,14 @@ extern Sync::Tasks* sync_tasks;
 
 InstanceActionWidget::InstanceActionWidget(ConsoleOutput& console_output) : console_output(console_output)
 {
-  button_deploy   .text("Deploy")   .add_class("btn-warning");
-  button_restart  .text("Restart")  .add_class("btn-primary");
-  button_stop     .text("Stop")     .add_class("btn-danger");
-  button_uninstall.text("Uninstall").add_class("btn-danger");
+  button_deploy   .inner({ Theme::fa_icon("cloud-upload-alt"), El("span").text(" Deploy") });
+  button_restart  .inner({ Theme::fa_icon("play"),             El("span").text(" Start") });
+  button_stop     .inner({ Theme::fa_icon("stop"),             El("span").text(" Stop") });
+  button_uninstall.inner({ Theme::fa_icon("eraser"),           El("span").text(" Uninstall") });
+
+  for (auto& button : vector<Button*>({ &button_deploy, &button_restart, &button_stop, &button_uninstall }))
+    button->add_class("btn-primary");
+
   listen_to(button_deploy.clicked,    std::bind(&InstanceActionWidget::deploy,    this, std::placeholders::_1));
   listen_to(button_uninstall.clicked, std::bind(&InstanceActionWidget::uninstall, this, std::placeholders::_1));
   listen_to(button_restart.clicked,   std::bind(&InstanceActionWidget::restart,   this, std::placeholders::_1));
@@ -34,7 +39,7 @@ void InstanceActionWidget::render()
   attr("style","text-align:center");
   inner({
     El("div", {{"class","btn-group"}}).inner({
-      button_deploy, button_uninstall, button_restart, button_stop
+      button_deploy, button_restart, button_stop, button_uninstall
     }),
     El("div", {{"class","progress mb-3"},{"style","margin-top:20px"}}).inner({progress_bar})
   });
@@ -107,6 +112,7 @@ void InstanceActionWidget::on_performing_action()
   for (auto* button : get_buttons())
     button->attr("disabled","disabled");
   progress_bar.set_active(true);
+  console_output.visible(performing_action);
 }
 
 void InstanceActionWidget::on_action_performed()
