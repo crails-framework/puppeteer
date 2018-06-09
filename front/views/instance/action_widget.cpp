@@ -24,6 +24,7 @@ InstanceActionWidget::InstanceActionWidget(ConsoleOutput& console_output) : cons
 void InstanceActionWidget::activate(std::shared_ptr<Puppeteer::Instance> instance)
 {
   model = instance;
+  listen_to(model->remote_state_changed, std::bind(&InstanceActionWidget::render, this));
   render();
 }
 
@@ -136,7 +137,7 @@ void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object respons
   std::cout << "Task progress updated: " << progress << ", " << (item_count / item_progress) << std::endl;
   if (response->hasOwnProperty("message"))
     console_output << (std::string)(response["message"]);
-  progress_bar.set_progress(item_count / item_progress);
+  progress_bar.set_progress(progress);
   if (status == "abort" || progress == 1)
   {
     on_action_performed();

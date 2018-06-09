@@ -2,6 +2,7 @@
 # define VIEW_PROGRESS_BAR_HPP
 
 # include <crails/front/element.hpp>
+# include <iostream>
 
 namespace Views
 {
@@ -24,6 +25,7 @@ namespace Views
       std::stringstream stream;
 
       stream << "width:" << (value * 100) << '%';
+      std::cout << "progress bar style: " << stream.str() << std::endl;
       attr("style", stream.str());
     }
   };
