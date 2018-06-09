@@ -8,6 +8,16 @@
 # include "front/views/utility/progress_bar.hpp"
 # include "console_output.hpp"
 
+namespace Sync
+{
+  enum TaskState
+  {
+    Continue = 0,
+    Success  = 1,
+    Abort    = 2
+  };
+}
+
 namespace Views
 {
   class InstanceActionWidget : public Crails::Front::Element, public Crails::Listener
@@ -37,6 +47,12 @@ namespace Views
     void on_deploy_start(const Crails::Front::Ajax&);
     void on_deploy_failure(const Crails::Front::Ajax&);
     void on_deploy_task_progress(Crails::Front::Object);
+
+    void on_uninstall_start(const Crails::Front::Ajax&);
+    void on_uninstall_failure(const Crails::Front::Ajax&);
+    void on_uninstall_task_progress(Crails::Front::Object);
+
+    Sync::TaskState on_task_progress(Crails::Front::Object);
 
     void on_restarted(const Crails::Front::Ajax&);
     void on_restart_failed(const Crails::Front::Ajax&);

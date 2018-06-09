@@ -67,8 +67,8 @@ void InstanceActionWidget::uninstall(client::Event*)
   {
     on_performing_action();
     Crails::Front::Ajax::query("POST", model->get_url() + "/uninstall").callbacks({
-      std::bind(&InstanceActionWidget::on_deploy_start,     this, std::placeholders::_1),
-      std::bind(&InstanceActionWidget::on_deploy_failure,   this, std::placeholders::_1)
+      std::bind(&InstanceActionWidget::on_uninstall_start,     this, std::placeholders::_1),
+      std::bind(&InstanceActionWidget::on_uninstall_failure,   this, std::placeholders::_1)
     })();
   }
 }
@@ -123,6 +123,59 @@ void InstanceActionWidget::on_action_performed()
   progress_bar.set_active(false);
 }
 
+void InstanceActionWidget::on_uninstall_start(const Crails::Front::Ajax& ajax)
+{
+  std::string task_uid = ajax.get_response_text();
+
+  console_output.flush();
+  progress_bar.set_progress(0);
+  progress_bar.text("Uninstalling...");
+  sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_uninstall_task_progress, this, std::placeholders::_1));
+}
+
+void InstanceActionWidget::on_uninstall_task_progress(Crails::Front::Object response)
+{
+  switch (on_task_progress(response))
+  {
+  default:
+    break ;
+  case Sync::Success:
+    model->set_state(1);
+    model->remote_state_changed.trigger();
+    break ;
+  case Sync::Abort:
+    model->set_state(2);
+    model->remote_state_changed.trigger();
+    break ;
+  }
+}
+
+Sync::TaskState InstanceActionWidget::on_task_progress(Crails::Front::Object response)
+{
+  if (performing_action)
+  {
+    std::string status   = response->hasOwnProperty("status") ? (std::string)(response["status"]) : (std::string)("continue");
+    float  progress      = client::parseFloat((const client::String*)(*response["progress"]));
+
+    if (response->hasOwnProperty("message"))
+      console_output << (std::string)(response["message"]);
+    progress_bar.set_progress(progress);
+    if (status == "abort")
+    {
+      on_action_performed();
+      console_output << "/!\\ Task aborted\n";
+      return Sync::Abort;
+    }
+    else if (progress == 1)
+    {
+      on_action_performed();
+      console_output << "(!) Task successfully completed\n";
+      return Sync::Success;
+    }
+  }
+  return Sync::Continue;
+}
+
 void InstanceActionWidget::on_deploy_start(const Crails::Front::Ajax& ajax)
 {
   std::string task_uid = ajax.get_response_text();
@@ -131,36 +184,28 @@ void InstanceActionWidget::on_deploy_start(const Crails::Front::Ajax& ajax)
   progress_bar.set_progress(0);
   progress_bar.text("Deployment...");
   sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_deploy_task_progress, this, std::placeholders::_1));
-  std::cout << "listening to deploy task " << task_uid << std::endl;
 }
 
 void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object response)
 {
-  if (performing_action)
+  switch (on_task_progress(response))
   {
-    std::string status   = response->hasOwnProperty("status") ? (std::string)(response["status"]) : (std::string)("continue");
-    float  progress      = client::parseFloat((const client::String*)(*response["progress"]));
-
-    std::cout << "Task progress updated: " << progress << std::endl;
-    if (response->hasOwnProperty("message"))
-      console_output << (std::string)(response["message"]);
-    progress_bar.set_progress(progress);
-    if (status == "abort" || progress == 1)
-    {
-      on_action_performed();
-      if (status == "abort")
-      {
-        model->set_state(2);
-        console_output << "/!\\ Task aborted\n";
-      }
-      else
-      {
-        model->set_state(1);
-        console_output << "(!) Task successfully completed\n";
-      }
-      model->remote_state_changed.trigger();
-    }
+  case Sync::Success:
+    model->set_state(0);
+    model->remote_state_changed.trigger();
+    break ;
+  case Sync::Abort:
+    model->set_state(2);
+    model->remote_state_changed.trigger();
+    break ;
   }
+}
+
+void InstanceActionWidget::on_uninstall_failure(const Crails::Front::Ajax&)
+{
+  std::cout << "uninstall failure" << std::endl;
+  model->set_state(2);
+  model->remote_state_changed.trigger();
 }
 
 void InstanceActionWidget::on_deploy_failure(const Crails::Front::Ajax&)
