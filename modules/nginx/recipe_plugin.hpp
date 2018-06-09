@@ -6,10 +6,10 @@
 struct NginxPlugin : public Recipe::Plugin
 {
   bool recipe_uses_plugin(const std::string& recipe_path) const;
-  void apply(const std::string& package, const std::string& recipe_folder, Instance& instance, Sync::Stream& stream) const;
+  void apply(const std::string& package, const std::string& recipe_folder, Instance& instance, const std::map<std::string, std::string>& variables, Sync::Stream& stream) const;
 
 private:
-  void setup    (const std::string& recipe_folder, Instance& instance, Sync::Stream& stream) const;
+  void setup    (const std::string& recipe_folder, Instance& instance, const std::map<std::string, std::string>& variables, Sync::Stream& stream) const;
   void uninstall(const std::string& recipe_folder, Instance& instance, Sync::Stream& stream) const;
 };
 

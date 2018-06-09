@@ -8,7 +8,7 @@ using namespace std;
 struct EmptyPlugin : public Recipe::Plugin
 {
   bool recipe_uses_plugin(const std::string& recipe_folder) const { return false; }
-  void apply(const std::string&, const std::string&, Instance&, Sync::Stream&) const {}
+  void apply(const std::string&, const std::string&, Instance&, const std::map<std::string,std::string>&, Sync::Stream&) const {}
 };
 
 const vector<shared_ptr<Recipe::Plugin> > Recipe::plugins = {

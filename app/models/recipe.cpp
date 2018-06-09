@@ -110,6 +110,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
     const std::string recipe_package_folder = recipe_folder + '/' + package;
     const std::string remote_package_folder = remote_folder + '/' + package;
     auto package_files = list_directory(recipe_package_folder);
+    std::map<std::string, std::string> variables;
 
     std::cout << "SET TASK COUNT: " << (package_files.size() + 4) << std::endl;
     task.set_task_count(package_files.size() + 4);
@@ -131,7 +132,6 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
     // scp ingredients
     {
       auto scp = ssh.make_scp_session(remote_package_folder, SSH_SCP_WRITE);
-      std::map<std::string, std::string> variables;
 
       instance.collect_variables(variables);
       build->collect_variables(variables);
@@ -170,7 +170,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
     for (const auto plugin : plugins)
     {
       if (plugin->recipe_uses_plugin(recipe_folder))
-        plugin->apply(package, recipe_folder, instance, stream);
+        plugin->apply(package, recipe_folder, instance, variables, stream);
     }
 
     task.increment();

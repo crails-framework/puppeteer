@@ -24,7 +24,7 @@ public:
   struct Plugin
   {
     virtual bool recipe_uses_plugin(const std::string& recipe_folder) const = 0;
-    virtual void apply(const std::string& package, const std::string& recipe_folder, Instance& instance, Sync::Stream&) const = 0;
+    virtual void apply(const std::string& package, const std::string& recipe_folder, Instance& instance, const std::map<std::string, std::string>& variables, Sync::Stream&) const = 0;
   };
 
   static const std::string base_path, remote_path, remote_user;
