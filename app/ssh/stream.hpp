@@ -27,6 +27,7 @@ namespace Sync
     template<typename T>
     Stream& operator<<(const T& v)
     {
+      std::cout << v;
       stream << v;
       if (stream.str().find('\n') != std::string::npos)
         on_new_line();

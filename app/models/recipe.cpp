@@ -162,8 +162,8 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
         status = ssh.exec("chmod +x '" + remote_package_folder + '/' + filename + '\'', stream);
         if (status)
           throw std::runtime_error("Recipe(" + get_name() + "): could not chmod script: " + filename);
-	stream << "## " << filename << ":\n";
-        status = ssh.exec("cd '" + remote_package_folder + "/' && ./" + filename, stream);
+        stream << "## " << filename << ":\n";
+        status = ssh.exec("cd '" + remote_package_folder + "/' && ./" + filename + " 2>&1", stream);
         if (status)
         {
           std::stringstream stream;
