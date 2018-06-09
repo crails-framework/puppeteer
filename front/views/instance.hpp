@@ -27,7 +27,7 @@ namespace Views
         El("div", {{"class","col-lg-6"}}).inner({
           Theme::card("Actions", action_widget)
         }),
-	El("div", {{"class","col-lg-12"}}).inner({
+        El("div", {{"class","col-lg-12"}}).inner({
           Theme::card("Console output", console_output)
 	})
       });

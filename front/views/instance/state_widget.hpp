@@ -5,6 +5,7 @@
 # include <crails/front/signal.hpp>
 # include "front/app/instances.hpp"
 # include "app/models/instance_state.hpp"
+# include "../utility/button.hpp"
 
 namespace Views
 {
@@ -12,6 +13,7 @@ namespace Views
   {
     std::shared_ptr<Puppeteer::Instance> model;
     InstanceState state;
+    Button fetch_state_button;
   public:
     InstanceStateWidget();
     void activate(std::shared_ptr<Puppeteer::Instance> instance);
@@ -22,6 +24,7 @@ namespace Views
     void render_uninstalled_state();
 
   private:
+    void on_fetch_state_clicked(client::Event*);
     void on_state_fetched(const Crails::Front::Ajax&);
     void on_state_fetch_failed(const Crails::Front::Ajax&);
 

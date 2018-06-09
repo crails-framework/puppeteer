@@ -20,6 +20,8 @@ static std::string strip_instance_name(const std::string& name, const Puppeteer:
 InstanceStateWidget::InstanceStateWidget()
 {
   text("Loading...");
+  fetch_state_button.text("Update");
+  listen_to(fetch_state_button.clicked, std::bind(&InstanceStateWidget::on_fetch_state_clicked, this, std::placeholders::_1));
 }
 
 void InstanceStateWidget::activate(std::shared_ptr<Puppeteer::Instance> instance)
@@ -35,6 +37,12 @@ void InstanceStateWidget::render()
     fetch_state();
   else
     render_uninstalled_state();
+}
+
+void InstanceStateWidget::on_fetch_state_clicked(client::Event*)
+{
+  text("Loading...");
+  fetch_state();
 }
 
 void InstanceStateWidget::fetch_state()
@@ -84,13 +92,16 @@ void InstanceStateWidget::render_state()
   auto states = state.get_states();
   vector<El> elements;
 
+  std::cout << "RENDER STATE" << std::endl;
   for (auto process : states)
   {
+    std::cout << "-> " << strip_instance_name(process.first, *model) << " = " << process.second << std::endl;
     elements.push_back(El("tr").inner({
       El("td").text(strip_instance_name(process.first, *model)),
       El("td").text(process.second)
     }));
   }
+  std::cout << std::endl;
 
   // Render
   html("");
