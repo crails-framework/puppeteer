@@ -11,6 +11,8 @@ public:
     archive & needs_restart & needs_configure & processes & states;
   )
 
+  void clear() { processes.clear(); states.clear(); }
+
   void initialize_from_monit(const std::string& data)
   {
     std::string process_pattern = "Process ";

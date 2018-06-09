@@ -123,6 +123,7 @@ void InstanceStateWidget::on_state_fetched(const Crails::Front::Ajax& ajax)
     IArchive              archive;
 
     archive.set_data(responseText);
+    state.clear();
     state.serialize(archive);
     render_state();
   }
