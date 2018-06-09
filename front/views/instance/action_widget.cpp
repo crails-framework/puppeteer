@@ -30,6 +30,7 @@ void InstanceActionWidget::activate(std::shared_ptr<Puppeteer::Instance> instanc
 
 void InstanceActionWidget::render()
 {
+  html("");
   attr("style","text-align:center");
   inner({
     El("div", {{"class","btn-group"}}).inner({
@@ -129,29 +130,30 @@ void InstanceActionWidget::on_deploy_start(const Crails::Front::Ajax& ajax)
 
 void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object response)
 {
-  std::string status   = response->hasOwnProperty("status") ? (std::string)(response["status"]) : (std::string)("continue");
-  float  progress      = client::parseFloat((const client::String*)(*response["progress"]));
-  double item_count    = client::parseInt((const client::String*)(*response["item_count"]));
-  double item_progress = client::parseInt((const client::String*)(*response["item_progress"]));
-
-  std::cout << "Task progress updated: " << progress << ", " << (item_count / item_progress) << std::endl;
-  if (response->hasOwnProperty("message"))
-    console_output << (std::string)(response["message"]);
-  progress_bar.set_progress(progress);
-  if (status == "abort" || progress == 1)
+  if (performing_action)
   {
-    on_action_performed();
-    if (status == "abort")
+    std::string status   = response->hasOwnProperty("status") ? (std::string)(response["status"]) : (std::string)("continue");
+    float  progress      = client::parseFloat((const client::String*)(*response["progress"]));
+
+    std::cout << "Task progress updated: " << progress << std::endl;
+    if (response->hasOwnProperty("message"))
+      console_output << (std::string)(response["message"]);
+    progress_bar.set_progress(progress);
+    if (status == "abort" || progress == 1)
     {
-      model->set_state(2);
-      console_output << "/!\\ Task aborted\n";
+      on_action_performed();
+      if (status == "abort")
+      {
+        model->set_state(2);
+        console_output << "/!\\ Task aborted\n";
+      }
+      else
+      {
+        model->set_state(1);
+        console_output << "(!) Task successfully completed\n";
+      }
+      model->remote_state_changed.trigger();
     }
-    else
-    {
-      model->set_state(1);
-      console_output << "(!) Task successfully completed\n";
-    }
-    model->remote_state_changed.trigger();
   }
 }
 
