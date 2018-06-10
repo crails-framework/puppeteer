@@ -10,3 +10,5 @@ const string         Jenkins::puppeteer_folder = Crails::getenv("JENKINS_PUPPETE
 
 const string         Jenkins::user             = Crails::getenv("JENKINS_USER");
 const string         Jenkins::api_token        = Crails::getenv("JENKINS_API_TOKEN");
+
+const string         Jenkins::public_url       = Crails::getenv("JENKINS_PUBLIC_URL");

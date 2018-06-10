@@ -24,4 +24,8 @@ void Crails::Router::initialize(void)
   SetRoute("POST", "/instances/:id/stop",      InstanceController, stop);
 
   SetRoute("POST", "/recipes/:id/fetch", RecipeController, fetch);
+
+  SetRoute("GET",  "/builds/:id/builds",  BuildController, builds);
+  SetRoute("POST", "/builds/:id/enable",  BuildController, enable);
+  SetRoute("POST", "/builds/:id/disable", BuildController, disable);
 }

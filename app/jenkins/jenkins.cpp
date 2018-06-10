@@ -1,4 +1,5 @@
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 #include "jenkins.hpp"
 #include <sstream>
 #include <crails/http.hpp>
@@ -62,6 +63,26 @@ bool Jenkins::job_exists(const std::string& jobname)
   return !(status == 404);
 }
 
+DataTree Jenkins::get_project_data(const std::string& jobname)
+{
+  const string url = job_url(jobname) + "/api/json";
+  boost::network::http::client::request request(url);
+  DataTree result;
+
+  prepare_query(request);
+  auto response = client.get(request);
+  auto status = boost::network::http::status(response);
+
+  if (status == 200)
+  {
+    string body = boost::network::http::body(response);
+
+    boost::replace_all(body, "http://jenkins", public_url);
+    result.from_json(body);
+  }
+  return result;
+}
+
 int Jenkins::push_config(const std::string& jobname, const std::string& config)
 {
   string url = job_exists(jobname) ? update_job_url(jobname) : create_job_url(jobname);
@@ -81,6 +102,27 @@ int Jenkins::delete_job(const string& jobname)
 {
   string url = update_job_url(jobname) + "/doDelete";
   boost::network::http::client::request request(url);
+  prepare_query(request);
+  auto response = client.post(request);
+
+  return boost::network::http::status(response);
+}
+
+int Jenkins::enable_job(const string& jobname)
+{
+  string url = job_url(jobname) + "/enable";
+  boost::network::http::client::request request(url);
+  prepare_query(request);
+  auto response = client.post(request);
+
+  return boost::network::http::status(response);
+}
+
+int Jenkins::disable_job(const string& jobname)
+{
+  string url = job_url(jobname) + "/disable";
+  boost::network::http::client::request request(url);
+  prepare_query(request);
   auto response = client.post(request);
 
   return boost::network::http::status(response);

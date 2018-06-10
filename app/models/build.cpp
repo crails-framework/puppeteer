@@ -75,3 +75,21 @@ void Build::on_change()
     throw std::runtime_error("could not create/update jenkins job");
   }
 }
+
+void Build::update_last_build()
+{
+  Jenkins jenkins;
+  const DataTree data = jenkins.get_project_data(get_name());
+
+  update_last_build(data);
+}
+
+void Build::update_last_build(const DataTree& data)
+{
+  const Data last_successful_build = data["lastSuccessfulBuild"]["number"];
+
+  if (last_successful_build.exists())
+    set_last_build(last_successful_build);
+  else
+    set_last_build(0);
+}

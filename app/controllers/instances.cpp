@@ -48,6 +48,9 @@ void InstanceController::open_ssh(function<void(Ssh::Session&)> callback)
 
 void InstanceController::fetch_state()
 {
+  require_model();
+  if (model)
+    model->get_build()->update_last_build();
   open_ssh([this](Ssh::Session& ssh)
   {
     stringstream output;
@@ -66,17 +69,15 @@ void InstanceController::fetch_state()
 
 void InstanceController::start()
 {
-  auto now = std::chrono::system_clock::now();
-
   open_ssh([this](Ssh::Session& ssh)
   {
     stringstream output;
     Sync::Stream stream(output);
 
     ssh.exec("monit start -g " + model->get_name(), stream);
+    model->set_last_start(model->get_build()->get_last_build());
+    database.save(*model);
   });
-  model->set_last_start(std::chrono::system_clock::to_time_t(now));
-  database.save(*model);
 }
 
 void InstanceController::stop()

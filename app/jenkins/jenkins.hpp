@@ -2,6 +2,7 @@
 # define APP_JENKINS_HPP
 
 # include <string>
+# include <crails/datatree.hpp>
 # include "config/http_client.hpp"
 
 class Jenkins
@@ -12,6 +13,7 @@ class Jenkins
   static const std::string    puppeteer_folder;
   static const std::string    user;
   static const std::string    api_token;
+  static const std::string    public_url;
 public:
   Jenkins();
 
@@ -21,9 +23,12 @@ public:
   std::string puppeteer_folder_url() const;
   std::string get_url() const;
 
-  bool job_exists(const std::string& jobname);
-  int  push_config(const std::string& jobname, const std::string& config);
-  int  delete_job(const std::string& jobname);
+  bool     job_exists(const std::string& jobname);
+  int      push_config(const std::string& jobname, const std::string& config);
+  int      delete_job(const std::string& jobname);
+  int      enable_job(const std::string& jobname);
+  int      disable_job(const std::string& jobname);
+  DataTree get_project_data(const std::string& jobname);
 
   int create_credentials(const std::string& id, const std::string& username, const std::string& password);
 

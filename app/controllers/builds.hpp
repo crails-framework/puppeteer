@@ -10,6 +10,10 @@ class BuildController : public Crud::ArchiveController<Build>
   std::string get_view_path() const { return "build_"; }
 public:
   BuildController(Crails::Params&);
+
+  void enable();
+  void disable();
+  void builds();
 };
 
 #endif
