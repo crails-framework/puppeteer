@@ -14,36 +14,21 @@
 
 using namespace Crails::Front;
 
-Sync::Faye*  faye;
-Sync::Tasks* sync_tasks;
+Sync::Faye*        faye;
+Sync::Tasks*       sync_tasks;
+Puppeteer::Router* router;
+
+static void initialize()
+{
+  router             = new Puppeteer::Router;
+  MainView::instance = new MainView;
+  faye               = new Sync::Faye;
+  sync_tasks         = new Sync::Tasks(*faye);
+  router->initialize();
+}
 
 void webMain()
 {
   std::cout << "cheerp client started ma gueule" << std::endl;
-
-  auto* router = new Puppeteer::Router;
-  MainView* main_view = new MainView;
-
-  MainView::instance = new MainView;
-
-  TemplateView my_view("tpl1");
-
-  main_view->attach(my_view);
-
-  //my_view.emplace(Crails::Front::body);
-
-  router->initialize();
-  std::string klass = Crails::Front::body.attr("class");
-  std::cout << "body has class " << klass << std::endl;
-  //body.text("coucou, tu veux voir ma bite ?");
- 
-  faye       = new Sync::Faye;
-  sync_tasks = new Sync::Tasks(*faye);
-
-  faye->subscribe("/sync", [](Crails::Front::Object response)
-  {
-    std::string text = response["text"];
-
-    std::cout << "Native faye handler says: " << text << std::endl;
-  });
+  Crails::Front::document.on_ready(initialize);
 }
