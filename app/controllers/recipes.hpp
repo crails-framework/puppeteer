@@ -10,6 +10,8 @@ class RecipeController : public Crud::ArchiveController<Recipe>
   std::string get_view_path() const { return "recipe_"; }
 public:
   RecipeController(Crails::Params&);
+
+  void fetch();
 };
 
 #endif

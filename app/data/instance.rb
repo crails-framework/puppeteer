@@ -12,7 +12,8 @@ Model.add "Instance", ["Instance", "app/models/instance.hpp"] do
   property 'std::string', 'user'
   property 'std::string', 'variables'
   property 'unsigned short', 'state', default: 0
-  property 'std::time_t', 'last_configure'
+  property 'std::string', 'last_configure', db: { column: 'last_conf' }
+  property 'std::time_t', 'last_start'
   has_one "Machine", "machine", joined: false, dependent: :destroy
   has_one "Build",   "build",   joined: false, dependent: :destroy
 end

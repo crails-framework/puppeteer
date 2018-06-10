@@ -51,6 +51,18 @@ void Repository::checkout(const string& name, int strategy)
   if (error < 0) throw Git::Exception(error);
 }
 
+std::string Repository::get_tip_oid() const
+{
+  unsigned char out[20];
+  char readable_out[64];
+  std::string oid;
+
+  git_reference_name_to_id((git_oid*)out, handle, "HEAD");
+  git_oid_fmt(readable_out, (git_oid*)out);
+  oid.assign(readable_out, 40);
+  return oid;
+}
+
 //
 // Object
 //

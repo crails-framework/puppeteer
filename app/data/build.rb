@@ -12,6 +12,7 @@ Model.add "Build", ["Build", "app/models/build.hpp"] do
   property 'std::string', 'branch'
   property 'std::string', 'options'
   property 'std::string', 'variables'
+  property 'std::time_t', 'last_build'
   has_one "Recipe",     "recipe",     joined: false, dependent: :destroy
   has_one "Credential", "credential", joined: false
 end

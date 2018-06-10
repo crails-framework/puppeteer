@@ -47,10 +47,16 @@ void Instance::open_ssh(std::function<void (Ssh::Session&)> callback)
 
 bool Instance::needs_restart()
 {
-  return false;
+  return get_last_start() <= get_build()->get_last_build();
 }
 
 bool Instance::needs_configure()
 {
-  return state == Uninstalled || state == Dirty;
+  if (state == Ready)
+  {
+    auto recipe = get_build()->get_recipe();
+
+    return recipe->get_last_tip() != get_last_configure();
+  }
+  return true;
 }

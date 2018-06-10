@@ -55,6 +55,8 @@ void InstanceController::fetch_state()
     InstanceState state;
     OArchive      archive;
 
+    state.set_needs_restart(model->needs_restart());
+    state.set_needs_configure(model->needs_configure());
     ssh.exec("monit status -g " + model->get_name(), stream);
     state.initialize_from_monit(output.str());
     state.serialize(archive);

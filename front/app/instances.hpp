@@ -4,6 +4,7 @@
 # include "model.hpp"
 # include "data/instance.hpp"
 # include "app/models/variable_list.hpp"
+# include "app/models/instance_state.hpp"
 # include <crails/front/mvc/collection.hpp>
 # include <sstream>
 
@@ -19,6 +20,8 @@ namespace Puppeteer
 
     VariableList get_variable_list() const { return get_variables(); }
     void set_variable_list(const VariableList& list) { set_variables(list); }
+
+    InstanceState state;
   };
 
   class Instances : public Crails::Front::Collection<Instance>

@@ -85,16 +85,47 @@ El InstanceStateWidget::make_configuration_state_label()
     configuration_state.text("Unknown");
     break ;
   }
-  return El("div").inner({
-    El("label").attr("style","margin-right:10px").text("Configuration :"),
-    configuration_state
+  return configuration_state;
+}
+
+El InstanceStateWidget::make_status_label()
+{
+  El configure_state("span", {{"class","role"}});
+  El restart_state("span", {{"class","role"}});
+  El tbody("tbody");
+
+  if (model->state.get_needs_configure())
+    configure_state.text("Must deploy").add_class("admin");
+  else
+    configure_state.text("Up to date").add_class("member");
+  if (model->state.get_needs_restart())
+    restart_state.text("Must restart").add_class("admin");
+  else
+    restart_state.text("Up to date").add_class("member");
+
+  tbody > El("tr").inner({
+    El("td").text("Configuration"),
+    El("td") > make_configuration_state_label()
   });
+  if (model->get_state() != 0)
+  {
+    tbody > El("tr").inner({
+      El("td").text("Recipe"),
+      El("td") > configure_state
+    });
+    tbody > El("tr").inner({
+      El("td").text("Build"),
+      El("td") > restart_state
+    });
+  }
+
+  return El("table", {{"class","table table-responsive"}}).css("width","calc(100% - 106px)") > tbody;
 }
 
 void InstanceStateWidget::render_state()
 {
   // Process state
-  auto states = state.get_states();
+  auto states = model->state.get_states();
   vector<El> elements;
 
   std::cout << "RENDER STATE" << std::endl;
@@ -112,8 +143,8 @@ void InstanceStateWidget::render_state()
   html("");
   inner({
     fetch_state_button,
-    make_configuration_state_label(),
-    El("table", {{"class","table table-borderless"}}).inner({
+    make_status_label(),
+    El("table", {{"class","table table-borderless"}}).css("width","calc(100% - 106px)").inner({
       El("thead").inner({ El("tr").inner({ El("th").text("Process"), El("th").text("State")  }) }),
       El("tbody").inner(elements)
     })
@@ -129,9 +160,9 @@ void InstanceStateWidget::on_state_fetched(const Crails::Front::Ajax& ajax)
     IArchive              archive;
 
     archive.set_data(responseText);
-    state.clear();
-    state.serialize(archive);
-    render_state();
+    model->state.clear();
+    model->state.serialize(archive);
+    model->remote_state_changed.trigger();
   }
 }
 
@@ -140,7 +171,7 @@ void InstanceStateWidget::on_state_fetch_failed(const Crails::Front::Ajax& ajax)
   std::cout << "failed to fetch state" << std::endl;
   html("").inner({
     fetch_state_button,
-    make_configuration_state_label(),
+    make_status_label(),
     El("div").text("Failed to fetch instance state")
   });
 }

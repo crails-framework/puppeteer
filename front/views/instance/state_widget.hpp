@@ -4,7 +4,6 @@
 # include <crails/front/element.hpp>
 # include <crails/front/signal.hpp>
 # include "front/app/instances.hpp"
-# include "app/models/instance_state.hpp"
 # include "../utility/button.hpp"
 
 namespace Views
@@ -12,7 +11,6 @@ namespace Views
   class InstanceStateWidget : public Crails::Front::Element, Crails::Listener
   {
     std::shared_ptr<Puppeteer::Instance> model;
-    InstanceState state;
     Button fetch_state_button;
   public:
     InstanceStateWidget();
@@ -29,6 +27,7 @@ namespace Views
     void on_state_fetch_failed(const Crails::Front::Ajax&);
 
     Crails::Front::Element make_configuration_state_label();
+    Crails::Front::Element make_status_label();
   };
 }
 

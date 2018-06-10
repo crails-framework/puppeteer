@@ -58,8 +58,8 @@ public:
 private:
   std::vector<std::string> processes;
   std::vector<std::string> states;
-  bool                     needs_restart;
-  bool                     needs_configure;
+  bool                     needs_restart   = true;
+  bool                     needs_configure = true;
 };
 
 #endif

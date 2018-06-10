@@ -1,4 +1,25 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="10">
+    <alter-table name="Instance">
+      <add-column name="last_conf" type="TEXT" null="false"/>
+      <drop-column name="last_configure"/>
+    </alter-table>
+  </changeset>
+
+  <changeset version="9"/>
+
+  <changeset version="8">
+    <alter-table name="Recipe">
+      <add-column name="last_tip" type="TEXT" null="false"/>
+    </alter-table>
+    <alter-table name="Build">
+      <add-column name="last_build" type="BIGINT" null="false"/>
+    </alter-table>
+    <alter-table name="Instance">
+      <add-column name="last_start" type="BIGINT" null="false"/>
+    </alter-table>
+  </changeset>
+
   <changeset version="7">
     <add-table name="Credential" kind="object">
       <column name="id" type="BIGINT" null="false"/>

@@ -49,7 +49,7 @@ static bool is_same_repository(const std::string& path, const std::string& url)
   return false;
 }
 
-static void initialize_git_repository(const std::string& path, const std::string& url, const std::string& branch = "master")
+static std::string initialize_git_repository(const std::string& path, const std::string& url, const std::string& branch = "master")
 {
   boost::filesystem::path p(path);
   Git::Repository repository;
@@ -60,6 +60,7 @@ static void initialize_git_repository(const std::string& path, const std::string
     repository.clone(url, path);
   repository.checkout(branch, GIT_CHECKOUT_FORCE);
   repository.find_remote("origin")->pull();
+  return repository.get_tip_oid();
 }
 
 string Recipe::get_path() const
@@ -71,6 +72,7 @@ void Recipe::fetch_recipe()
 {
   string repository_path = get_path();
   string url = get_git_url();
+  string oid;
   auto   credential = get_credential();
 
   if (credential)
@@ -81,7 +83,8 @@ void Recipe::fetch_recipe()
   }
   if (!is_same_repository(repository_path, url))
     boost::filesystem::remove_all(repository_path);
-  initialize_git_repository(repository_path, url, get_git_branch());
+  oid = initialize_git_repository(repository_path, url, get_git_branch());
+  set_last_tip(oid);
 }
 
 static std::string generate_variable_file(const std::map<std::string, std::string>& variables)

@@ -22,4 +22,6 @@ void Crails::Router::initialize(void)
   SetRoute("POST", "/instances/:id/start",     InstanceController, restart);
   SetRoute("POST", "/instances/:id/restart",   InstanceController, restart);
   SetRoute("POST", "/instances/:id/stop",      InstanceController, stop);
+
+  SetRoute("POST", "/recipes/:id/fetch", RecipeController, fetch);
 }

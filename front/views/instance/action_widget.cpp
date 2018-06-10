@@ -43,7 +43,7 @@ void InstanceActionWidget::render()
     }),
     El("div", {{"class","progress mb-3"},{"style","margin-top:20px"}}).inner({progress_bar})
   });
-  button_deploy   .visible(model->get_state() != 1);
+  button_deploy   .visible(model->get_state() != 1 || model->state.get_needs_configure());
   button_uninstall.visible(model->get_state()  > 0);
   button_restart  .visible(model->get_state() != 0);
   button_stop     .visible(model->get_state() != 0);

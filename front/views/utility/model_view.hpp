@@ -35,8 +35,8 @@ namespace Views
       {
         this->model = _model;
         this->edit_link.attr("href", this->model->get_path() + "/edit");
-	title.text(model->get_name());
-	on_model_received();
+        title.text(model->get_name());
+        on_model_received();
       });
     }
 
