@@ -39,7 +39,12 @@ void InstanceStateWidget::activate(std::shared_ptr<Puppeteer::Instance> instance
 void InstanceStateWidget::render()
 {
   if (model->get_state() > 0)
-    fetch_state();
+  {
+    if (fetching_state)
+      render_state();
+    else
+      fetch_state();
+  }
   else
     render_uninstalled_state();
 }
@@ -52,6 +57,7 @@ void InstanceStateWidget::on_fetch_state_clicked(client::Event*)
 
 void InstanceStateWidget::fetch_state()
 {
+  fetching_state = true;
   Crails::Front::Ajax::query("GET", model->get_url() + "/state").callbacks({
     std::bind(&InstanceStateWidget::on_state_fetched,      this, std::placeholders::_1),
     std::bind(&InstanceStateWidget::on_state_fetch_failed, this, std::placeholders::_1)
@@ -164,6 +170,7 @@ void InstanceStateWidget::on_state_fetched(const Crails::Front::Ajax& ajax)
     model->state.serialize(archive);
     model->remote_state_changed.trigger();
   }
+  fetching_state = false;
 }
 
 void InstanceStateWidget::on_state_fetch_failed(const Crails::Front::Ajax& ajax)
@@ -174,4 +181,5 @@ void InstanceStateWidget::on_state_fetch_failed(const Crails::Front::Ajax& ajax)
     make_status_label(),
     El("div").text("Failed to fetch instance state")
   });
+  fetching_state = false;
 }

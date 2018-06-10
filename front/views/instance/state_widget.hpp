@@ -12,6 +12,7 @@ namespace Views
   {
     std::shared_ptr<Puppeteer::Instance> model;
     Button fetch_state_button;
+    bool fetching_state = false;
   public:
     InstanceStateWidget();
     void activate(std::shared_ptr<Puppeteer::Instance> instance);
