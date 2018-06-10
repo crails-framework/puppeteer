@@ -66,6 +66,8 @@ void InstanceController::fetch_state()
 
 void InstanceController::start()
 {
+  auto now = std::chrono::system_clock::now();
+
   open_ssh([this](Ssh::Session& ssh)
   {
     stringstream output;
@@ -73,6 +75,8 @@ void InstanceController::start()
 
     ssh.exec("monit start -g " + model->get_name(), stream);
   });
+  model->set_last_start(std::chrono::system_clock::to_time_t(now));
+  database.save(*model);
 }
 
 void InstanceController::stop()
