@@ -22,6 +22,7 @@ bool NginxPlugin::recipe_uses_plugin(const std::string& recipe_path) const
 
 void NginxPlugin::apply(const std::string& package, const std::string& recipe_folder, Instance& instance, const map<string,string>& variables, Sync::Stream& stream) const
 {
+  stream << '\n' << "## NGINX plugin\n";
   if (package == "setup")
     setup(recipe_folder, instance, variables, stream);
   else if (package == "uninstall")
@@ -32,7 +33,6 @@ void NginxPlugin::setup(const string& recipe_folder, Instance& instance, const m
 {
   std::string nginx_server_ip = Crails::getenv("NGINX_SERVER_IP");
 
-  stream << '\n' << "## NGINX plugin\n";
   if (nginx_server_ip.length())
   {
     std::string config = generate_file_from_template(recipe_folder + "/nginx.conf", variables);
@@ -53,7 +53,6 @@ void NginxPlugin::uninstall(const string& recipe_folder, Instance& instance, Syn
 {
   std::string nginx_server_ip = Crails::getenv("NGINX_SERVER_IP");
 
-  stream << '\n' << "## NGINX plugin\n";
   if (nginx_server_ip.length())
   {
     Ssh::Session ssh;
