@@ -4,6 +4,7 @@ project(puppeteer)
 option(ODB_WITH_PGSQL "enables pgsql support for crails-odb" ON)
 option(DEVELOPER_MODE "enable debugging tools" ON)
 option(WITH_NGINX     "build the nginx plugin" ON)
+option(WITH_GANDI     "build the gandi plugin" ON)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic ")
 
@@ -47,6 +48,9 @@ add_subdirectory(modules/odb)
 if (WITH_NGINX)
   add_subdirectory(modules/nginx)
 endif()
+if (WITH_GANDI)
+  add_subdirectory(modules/gandi)
+endif()
 
 add_library(crails-app SHARED ${crails_app})
 add_executable(server ${server_files})
@@ -67,6 +71,7 @@ set(dependencies crails-core${crails-suffix}
                  )
 
 # Custom dependencies (do not modify this line)
+set(dependencies ${dependencies} crails-xmlrpc${crails-suffix})
 set(dependencies ${dependencies} crails-sync${crails-suffix})
 set(dependencies ${dependencies} crails-sidekic${crails-suffix})
 set(dependencies ${dependencies} crails-front${crails-suffix})
