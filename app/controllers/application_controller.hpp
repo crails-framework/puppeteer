@@ -2,7 +2,7 @@
 # define APPLICATION_CONTROLLER_HPP
 
 # include <crails/server.hpp>
-# include "modules/odb/controller.hpp"
+# include <crails/odb/controller.hpp>
 
 class OArchive;
 

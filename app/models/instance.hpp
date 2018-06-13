@@ -1,7 +1,7 @@
 #ifndef  INSTANCE_HPP
 # define INSTANCE_HPP
 
-# include "modules/odb/model.hpp"
+# include <crails/odb/model.hpp>
 # include "lib/app/data/instance.hpp"
 
 class OArchive;

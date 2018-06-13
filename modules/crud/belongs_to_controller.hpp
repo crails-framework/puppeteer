@@ -4,7 +4,7 @@
 # include <crails/params.hpp>
 # include <memory>
 # include <string>
-# include "modules/odb/id_type.hpp"
+# include <crails/odb/id_type.hpp>
 # include "modules/crud/controller.hpp"
 
 namespace Crud
@@ -28,7 +28,7 @@ namespace Crud
       if (has_parent_id_param())
       {
         auto parent_id = Super::params["parent_id"].template as<Db::id_type>();
-        auto query = podb::query<PARENT>::id == parent_id;
+        auto query = odb::query<PARENT>::id == parent_id;
 
         if (!(Super::database.find_one(parent_resource, query)))
           Super::response["status"] = Super::ResponseStatus::not_found;

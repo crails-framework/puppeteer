@@ -1,10 +1,10 @@
 #include <crails/router.hpp>
+#include "lib/odb/application-odb.hxx"
 #include "controllers/machines.hpp"
 #include "controllers/instances.hpp"
 #include "controllers/builds.hpp"
 #include "controllers/recipes.hpp"
 #include "controllers/credentials.hpp"
-#include "lib/odb/application-odb.hxx"
 
 void Crails::Router::initialize(void)
 {

@@ -7,7 +7,7 @@
 # include "config/odb.hpp"
 # include <crails/datatree.hpp>
 # ifndef ODB_COMPILER
-#  include "modules/odb/connection.hpp"
+#  include <crails/odb/connection.hpp>
 # endif
 
 namespace odb

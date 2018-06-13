@@ -51,8 +51,8 @@ class DestroyGenerator < GeneratorBase
       source  = "#include \"#{include}\"\n"
       source += "#include \"lib/#{filename[0...-2]}queries.hpp\"\n"
       source += "#include \"app/models/helpers.hpp\"\n"
-      source += "#include \"modules/odb/any.hpp\"\n"
-      source += "#include \"modules/odb/connection.hpp\"\n"
+      source += "#include <crails/odb/any.hpp>\n"
+      source += "#include <crails/odb/connection.hpp>\n"
       source += "#include \"lib/odb/application-odb.hxx\"\n"
       source += (collect_includes_for filename).join "\n"
       source += "\n" + (data[:bodies].join "\n")

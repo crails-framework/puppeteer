@@ -1,6 +1,6 @@
 #include "app/models/instance.hpp"
 #include "lib/odb/application-odb.hxx"
-#include "modules/odb/connection.hpp"
+#include <crails/odb/connection.hpp>
 #include <crails/params.hpp>
 #include <crails/sync/task.hpp>
 

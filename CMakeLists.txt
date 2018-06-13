@@ -44,7 +44,6 @@ file(GLOB_RECURSE tests_files
 
 # Add your modules here (do not modify this line)
 add_subdirectory(modules/crud)
-add_subdirectory(modules/odb)
 if (WITH_NGINX)
   add_subdirectory(modules/nginx)
 endif()

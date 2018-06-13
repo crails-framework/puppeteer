@@ -1,7 +1,7 @@
 #ifndef  BUILD_HPP
 # define BUILD_HPP
 
-# include "modules/odb/model.hpp"
+# include <crails/odb/model.hpp>
 # include "lib/app/data/build.hpp"
 
 class OArchive;

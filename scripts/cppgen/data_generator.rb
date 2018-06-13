@@ -249,7 +249,7 @@ CPP
 # include <map>
 # include <string>
 # include <crails/datatree.hpp>
-# include "modules/odb/id_type.hpp"
+# include <crails/odb/id_type.hpp>
 #{collect_includes_for(filename, true).join "\n"}
 namespace odb { class access; }
 #{data[:headers].join ""}

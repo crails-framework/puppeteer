@@ -16,13 +16,13 @@ public:
   }
 
   template<typename MODEL>
-  void decorate_query(podb::query<MODEL>& query) const
+  void decorate_query(odb::query<MODEL>& query) const
   {
     if (enabled)
     {
       query = MODEL::default_order_by(query)
-        + "LIMIT"  + podb::query<MODEL>::_val(get_items_per_page())
-        + "OFFSET" + podb::query<MODEL>::_val(get_current_offset());
+        + "LIMIT"  + odb::query<MODEL>::_val(get_items_per_page())
+        + "OFFSET" + odb::query<MODEL>::_val(get_current_offset());
     }
   }
 

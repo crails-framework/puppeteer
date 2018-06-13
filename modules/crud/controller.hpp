@@ -20,7 +20,7 @@ namespace Crud
   class Controller : public ApplicationController
   {
   public:
-    typedef podb::query<QUERY_OBJECT> Query;
+    typedef odb::query<QUERY_OBJECT> Query;
 
     Controller(Crails::Params& params) :
       ApplicationController(params),
@@ -157,7 +157,7 @@ namespace Crud
       auto param_name = get_id_param_name();
       auto id = params[param_name].template as<Db::id_type>();
 
-      return database.find_one(model, podb::query<MODEL>::id == id);
+      return database.find_one(model, odb::query<MODEL>::id == id);
     }
 
     virtual bool find_models()

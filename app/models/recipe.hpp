@@ -1,7 +1,7 @@
 #ifndef  RECIPE_HPP
 # define RECIPE_HPP
 
-# include "modules/odb/model.hpp"
+# include <crails/odb/model.hpp>
 # include "lib/app/data/recipe.hpp"
 
 class OArchive;

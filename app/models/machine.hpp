@@ -1,7 +1,7 @@
 #ifndef  MACHINE_HPP
 # define MACHINE_HPP
 
-# include "modules/odb/model.hpp"
+# include <crails/odb/model.hpp>
 # include "lib/app/data/machine.hpp"
 
 class OArchive;
