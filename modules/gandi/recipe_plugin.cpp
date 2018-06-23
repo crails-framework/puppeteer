@@ -33,7 +33,6 @@ void GandiPlugin::setup(const string& recipe_folder, Instance& instance, const m
       auto records = api.domain_zone_record_list(domain_zone_id);
       bool has_matching_record = false;
       bool needs_update = true;
-      int new_zone_version;
 
       // Walking the record to check for an existing ZoneRecord
       stream << "matching subdomain `" << name << "` to `" << public_ip->second << "`\n";
@@ -53,13 +52,15 @@ void GandiPlugin::setup(const string& recipe_folder, Instance& instance, const m
         }
       }
 
-      // Creating the new zone file version
-      new_zone_version = api.domain_zone_version_new(domain_zone_id);
-
       if (!needs_update)
         stream << "no changes needed\n";
       else
       {
+        int new_zone_version;
+
+        // Creating the new zone file version
+        new_zone_version = api.domain_zone_version_new(domain_zone_id);
+
         // Performing the update/create (depending on whether a matching record has been found)
         if (has_matching_record)
           api.domain_zone_record_set(domain_zone_id, new_zone_version, records);
