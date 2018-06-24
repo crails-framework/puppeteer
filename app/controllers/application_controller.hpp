@@ -6,13 +6,13 @@
 
 class OArchive;
 
-class ApplicationController : public Odb::Controller
+class ApplicationController : public ODB::Controller
 {
 protected:
   typedef Crails::Server::HttpCodes ResponseStatus;
 
 public:
-  ApplicationController(Crails::Params& params) : Odb::Controller(params)
+  ApplicationController(Crails::Params& params) : ODB::Controller(params)
   {}
 
   bool must_protect_from_forgery(void) const { return false; }

@@ -52,7 +52,7 @@ class DestroyGenerator < GeneratorBase
       source += "#include \"lib/#{filename[0...-2]}queries.hpp\"\n"
       source += "#include \"app/models/helpers.hpp\"\n"
       source += "#include <crails/odb/any.hpp>\n"
-      source += "#include <crails/odb/connection.hpp>\n"
+      source += "#include <#{GeneratorBase.odb_connection[:include]}>\n"
       source += "#include \"lib/odb/application-odb.hxx\"\n"
       source += (collect_includes_for filename).join "\n"
       source += "\n" + (data[:bodies].join "\n")
@@ -64,13 +64,13 @@ class DestroyGenerator < GeneratorBase
     DestroyGenerator.my_prepare if DestroyGenerator.destroy_data.nil?
     @finalclass = object[:classname]
     @klassname = get_classname(object)
-    _append "void #{@klassname}::on_dependent_destroy(Db::id_type self_id)"
+    _append "void #{@klassname}::on_dependent_destroy(ODB::id_type self_id)"
     _append "{"
     unless object[:classname].nil?
       @indent += 1
       depended_by = DestroyGenerator.destroy_data[object[:classname]]
       if depended_by.class == Array
-        _append "auto& database = *Db::Connection::instance;"
+        _append "auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
         depended_by.each do |relation|
           _append "// #{relation[:class]}"
           _append "{"
@@ -146,11 +146,11 @@ class DestroyGenerator < GeneratorBase
       _append "}"
     else
       _append "typedef odb::query<#{relation[:class]}> Query;"
-      _append "std::vector<Db::id_type> ids = { self_id };"
+      _append "std::vector<ODB::id_type> ids = { self_id };"
       _append "odb::result<#{relation[:class]}> models;"
       _append "Query query;\n"
       id_field = "#{get_singular_name relation[:field]}_ids"
-      _append "query = Query::#{id_field} + \"@>\" + odb::array_to_string(ids, \"int\");"
+      _append "query = Query::#{id_field} + \"@>\" + ODB::array_to_string(ids, \"int\");"
       _append "database.find<#{relation[:class]}>(models, query);"
       _append "for (auto model : odb::to_vector<#{relation[:class]}>(models))"
       _append "{"

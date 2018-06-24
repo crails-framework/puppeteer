@@ -105,7 +105,7 @@ class EditGenerator < GeneratorBase
       if options[:joined] == false
         _append "#{tptr} #{@klassname}::get_#{name}()"
         _append "{"
-        _append "  auto& database = *Db::Connection::instance;"
+        _append "  auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
         _append "  #{tptr} result;\n"
         _append "  database.find_one(result, #{name}_id);"
         _append "  return result;"
@@ -115,7 +115,7 @@ class EditGenerator < GeneratorBase
         _append "  #{name}_id = v->get_id();"
         _append "}\n"
       else
-        _append "Db::id_type #{@klassname}::get_#{name}_id() const"
+        _append "ODB::id_type #{@klassname}::get_#{name}_id() const"
         _append "{"
         _append "  return #{name} ? #{name}->get_id() : 0;"
         _append "}\n"
@@ -123,7 +123,7 @@ class EditGenerator < GeneratorBase
     elsif @rendering_validations
       if not options[:validate].nil?
         if options[:joined] == false
-          validation "Db::id_type", "#{name}_id", options[:validate]
+          validation "ODB::id_type", "#{name}_id", options[:validate]
         else
           validation tptr, name, options[:validate]
         end
@@ -137,9 +137,9 @@ class EditGenerator < GeneratorBase
         _append "    set_#{name}(nullptr);"
         _append "  else if (!get_#{name}() || #{data_id} != get_#{name}()->get_id())"
         _append "  {"
-        _append "    auto& database = *Db::Connection::instance;"
+        _append "    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
         _append "    #{tptr} linked_resource;"
-        _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<Db::id_type>());"
+        _append "    database.find_one(linked_resource, data[\"#{name}_id\"].as<ODB::id_type>());"
         _append "    set_#{name}(linked_resource);"
         _append "  }"
         _append "}"
@@ -157,7 +157,7 @@ class EditGenerator < GeneratorBase
       else
         _id_based_has_many type, name, options
       end
-      _append "void #{@klassname}::collect_#{name}(std::map<Db::id_type, #{ptr_type type}>& results)"
+      _append "void #{@klassname}::collect_#{name}(std::map<ODB::id_type, #{ptr_type type}>& results)"
       _append "{"
       @indent += 1
       _append "for (auto model : get_#{name}())"
@@ -231,7 +231,7 @@ class EditGenerator < GeneratorBase
     _append "void #{@klassname}::remove_#{singular_name}(const #{type}& v)"
     _append "{"
     @indent += 1
-    _append "auto it = remove_if(#{singular_name}_ids.begin(), #{singular_name}_ids.end(), [v](Db::id_type id)"
+    _append "auto it = remove_if(#{singular_name}_ids.begin(), #{singular_name}_ids.end(), [v](ODB::id_type id)"
     _append "{"
     @indent += 1
     _append "return id == v.get_id();"
@@ -258,11 +258,11 @@ class EditGenerator < GeneratorBase
     _append "{"
     @indent += 1
     _append "typedef podb::query<#{type}> query;"
-    _append "auto& database = *Db::Connection::instance;"
+    _append "auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;"
     _append "odb::result<#{type}> results;"
     _append "#{name}.clear();"
     _append "database.find<#{type}>(results,"
-    _append "  query::id + \"=\" + odb::any(#{singular_name}_ids, \"int\")"
+    _append "  query::id + \"=\" + ODB::any(#{singular_name}_ids, \"int\")"
     _append ");"
     _append "for (auto model : results)"
     _append "  #{name}.push_back(std::make_shared<#{type}>(model));"
@@ -283,7 +283,7 @@ class EditGenerator < GeneratorBase
       source  = "#include \"#{include}\"\n"
       source += "#include \"app/models/helpers.hpp\"\n"
       source += "#include <crails/odb/any.hpp>\n"
-      source += "#include <crails/odb/connection.hpp>\n"
+      source += "#include <#{GeneratorBase.odb_connection[:include]}>\n"
       source += "#include \"lib/odb/application-odb.hxx\"\n"
       source += (collect_includes_for filename).join "\n"
       source += "\n" + (data[:bodies].join "\n")

@@ -19,7 +19,7 @@ class ViewGenerator < GeneratorBase
     reset
     @declarations << "#include \"#{object[:header]}\"\n"
     @declarations << "#{object[:classname]}& @model;"
-    property "Db::id_type", "id"
+    property "ODB::id_type", "id"
     self.instance_eval &object[:block]
     @src
   end

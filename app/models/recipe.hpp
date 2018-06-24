@@ -1,7 +1,7 @@
 #ifndef  RECIPE_HPP
 # define RECIPE_HPP
 
-# include <crails/odb/model.hpp>
+# include "model.hpp"
 # include "lib/app/data/recipe.hpp"
 
 class OArchive;
@@ -10,7 +10,7 @@ class Instance;
 namespace Sync { class Task; class Stream; }
 
 # pragma db object pointer(std::shared_ptr)
-class Recipe : public Db::Model, public ModelData::Recipe
+class Recipe : public Model, public ModelData::Recipe
 {
   odb_instantiable()
 public:

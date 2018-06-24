@@ -17,6 +17,8 @@ class GeneratorBase
   def self.is_file_based? ; true ; end
 
   class << self
+    attr_accessor :odb_connection
+
     def prepare inputs_dir, output_dir
       @output_dir = output_dir
       Includes.list ||= {}

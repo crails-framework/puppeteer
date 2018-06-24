@@ -21,16 +21,16 @@ class ImportGenerator < GeneratorBase
 struct #{@klassimp}
 {
   typedef std::shared_ptr<#{@klassname}>  EntryPtr;
-  typedef std::map<Db::id_type, EntryPtr> EntryMap;
+  typedef std::map<ODB::id_type, EntryPtr> EntryMap;
 
   void import(const Csv::Document& document)
   {
-    typedef std::pair<Db::id_type, EntryPtr> MapItem;
-    auto db = Db::Connection::instance;
+    typedef std::pair<ODB::id_type, EntryPtr> MapItem;
+    auto db = #{GeneratorBase.odb_connection[:object]}::instance;
 
     for (const auto& row : document)
     {
-      auto id = boost::lexical_cast<Db::id_type>(row.get("id"));
+      auto id = boost::lexical_cast<ODB::id_type>(row.get("id"));
       auto model = std::make_shared<#{@klassname}>();
 
 #{@import_properties_src}
@@ -96,14 +96,14 @@ struct #{@klassimp}
   def has_one type, name, options = {}
     # IMPORT
     @import_hasone_src += %{
-  void import_#{name}(const Csv::Document& document, std::map<Db::id_type, std::shared_ptr<#{type}> > entries)
+  void import_#{name}(const Csv::Document& document, std::map<ODB::id_type, std::shared_ptr<#{type}> > entries)
   {
     if (document.has_column("#{name}"))
     {
       for (const auto& row : document)
       {
-        auto id = boost::lexical_cast<Db::id_type>(row.get("id"));
-        auto rel_id = boost::lexical_cast<Db::id_type>(row.get("#{name}"));
+        auto id = boost::lexical_cast<ODB::id_type>(row.get("id"));
+        auto rel_id = boost::lexical_cast<ODB::id_type>(row.get("#{name}"));
         auto rel  = entries[rel_id];
 
         if (rel_id != 0 && rel == nullptr)
@@ -117,7 +117,7 @@ struct #{@klassimp}
         }
         else if (rel_id != 0)
         {
-          auto database = Db::Connection::instance;
+          auto database = #{GeneratorBase.odb_connection[:object]}::instance;
           auto self = this->entries[id];
           self->set_#{name}(rel);
           database->save(*self);
@@ -138,23 +138,23 @@ struct #{@klassimp}
     # IMPORT
     singular_name = get_singular_name name
     @import_hasmany_src += %{
-  void import_#{name}(const Csv::Document& document, std::map<Db::id_type, std::shared_ptr<#{type}> > entries)
+  void import_#{name}(const Csv::Document& document, std::map<ODB::id_type, std::shared_ptr<#{type}> > entries)
   {
     if (document.has_column("#{singular_name}_ids"))
     {
       for (const auto& row : document)
       {
-        auto id = boost::lexical_cast<Db::id_type>(row.get("id"));
+        auto id = boost::lexical_cast<ODB::id_type>(row.get("id"));
         auto rel_ids = Crails::split(row.get("#{singular_name}_ids"), '#{ARRAY_SEP}');
 
         if (rel_ids.size() > 0)
         {
-          auto database = Db::Connection::instance;
+          auto database = #{GeneratorBase.odb_connection[:object]}::instance;
           auto self = this->entries[id];
 
           for (auto rel_id : rel_ids)
           {
-            auto rel = entries[boost::lexical_cast<Db::id_type>(rel_id)];
+            auto rel = entries[boost::lexical_cast<ODB::id_type>(rel_id)];
 
 	    if (rel != nullptr)
               self->add_#{singular_name}(rel);
@@ -204,7 +204,7 @@ struct #{@klassimp}
 # include <csv/writer.hpp>
 # include <boost/lexical_cast.hpp>
 # include <crails/utils/string.hpp>
-# include "modules/odb/connection.hpp"
+# include <#{GeneratorBase.odb_connection[:include]}>
 
 #{data[:headers].join ""}
 

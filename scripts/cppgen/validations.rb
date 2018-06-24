@@ -24,7 +24,7 @@ def validate_uniqueness source_type, type, name
   if type.start_with?("std::shared_ptr")
 <<CPP
   {
-    auto& database = *Db::Connection::instance;
+    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;
     odb::result<#{source_type}> results;
 
     database.find(results, odb::query<#{source_type}::#{name}->id == get_#{name}_id());
@@ -35,7 +35,7 @@ CPP
   else
 <<CPP
   {
-    auto& database = *Db::Connection::instance;
+    auto& database = *#{GeneratorBase.odb_connection[:object]}::instance;
     odb::result<#{source_type}> results;
 
     database.find(results, odb::query<#{source_type}::#{name} == #{name});
@@ -57,7 +57,7 @@ CPP
 if (#{name} == nullptr)
   errors["#{name}_id"]["t"] = "validate.required";
 CPP
-  elsif type == "Db::id_type"
+  elsif type == "ODB::id_type"
 <<CPP
 if (#{name} == 0)
   errors["#{name}"]["t"] = "validate.required";

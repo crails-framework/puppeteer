@@ -55,7 +55,7 @@ class QueryGenerator < GeneratorBase
   struct #{query_object}
   {
     std::string get_database_name() const { return #{type}().get_database_name(); }
-    Db::id_type get_id() const { return self ? self->get_id() : 0; }
+    ODB::id_type get_id() const { return self ? self->get_id() : 0; }
     std::shared_ptr<#{@finalklass}> self;
     operator #{@finalklass}() const { return *self; }
 

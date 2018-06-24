@@ -1,14 +1,14 @@
 #ifndef  MACHINE_HPP
 # define MACHINE_HPP
 
-# include <crails/odb/model.hpp>
+# include "model.hpp"
 # include "lib/app/data/machine.hpp"
 
 class OArchive;
 class IArchive;
 
 # pragma db object pointer(std::shared_ptr)
-class Machine : public Db::Model, public ModelData::Machine
+class Machine : public Model, public ModelData::Machine
 {
   odb_instantiable()
 public:

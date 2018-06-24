@@ -1,12 +1,4 @@
-require 'cppgen/data_generator'
-require 'cppgen/edit_generator'
-require 'cppgen/view_generator'
-require 'cppgen/destroy_generator'
-require 'cppgen/aurelia_generator'
-require 'cppgen/import_generator'
-require 'cppgen/query_generator'
-require 'cppgen/front_generator'
-require 'cppgen/archive_generator'
+require 'cppgen/generator_base'
 
 Dir["config/**/*.rb"].each do |file|
   require "#{Dir.pwd}/#{file}"
@@ -16,16 +8,21 @@ module ::Guard
   class Models < Plugin
     def initialize options = {}
       super
-      @input      = options[:input]
-      @output     = options[:output]
-      @generators = options[:generators]
-      @input      = [@input] if @input.class != Array
-      @tmpdir     = ".tmp"
+      @input          = options[:input]
+      @output         = options[:output]
+      @generators     = options[:generators]
+      @odb_connection = options[:odb_connection] || { object: "ODB::Connection", include: "crails/odb/connection.hpp" }
+      @input          = [@input] if @input.class != Array
+      @tmpdir         = ".tmp"
     end
 
     def run_all
+      @generators.each do |generator|
+        require "cppgen/#{generator.to_s}_generator"
+      end
       `rm -Rf #{@tmpdir}`
       GeneratorBase.prepare @input, @tmpdir
+      GeneratorBase.odb_connection = @odb_connection
       @generators.each do |generator|
         const_name = generator.to_s.capitalize + "Generator"
         klass      = Kernel.const_get const_name

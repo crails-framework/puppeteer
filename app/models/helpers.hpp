@@ -75,7 +75,7 @@ bool update_id_list(
   {
     std::shared_ptr<MODEL> model;
 
-    if (!Db::Connection::instance->find_one(model, podb::query<MODEL>::id == id))
+    if (!ODB::Connection::instance->find_one(model, podb::query<MODEL>::id == id))
       return false;
     model_list.push_back(id);
   }
@@ -112,7 +112,7 @@ bool update_id_list(
   {
     std::shared_ptr<MODEL> model;
 
-    if (!Db::Connection::instance->find_one(model, podb::query<MODEL>::id == id))
+    if (!ODB::Connection::instance->find_one(model, podb::query<MODEL>::id == id))
       return false;
     model_list.push_back(model);
   }

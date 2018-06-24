@@ -63,7 +63,7 @@ class DataGenerator < GeneratorBase
     _append "virtual std::vector<std::string> find_missing_parameters(Data) const;"
     _append "virtual void                     edit(Data);"
     _append "virtual bool                     is_valid();"
-    _append "virtual void                     on_dependent_destroy(Db::id_type);\n"
+    _append "virtual void                     on_dependent_destroy(ODB::id_type);\n"
   end
 
   def prepare_order_by
@@ -157,24 +157,24 @@ class DataGenerator < GeneratorBase
       with_visibility :public do
         _append "#{virt}#{tptr} get_#{name}() const { return #{name}; }"
         _append "#{virt}void set_#{name}(#{tptr} v) { this->#{name} = v; }"
-        _append "#{virt}Db::id_type get_#{name}_id() const;"
+        _append "#{virt}ODB::id_type get_#{name}_id() const;"
       end
       _append "#{tptr} #{name};"
     else
       with_visibility :public do
         _append "#{virt}#{tptr} get_#{name}();"
         _append "#{virt}void set_#{name}(#{tptr} v);"
-        _append "Db::id_type get_#{name}_id() const { return #{name}_id; }"
-        _append "void set_#{name}_id(Db::id_type v) { #{name}_id = v; }"
+        _append "ODB::id_type get_#{name}_id() const { return #{name}_id; }"
+        _append "void set_#{name}_id(ODB::id_type v) { #{name}_id = v; }"
       end
       make_pragma_db options[:db] unless options[:db].nil?
-      _append "Db::id_type #{name}_id;"
+      _append "ODB::id_type #{name}_id;"
     end
     with_visibility :public do
       _append <<CPP
 
     template<typename ARRAY>
-    static void collect_#{name}(ARRAY& array, std::map<Db::id_type, #{tptr} >& results)
+    static void collect_#{name}(ARRAY& array, std::map<ODB::id_type, #{tptr} >& results)
     {
       for (auto model : array)
       {
@@ -198,7 +198,7 @@ CPP
       _append "#{virt}bool update_#{name}(Data);"
       _append "#{virt}void add_#{singular_name}(#{tptr});"
       _append "#{virt}void remove_#{singular_name}(const #{type}&);"
-      _append "#{virt}void collect_#{name}(std::map<Db::id_type, #{tptr} >&);"
+      _append "#{virt}void collect_#{name}(std::map<ODB::id_type, #{tptr} >&);"
     end
     if options[:joined] != false
       _join_based_has_many list_type, name, options
@@ -216,7 +216,7 @@ CPP
 
   def _id_based_has_many list_type, name, options
     singular_name = get_singular_name name
-    store_type = "std::vector<Db::id_type>"
+    store_type = "std::vector<ODB::id_type>"
     with_visibility :public do
       _append "const #{store_type}& get_#{singular_name}_ids() const { return #{singular_name}_ids; }"
       _append "const #{list_type}& get_#{name}();"

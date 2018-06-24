@@ -1,14 +1,14 @@
 #ifndef  BUILD_HPP
 # define BUILD_HPP
 
-# include <crails/odb/model.hpp>
+# include "model.hpp"
 # include "lib/app/data/build.hpp"
 
 class OArchive;
 class IArchive;
 
 # pragma db object pointer(std::shared_ptr)
-class Build : public Db::Model, public ModelData::Build
+class Build : public Model, public ModelData::Build
 {
   odb_instantiable()
 public:

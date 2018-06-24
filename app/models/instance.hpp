@@ -1,7 +1,7 @@
 #ifndef  INSTANCE_HPP
 # define INSTANCE_HPP
 
-# include <crails/odb/model.hpp>
+# include "model.hpp"
 # include "lib/app/data/instance.hpp"
 
 class OArchive;
@@ -10,7 +10,7 @@ namespace Ssh { class Session; }
 namespace Sync { class Task; }
 
 # pragma db object pointer(std::shared_ptr)
-class Instance : public Db::Model, public ModelData::Instance
+class Instance : public Model, public ModelData::Instance
 {
   odb_instantiable()
 public:

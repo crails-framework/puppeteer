@@ -155,7 +155,7 @@ namespace Crud
     virtual bool find_model()
     {
       auto param_name = get_id_param_name();
-      auto id = params[param_name].template as<Db::id_type>();
+      auto id = params[param_name].template as<ODB::id_type>();
 
       return database.find_one(model, odb::query<MODEL>::id == id);
     }
