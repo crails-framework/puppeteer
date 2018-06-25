@@ -1,4 +1,5 @@
 #include "recipe.hpp"
+#include "app/models/variable_set.hpp"
 #include "lib/odb/application-odb.hxx"
 #include <crails/getenv.hpp>
 #include <crails/utils/string.hpp>
@@ -136,6 +137,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
     {
       auto scp = ssh.make_scp_session(remote_package_folder, SSH_SCP_WRITE);
 
+      VariableSet::collect_global_variables(variables);
       instance.collect_variables(variables);
       build->collect_variables(variables);
       variables["MACHINE_IP"] = machine->get_ip();

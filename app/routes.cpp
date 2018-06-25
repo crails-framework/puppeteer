@@ -5,6 +5,7 @@
 #include "controllers/builds.hpp"
 #include "controllers/recipes.hpp"
 #include "controllers/credentials.hpp"
+#include "controllers/variable_sets.hpp"
 
 void Crails::Router::initialize(void)
 {
@@ -28,4 +29,8 @@ void Crails::Router::initialize(void)
   SetRoute("GET",  "/builds/:id/builds",  BuildController, builds);
   SetRoute("POST", "/builds/:id/enable",  BuildController, enable);
   SetRoute("POST", "/builds/:id/disable", BuildController, disable);
+
+  SetRoute("GET",  "/variables", VariableSetController, show);
+  SetRoute("POST", "/variables", VariableSetController, update);
+  SetRoute("PUT",  "/variables", VariableSetController, update);
 }

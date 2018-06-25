@@ -15,6 +15,7 @@
 #include "views/credentials.hpp"
 #include "views/credential.hpp"
 #include "views/credential_new.hpp"
+#include "views/variable_set_new.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <iostream>
@@ -69,6 +70,14 @@ void Puppeteer::Router::initialize()
   make_routes_for<Views::Instances,   Views::Instance,   Views::InstanceNew>  (*this, "/instances");
   make_routes_for<Views::Recipes,     Views::Recipe,     Views::RecipeNew>    (*this, "/recipes");
   make_routes_for<Views::Credentials, Views::Credential, Views::CredentialNew>(*this, "/credentials");
+
+  match("/variables", [](const Params& params)
+  {
+    auto* view = new Views::VariableSetForm;
+
+    MainView::instance->attach(*view);
+    view->activate(0);
+  });
 
   Crails::Front::Router::initialize();
 }

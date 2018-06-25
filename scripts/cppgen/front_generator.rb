@@ -83,7 +83,7 @@ class FrontGenerator < GeneratorBase
     elsif @state == :public_scope
       _append "#{type} get_#{name}() const { return #{name}; }"
       if options[:read_only] != true
-        _append "void set_#{name}(#{type} value) { #{name} = value; }"
+        _append "void set_#{name}(#{type} _value) { #{name} = _value; }"
       end
     elsif @state == :serialize
       @src += " & #{name}"

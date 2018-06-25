@@ -1,4 +1,19 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="11">
+    <add-table name="VariableSet" kind="object">
+      <column name="id" type="BIGINT" null="false"/>
+      <column name="deleted" type="BOOLEAN" null="false" default="FALSE"/>
+      <column name="created_at" type="BIGINT" null="true"/>
+      <column name="updated_at" type="BIGINT" null="true"/>
+      <column name="value" type="TEXT" null="false"/>
+      <column name="owner_type" type="SMALLINT" null="false"/>
+      <column name="owner_id" type="BIGINT" null="false"/>
+      <primary-key auto="true">
+        <column name="id"/>
+      </primary-key>
+    </add-table>
+  </changeset>
+
   <changeset version="10">
     <alter-table name="Instance">
       <add-column name="last_conf" type="TEXT" null="false"/>
