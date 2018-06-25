@@ -21,10 +21,10 @@ namespace Crud
       {
         IArchive archive;
 
-	archive.set_data(archive_data.as<std::string>());
+        archive.set_data(archive_data.as<std::string>());
         Super::model->serialize(archive);
         Super::model->on_change();
-	return Super::validate();
+        return Super::validate();
       }
       return Super::edit_model(data);
     }

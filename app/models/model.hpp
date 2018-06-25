@@ -3,7 +3,7 @@
 
 # include <crails/odb/model.hpp>
 
-# pragma db abstract
+# pragma db object abstract
 class Model : public ODB::Model
 {
 public:
