@@ -65,9 +65,9 @@ set(dependencies crails-core${crails-suffix}
                  ${Boost_LIBRARIES}
                  pthread dl crypto ssl
                  ${CPPNETLIB_LIBRARIES}
-		 odb-pgsql
                  ${dependencies}
-                 )
+		 odb-pgsql
+)
 
 # Custom dependencies (do not modify this line)
 set(dependencies ${dependencies} crails-xmlrpc${crails-suffix})
@@ -78,13 +78,14 @@ set(dependencies ${dependencies} crails-odb${crails-suffix})
 set(dependencies ${dependencies} odb)
 set(dependencies ${dependencies} ssh)
 set(dependencies ${dependencies} git2)
+set(dependencies ${dependencies} ${Boost_LIBRARIES})
 
 target_link_libraries(server ${dependencies})
 target_link_libraries(tests  crails-tests${crails-suffix} ${dependencies})
 
 if (ODB_WITH_PGSQL)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DODB_WITH_PGSQL")
-  #set(dependencies ${dependencies} odb-pgsql)
+  #  set(dependencies ${dependencies} odb-pgsql)
 endif()
 
 add_subdirectory(tasks/odb_migrate)
