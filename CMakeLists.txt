@@ -9,7 +9,7 @@ option(WITH_GANDI     "build the gandi plugin" ON)
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic ")
 
 find_package(cppnetlib REQUIRED)
-find_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)
+find_package(Boost COMPONENTS thread filesystem program_options system random date_time REQUIRED)
 
 include_directories(include /usr/local/include ${CPPNETLIB_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} .)
 link_directories(/usr/local/lib /usr/local/lib64 /usr/lib/odb /usr/local/lib/odb /usr/lib/x86_64-linux-gnu)
