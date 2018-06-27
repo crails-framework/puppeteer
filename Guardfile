@@ -3,7 +3,7 @@ $: << "#{Dir.pwd}/scripts"
 $: << "#{Dir.pwd}"
 
 group :before_compile do
-  guard 'crails-archive'
+#  guard 'crails-archive'
 
   guard 'crails-cheerp', include_paths: ["/usr/local/include","."],
     sourcemap_output: "public/assets/application.js.map",
