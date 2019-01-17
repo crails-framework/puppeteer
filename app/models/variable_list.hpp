@@ -4,6 +4,7 @@
 # include <string>
 # include <map>
 # include <crails/utils/string.hpp>
+# include <crails/front/exception.hpp>
 
 class VariableList : public std::string
 {
@@ -33,13 +34,7 @@ public:
       if (subparts.size() == 2)
         map[*subparts.begin()] = *subparts.rbegin();
       else
-      {
-#ifndef __CHEERP_CLIENT__
-        throw std::runtime_error("invalid variable list string");
-#else
-        __asm__("throw 'invalid variable list string';");
-#endif
-      }
+        Crails::raise(std::runtime_error("invalid variable list string"));
     }
   }
 

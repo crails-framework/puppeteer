@@ -28,9 +28,13 @@ public:
     Dirty       = 2
   };
 
+  std::string get_url()  const { return get_model_url(*this); }
+  std::string get_path() const { return '#' + get_url(); }
+
   void serialize(OArchive&);
   void serialize(IArchive&);
 
+# ifndef __CHEERP_CLIENT__
   void collect_variables(std::map<std::string,std::string>&) const;
   void configure(Sync::Task&);
   void uninstall(Sync::Task&);
@@ -38,6 +42,7 @@ public:
 
   bool needs_restart();
   bool needs_configure();
+#endif
 };
 
 #endif

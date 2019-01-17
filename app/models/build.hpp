@@ -19,10 +19,14 @@ public:
     size_t value;
   };
 
-  static const std::string builds_path;
+  std::string get_url()  const { return get_model_url(*this); }
+  std::string get_path() const { return '#' + get_url(); }
 
   void serialize(OArchive&);
   void serialize(IArchive&);
+
+# ifndef __CHEERP_CLIENT__
+  static const std::string builds_path;
 
   void on_change();
   void update_last_build();
@@ -31,6 +35,7 @@ public:
   void collect_variables(std::map<std::string,std::string>&);
   std::string get_build_path() const;
   std::string get_build_config();
+# endif
 };
 
 #endif

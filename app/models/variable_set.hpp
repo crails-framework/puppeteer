@@ -19,11 +19,17 @@ public:
     size_t value;
   };
 
+  std::string get_url()  const { return get_model_url(*this); }
+  std::string get_path() const { return '#' + get_url(); }
+
   void serialize(OArchive&);
   void serialize(IArchive&);
 
   void collect_variables(std::map<std::string,std::string>& variables) const;
+
+# ifndef __CHEERP_CLIENT__
   static void collect_global_variables(std::map<std::string,std::string>& variables);
+# endif
 };
 
 #endif

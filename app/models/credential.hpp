@@ -19,12 +19,17 @@ public:
     size_t value;
   };
 
+  std::string get_url()  const { return get_model_url(*this); }
+  std::string get_path() const { return '#' + get_url(); }
+
   void serialize(OArchive&);
   void serialize(IArchive&);
 
-  void on_change();
-
   std::string get_jenkins_id() const;
+
+# ifndef __CHEERP_CLIENT__
+  void on_change();
+# endif
 };
 
 #endif

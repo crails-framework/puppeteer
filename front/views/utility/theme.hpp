@@ -28,12 +28,21 @@ namespace Views
 
     static Crails::Front::Element responsive_table(Crails::Front::Element& thead, Crails::Front::Element& tbody)
     {
-      return El("div", {{"class","table-responsive table--no-card m-b-40"}}).inner({
-        El("table", {{"class","table table-borderless table-striped table-earning"}}).inner({
-          thead,
-	  tbody
-	})
+      return _card(El("div"), thead, tbody);
+    }
+
+    static Crails::Front::Element _card(Crails::Front::Element self, const std::string& title, Crails::Front::Element& content)
+    {
+      self.add_class("card");
+      self.inner({
+        El("div", {{"class", "card-header"}}).inner({
+          El("strong").text(title)
+        }),
+        El("div", {{"class", "card-body card-block"}}).inner({
+          content
+        })
       });
+      return self;
     }
 
     static Crails::Front::Element card(const std::string& title, Crails::Front::Element& content)

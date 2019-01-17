@@ -2,6 +2,8 @@
 
 using namespace Views;
 
+typedef Crails::Front::Element El;
+
 VariableListEditor::VariableListEditor()
 {
   button_add.text("Add variable");
@@ -16,7 +18,8 @@ void VariableListEditor::render()
 
   inputs.clear();
   View::render();
-  el.html("");
+  html("");
+  event_listeners.clear();
 
   if (!read_only)
     variable_map[""] = "";
@@ -39,8 +42,10 @@ void VariableListEditor::render()
     }
     else
     {
-      bind_event_listener(label, "change", std::bind(&VariableListEditor::on_change, this, std::placeholders::_1));
-      bind_event_listener(value, "change", std::bind(&VariableListEditor::on_change, this, std::placeholders::_1));
+      label.events->on("change", [this](client::Event* e) { on_change(e); });
+      value.events->on("change", [this](client::Event* e) { on_change(e); });
+      event_listeners.push_back(label.events);
+      event_listeners.push_back(value.events);
     }
   }
   if (!read_only)
@@ -52,7 +57,7 @@ void VariableListEditor::render()
     );
     fields.push_back(El("div",{{"style","clear:both;"}}));
   }
-  el.inner(fields);
+  inner(fields);
 }
 
 

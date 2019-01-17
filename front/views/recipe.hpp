@@ -69,9 +69,7 @@ namespace Views
     void on_fetched(const Crails::Front::Ajax&)
     {
       std::cout << "recipe fetched" << std::endl;
-      model->fetch({
-        [this](const Crails::Front::Ajax&) { render(); }
-      });
+      model->fetch().then([this]() { render(); });
     }
 
     void on_fetch_failed(const Crails::Front::Ajax&)

@@ -2,13 +2,13 @@
 # define FRONT_MACHINES_HPP
 
 # include "model.hpp"
-# include "data/machine.hpp"
+# include "app/models/machine.hpp"
 # include <crails/front/mvc/collection.hpp>
 # include <sstream>
 
 namespace Puppeteer
 {
-  class Machine : public MachineData
+  class Machine : public ::Machine
   {
   public:
     model_class("machines")

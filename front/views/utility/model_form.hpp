@@ -28,7 +28,7 @@ namespace Views
       Crails::Front::Element col_lg_12;
 
       col_lg_12.add_class("col-lg-12");
-      el.inner({
+      inner({
         El("div", {{"class","container-fluid"}}).inner({
           El("div", {{"class", "row"}}).inner({
             col_lg_12
@@ -76,19 +76,16 @@ namespace Views
     void save_clicked(client::Event*)
     {
       update_model_attributes();
-      model->save({
-        std::bind(&ModelForm<MODEL>::on_saved,       this, std::placeholders::_1),
-        std::bind(&ModelForm<MODEL>::on_save_failed, this, std::placeholders::_1)
-      });
+      model->save().then([this]() { on_saved(); });
     }
 
-    virtual void on_saved(const Crails::Front::Ajax&)
+    virtual void on_saved()
     {
 	    std::cout << "Gonna navigate to path " << model->get_path() << std::endl;
       Puppeteer::Router::instance->navigate(model->get_path(), true);
     }
 
-    virtual void on_save_failed(const Crails::Front::Ajax&)
+    virtual void on_save_failed()
     {
     }
   };

@@ -19,8 +19,8 @@ namespace Views
       title_controls.inner({edit_link});
 
       title = El("h3");
-      el.add_class("container-fluid");
-      el.inner({
+      add_class("container-fluid");
+      inner({
         Theme::title1(El("div").inner({
           El("h2", {{"class","title-1"}}).text(type_title),
           title

@@ -76,7 +76,7 @@ void Puppeteer::Router::initialize()
     auto* view = new Views::VariableSetForm;
 
     MainView::instance->attach(*view);
-    view->activate(0);
+    ((Views::ModelForm<Puppeteer::VariableSet>*)view)->activate(0);
   });
 
   Crails::Front::Router::initialize();

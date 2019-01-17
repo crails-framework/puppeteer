@@ -2,13 +2,13 @@
 # define FRONT_CREDENTIALS_HPP
 
 # include "model.hpp"
-# include "data/credential.hpp"
+# include "app/models/credential.hpp"
 # include <crails/front/mvc/collection.hpp>
 # include <sstream>
 
 namespace Puppeteer
 {
-  class Credential : public CredentialData
+  class Credential : public ::Credential
   {
   public:
     model_class("credentials")

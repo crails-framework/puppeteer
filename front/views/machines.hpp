@@ -19,7 +19,7 @@ namespace Views
     void attached()
     {
       std::cout << "machine view attached maggle" << std::endl;
-      auto list = el.find("tbody");
+      auto list = find("tbody");
       std::cout << "number of tbody found: " << list.size() << std::endl;
       TableView::attached();
     }

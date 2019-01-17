@@ -9,9 +9,7 @@ void fetch_one(unsigned long id, std::function<void (std::shared_ptr<MODEL>)> ca
 {
   auto model = std::make_shared<MODEL>(id);
 
-  model->fetch({
-    [model, callback](const Crails::Front::Ajax&) { callback(model); }
-  });
+  model->fetch().then([model, callback]() { callback(model); });
 }
 
 # define model_class(scope) \

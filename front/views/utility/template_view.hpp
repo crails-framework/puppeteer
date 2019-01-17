@@ -3,27 +3,25 @@
 
 # include <crails/front/mvc/view.hpp>
 # include <crails/front/element.hpp>
+# include <crails/front/signal.hpp>
 # include <iostream>
 
-class TemplateView : public Crails::Front::View
+class TemplateView : public Crails::Front::View, public Crails::Listener
 {
+protected:
+  typedef Crails::Front::Element El;
 public:
   TemplateView(const std::string& name)
   {
     auto* tpl = client::document.getElementById(name.c_str());
 
     if (tpl)
-      el->set_innerHTML(tpl->get_innerHTML());
-  }
-
-  void append_to(Crails::Front::Element& target)
-  {
-    el.append_to(*target);
+      (*this)->set_innerHTML(tpl->get_innerHTML());
   }
 
   void emplace(Crails::Front::Element& target)
   {
-    target->set_innerHTML("");
+    (*this)->set_innerHTML("");
     append_to(target);
   }
 

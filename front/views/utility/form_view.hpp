@@ -15,7 +15,7 @@ namespace Views
 
     FormView(const std::string& title) : TemplateView("tpl1")
     {
-      el = Theme::card(title, form_el);
+      Theme::_card(*this, title, form_el);
       button_save = El("button", {{"class","btn btn-lg btn-info btn-block"}}).inner({
         Theme::fa_icon("save"),
         El("span").text(" Save")

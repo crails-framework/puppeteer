@@ -36,7 +36,7 @@ namespace Views
         {"git branch",    input_branch},
         {"credentials",   input_credential},
         {"build options", input_options},
-        {"environment variables", input_variables.get_element()}
+        {"environment variables", input_variables}
       };
     }
 

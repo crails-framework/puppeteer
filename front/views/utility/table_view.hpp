@@ -4,6 +4,7 @@
 # include "template_view.hpp"
 # include "theme.hpp"
 # include <crails/front/mvc/collection.hpp>
+# include <crails/front/ajax.hpp>
 
 namespace Views
 {
@@ -24,12 +25,12 @@ namespace Views
       thead = El("thead");
       tbody = El("tbody");
 
-      el.attr("class", "container-fluid");
+      attr("class", "container-fluid");
     }
 
     void initialize_table()
     {
-      el.inner({
+      inner({
         Theme::title1(title, El("a", {{"href",get_new_model_path()},{"class","au-btn au-btn-icon au-btn--blue"}}).inner({
           El("i", {{"class","zmdi zmdi-plus"}}),
           El("span").text("Add")
@@ -73,19 +74,16 @@ namespace Views
     {
       initialize_table();
       initialize_thead();
-      collection.fetch({
-        std::bind(&TableView<COLLECTION>::on_fetched,     this, std::placeholders::_1),
-        std::bind(&TableView<COLLECTION>::on_fetch_error, this, std::placeholders::_1)
-      });
+      collection.fetch().then([this]() { on_fetched(); });
     }
 
-    void on_fetched(const Crails::Front::Ajax&)
+    void on_fetched()
     {
       std::cout << "machine collection fetched " << collection.count() << std::endl;
       render_tbody();
     }
 
-    void on_fetch_error(const Crails::Front::Ajax&)
+    void on_fetch_error()
     {
       std::cout << "machine collection fetch failed" << std::endl;
     }

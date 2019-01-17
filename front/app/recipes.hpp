@@ -1,13 +1,13 @@
 #ifndef  FRONT_RECIPES_HPP
 # define FRONT_RECIPES_HPP
 
-# include "data/recipe.hpp"
+# include "app/models/recipe.hpp"
 # include "model.hpp"
 # include <crails/front/mvc/collection.hpp>
 
 namespace Puppeteer
 {
-  class Recipe : public RecipeData
+  class Recipe : public ::Recipe
   {
   public:
     model_class("recipes")

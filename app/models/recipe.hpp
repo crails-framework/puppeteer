@@ -21,6 +21,13 @@ public:
     size_t value;
   };
 
+  std::string get_url()  const { return get_model_url(*this); }
+  std::string get_path() const { return '#' + get_url(); }
+
+  void serialize(OArchive&);
+  void serialize(IArchive&);
+
+# ifndef __CHEERP_CLIENT__
   struct Plugin
   {
     virtual bool recipe_uses_plugin(const std::string& recipe_folder) const = 0;
@@ -30,17 +37,15 @@ public:
   static const std::string base_path, remote_path, remote_user;
   static const std::vector<std::shared_ptr<Plugin> > plugins;
 
-  void serialize(OArchive&);
-  void serialize(IArchive&);
-
   void on_change();
 
-  std::string get_path() const;
+  std::string get_repository_path() const;
   void fetch_recipe();
 
   void exec_package(const std::string&, Instance&, Sync::Task&);
   void deploy_for(Instance&, Sync::Task&);
   void uninstall_from(Instance&, Sync::Task&);
+# endif
 };
 
 #endif

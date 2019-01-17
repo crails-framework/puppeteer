@@ -1,14 +1,17 @@
 #include "instance.hpp"
-#include "lib/odb/application-odb.hxx"
-#include "app/ssh/session.hpp"
+#ifndef __CHEERP_CLIENT__
+# include "lib/odb/application-odb.hxx"
+# include "app/ssh/session.hpp"
+# include <crails/sync/task.hpp>
+#endif
 #include "variable_list.hpp"
 #include "recipe.hpp"
-#include <crails/sync/task.hpp>
 
 using namespace std;
 
 odb_instantiable_impl(Instance)
 
+#ifndef __CHEERP_CLIENT__
 void Instance::collect_variables(map<string,string>& variables) const
 {
   const VariableList local_variables = get_variables();
@@ -60,3 +63,4 @@ bool Instance::needs_configure()
   }
   return true;
 }
+#endif

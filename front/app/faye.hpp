@@ -12,9 +12,9 @@ namespace client
   public:
     FayeClient(const String&);
 
-    void                     disable(const String&);
-    void                     subscribe(const String&, EventListener*);
-    client::Promise<Object>* publish(const String&, Object*);
+    void             disable(const String&);
+    void             subscribe(const String&, EventListener*);
+    client::Promise* publish(const String&, Object*);
   };
 }
 

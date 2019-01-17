@@ -5,23 +5,12 @@ $: << "#{Dir.pwd}"
 group :before_compile do
 #  guard 'crails-archive'
 
-  guard 'crails-cheerp', include_paths: ["/usr/local/include","."],
-    sourcemap_output: "public/assets/application.js.map",
-    sourcemap_standalone: true,
-#   preexecute: true,
-    dummy_var: 42 do
+  guard 'crails-cheerp' do
     watch(%r{front/.+\.(cpp|hpp)$})
   end
 
-  guard 'models', input: ["app/data"],
-                  output: "lib",
-                  generators: [:edit, :data, :view, :destroy, :query, :archive] do
-    watch(%r{app/data/.+\.rb$})
-  end
-
-  guard 'models', input: ["app/data"],
-                  output: "front",
-                  generators: [:front] do
+  guard 'crails-models', input: ["app/data"], output: "lib",
+                  generators: [:edit_with_front, :data_with_front, :view, :destroy, :query, :archive] do
     watch(%r{app/data/.+\.rb$})
   end
 

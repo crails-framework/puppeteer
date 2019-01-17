@@ -20,13 +20,11 @@ namespace Views
 
     void render()
     {
-      collection.fetch({
-        std::bind(&CollectionSelect::on_fetched, this, std::placeholders::_1)
-      });
+      collection.fetch().then([this]() { on_fetched(); });
     }
 
   protected:
-    void on_fetched(const Crails::Front::Ajax&)
+    void on_fetched()
     {
       std::vector<Crails::Front::Element> options;
 

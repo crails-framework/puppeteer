@@ -1,16 +1,18 @@
 #include "build.hpp"
-#include "lib/odb/application-odb.hxx"
-#include <crails/getenv.hpp>
-#include <crails/password.hpp>
+#ifndef __CHEERP_CLIENT__
+# include "lib/odb/application-odb.hxx"
+# include <crails/password.hpp>
+# include <crails/getenv.hpp>
+# include <crails/read_file.hpp>
+# include "app/jenkins/jenkins.hpp"
+#endif
 #include "variable_list.hpp"
-#include "app/jenkins/jenkins.hpp"
-
-#include <crails/read_file.hpp>
 
 using namespace std;
 
 odb_instantiable_impl(Build)
 
+#ifndef __CHEERP_CLIENT__
 const std::string Build::builds_path = Crails::getenv("PUPPETEER_BUILDS_PATH", "/opt/puppeteer/builds");
 
 void Build::collect_variables(map<string,string>& variables)
@@ -93,3 +95,4 @@ void Build::update_last_build(const DataTree& data)
   else
     set_last_build(0);
 }
+#endif

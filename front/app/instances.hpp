@@ -2,7 +2,7 @@
 # define FRONT_INSTANCES_HPP
 
 # include "model.hpp"
-# include "data/instance.hpp"
+# include "app/models/instance.hpp"
 # include "app/models/variable_list.hpp"
 # include "app/models/instance_state.hpp"
 # include <crails/front/mvc/collection.hpp>
@@ -10,7 +10,7 @@
 
 namespace Puppeteer
 {
-  class Instance : public InstanceData
+  class Instance : public ::Instance
   {
   public:
     model_class("instances")

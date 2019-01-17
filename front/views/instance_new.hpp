@@ -10,6 +10,7 @@ namespace Views
 {
   class InstanceNew : public ModelForm<Puppeteer::Instance>
   {
+    typedef Crails::Front::Element El;
     Crails::Front::Element input_name, input_user;
     CollectionSelectWithName<Puppeteer::Machines> input_machine;
     CollectionSelectWithName<Puppeteer::Builds>   input_build;
@@ -30,7 +31,7 @@ namespace Views
         {"user name", input_user},
         {"machine",   input_machine},
         {"build",     input_build},
-        {"environment variables", input_variables.get_element()}
+        {"environment variables", input_variables}
       };
     }
 

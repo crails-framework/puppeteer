@@ -2,12 +2,13 @@
 # define VARIABLE_LIST_EDITOR_HPP
 
 # include <crails/front/mvc/view.hpp>
+# include <crails/front/signal.hpp>
 # include "app/models/variable_list.hpp"
 # include "button.hpp"
 
 namespace Views
 {
-  class VariableListEditor : public Crails::Front::View
+  class VariableListEditor : public Crails::Front::View, public Crails::Listener
   {
   public:
     VariableListEditor();
@@ -30,9 +31,11 @@ namespace Views
     void update_value();
 
     VariableList variables;
-    std::list<std::pair<El,El> > inputs;
+    std::list<std::pair<Crails::Front::Element,Crails::Front::Element> > inputs;
     Button button_add;
     bool read_only = false;
+
+    std::list<std::shared_ptr<Crails::Front::JavascriptEvents> > event_listeners;
   };
 }
 

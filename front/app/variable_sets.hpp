@@ -3,13 +3,13 @@
 
 # include <crails/odb/id_type.hpp>
 # include "model.hpp"
-# include "data/variable_set.hpp"
+# include "app/models/variable_set.hpp"
 # include "app/models/variable_list.hpp"
 # include <crails/front/mvc/collection.hpp>
 
 namespace Puppeteer
 {
-  class VariableSet : public VariableSetData
+  class VariableSet : public ::VariableSet
   {
   public:
     model_default_constructors(VariableSet)

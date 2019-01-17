@@ -8,6 +8,7 @@ namespace Views
 {
   class MachineNew : public ModelForm<Puppeteer::Machine>
   {
+    typedef Crails::Front::Element El;
     Crails::Front::Element input_name, input_ip;
   public:
     MachineNew() : ModelForm("New machine")
@@ -42,17 +43,17 @@ namespace Views
       ModelForm::attached();
     }
 
-    void on_saved(const Crails::Front::Ajax& ajax)
+    void on_saved()
     {
       std::cout << "!!!" << std::endl;
       std::cout << "saving model success" << std::endl;
       std::cout << "Machine id = " << model->get_id() << std::endl;
       std::cout << "Machine name = " << model->get_name() << std::endl;
       std::cout << "!!!" << std::endl;
-      ModelForm::on_saved(ajax);
+      ModelForm::on_saved();
     }
 
-    void on_save_failed(const Crails::Front::Ajax&)
+    void on_save_failed()
     {
       std::cout << "saving model failed" << std::endl;
     }

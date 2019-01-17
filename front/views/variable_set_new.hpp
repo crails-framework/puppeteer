@@ -17,7 +17,7 @@ namespace Views
     std::unordered_map<std::string, El> get_inputs()
     {
       return {
-        {"environment variables", input_variables.get_element()}
+        {"environment variables", input_variables}
       };
     }
 

@@ -1,18 +1,21 @@
 #include "recipe.hpp"
 #include "app/models/variable_set.hpp"
-#include "lib/odb/application-odb.hxx"
-#include <crails/getenv.hpp>
-#include <crails/utils/string.hpp>
-#include <crails/sync/task.hpp>
-#include "app/ssh/session.hpp"
-#include "app/ssh/scp.hpp"
-#include "app/git/git.hpp"
-#include <boost/filesystem.hpp>
+#ifndef __CHEERP_CLIENT__
+# include "lib/odb/application-odb.hxx"
+# include <crails/getenv.hpp>
+# include <crails/utils/string.hpp>
+# include <crails/sync/task.hpp>
+# include "app/ssh/session.hpp"
+# include "app/ssh/scp.hpp"
+# include "app/git/git.hpp"
+# include <boost/filesystem.hpp>
+#endif
 
 using namespace std;
 
 odb_instantiable_impl(Recipe)
 
+#ifndef __CHEERP_CLIENT__
 const string Recipe::base_path   = Crails::getenv("PUPPETEER_RECIPE_PATH", "/opt/puppeteer/recipes");
 const string Recipe::remote_path = Crails::getenv("PUPPETEER_REMOTE_PATH", "/opt/puppeteer/client");
 const string Recipe::remote_user = Crails::getenv("PUPPETEER_REMOTE_USER", "root");
@@ -64,14 +67,14 @@ static std::string initialize_git_repository(const std::string& path, const std:
   return repository.get_tip_oid();
 }
 
-string Recipe::get_path() const
+string Recipe::get_repository_path() const
 {
   return base_path   + '/' + get_name();
 }
 
 void Recipe::fetch_recipe()
 {
-  string repository_path = get_path();
+  string repository_path = get_repository_path();
   string url = get_git_url();
   string oid;
   auto   credential = get_credential();
@@ -110,7 +113,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
   task.increment();
   {
     const std::string remote_folder = remote_path + '/' + instance.get_name();
-    const std::string recipe_folder = get_path();
+    const std::string recipe_folder = get_repository_path();
     const std::string recipe_package_folder = recipe_folder + '/' + package;
     const std::string remote_package_folder = remote_folder + '/' + package;
     auto package_files = list_directory(recipe_package_folder);
@@ -191,3 +194,4 @@ void Recipe::uninstall_from(Instance& instance, Sync::Task& task)
 {
   exec_package("uninstall", instance, task);
 }
+#endif

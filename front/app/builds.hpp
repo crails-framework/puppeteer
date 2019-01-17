@@ -1,7 +1,7 @@
 #ifndef  FRONT_BUILDS_HPP
 # define FRONT_BUILDS_HPP
 
-# include "data/build.hpp"
+# include "app/models/build.hpp"
 # include "model.hpp"
 # include "app/models/variable_list.hpp"
 # include <crails/front/mvc/collection.hpp>
@@ -9,7 +9,7 @@
 
 namespace Puppeteer
 {
-  class Build : public BuildData
+  class Build : public ::Build
   {
   public:
     model_class("builds")

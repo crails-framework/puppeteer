@@ -1,6 +1,8 @@
 #include "variable_set.hpp"
 #include "variable_list.hpp"
-#include "lib/odb/application-odb.hxx"
+#ifndef __CHEERP_CLIENT__
+# include "lib/odb/application-odb.hxx"
+#endif
 
 using namespace std;
 
@@ -13,6 +15,7 @@ void VariableSet::collect_variables(map<string,string>& variables) const
   local_variables.to_map(variables);
 }
 
+#ifndef __CHEERP_CLIENT__
 void VariableSet::collect_global_variables(map<string,string>& variables)
 {
   auto& database = *ODB::Connection::instance;
@@ -22,3 +25,4 @@ void VariableSet::collect_global_variables(map<string,string>& variables)
   for (const auto& variable_set : variable_sets)
     variable_set.collect_variables(variables);
 }
+#endif
