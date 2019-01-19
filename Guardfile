@@ -3,12 +3,6 @@ $: << "#{Dir.pwd}/scripts"
 $: << "#{Dir.pwd}"
 
 group :before_compile do
-#  guard 'crails-archive'
-
-  guard 'crails-cheerp' do
-    watch(%r{front/.+\.(cpp|hpp)$})
-  end
-
   guard 'crails-models', input: ["app/data"], output: "lib",
                   generators: [:edit_with_front, :data_with_front, :view, :destroy, :query, :archive] do
     watch(%r{app/data/.+\.rb$})
@@ -18,6 +12,10 @@ group :before_compile do
     output:   "lib/odb",
     at_once:  true do
     watch(%r{app/models/.+.h(pp|xx)?$})
+  end
+
+  guard 'crails-cheerp' do
+    watch(%r{front/.+\.(cpp|hpp)$})
   end
 end
 
