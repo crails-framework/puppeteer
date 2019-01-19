@@ -21,6 +21,7 @@ void MainView::detach_current_view()
   if (view)
   {
     view->detached();
+    view->destroy();
     delete view;
   }
 }
