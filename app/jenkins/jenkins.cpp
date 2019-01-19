@@ -94,6 +94,8 @@ int Jenkins::push_config(const std::string& jobname, const std::string& config)
   request << boost::network::header("Content-Length", boost::lexical_cast<string>(config.length()));
   request << boost::network::body(config);
 
+  std::cout << "[Jenkins] Pushing config " << jobname << ':' << std::endl << config << std::endl << std::endl;
+
   auto response = client.post(request);
   return boost::network::http::status(response);
 }
