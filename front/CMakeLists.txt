@@ -6,6 +6,7 @@ project(puppeteer-front)
 option(DEVELOPER_MODE "enable debugging tools" ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__CHEERP_CLIENT__")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMODELS_CLIENT_SUPER_CLASS=Crails::Front::ArchiveModel")
 
 include_directories(include /usr/local/include . ..)
 
