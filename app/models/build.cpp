@@ -60,7 +60,7 @@ std::string Build::get_build_config()
 {
   map<string,string> variables;
   auto recipe = get_recipe();
-  auto source_path = recipe->get_path() + "/jenkins.xml";
+  auto source_path = recipe->get_repository_path() + "/jenkins.xml";
 
   collect_variables(variables);
   return generate_file_from_template(source_path, variables);

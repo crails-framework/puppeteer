@@ -69,7 +69,7 @@ static std::string initialize_git_repository(const std::string& path, const std:
 
 string Recipe::get_repository_path() const
 {
-  return base_path   + '/' + get_name();
+  return base_path + '/' + get_name();
 }
 
 void Recipe::fetch_recipe()
