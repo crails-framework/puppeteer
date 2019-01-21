@@ -9,6 +9,7 @@ namespace Views
   template<typename MODEL>
   class ModelView : public TemplateView
   {
+    Crails::Front::Element header;
   public:
     ModelView(const std::string& type_title) : TemplateView("tpl1")
     {
@@ -17,15 +18,19 @@ namespace Views
         El("span").text("Edit")	
       });
       title_controls.inner({edit_link});
-
       title = El("h3");
+      header.inner({
+        El("h2", {{"class","title-1"}}).text(type_title),
+        title
+      });
       add_class("container-fluid");
+    }
+
+    void attached()
+    {
       inner({
-        Theme::title1(El("div").inner({
-          El("h2", {{"class","title-1"}}).text(type_title),
-          title
-        }), title_controls),
-	page_content
+        Theme::title1(header, title_controls),
+        page_content
       });
     }
 
