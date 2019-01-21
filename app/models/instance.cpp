@@ -18,7 +18,7 @@ void Instance::collect_variables(map<string,string>& variables) const
 
   variables["INSTANCE_NAME"] = get_name();
   variables["APP_USER"]      = get_user();
-  variables["APP_PATH"]      = get_path() == "" ? ("/home/" + get_user()) : get_path();
+  variables["APP_PATH"]      = path == "" ? ("/home/" + get_user()) : path;
   local_variables.to_map(variables);
 }
 
