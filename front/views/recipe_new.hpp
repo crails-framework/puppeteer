@@ -24,6 +24,7 @@ namespace Views
         {"name","recipe_git_branch"},{"type","text"},{"class","form-control"},{"placeholder","master"}
       });
       input_credential.add_class("form-control");
+      input_credential.with_empty_option(true);
     }
 
     std::unordered_map<std::string, El> get_inputs()
@@ -32,7 +33,7 @@ namespace Views
         {"name",        input_name},
         {"git url",     input_git_url },
         {"git branch",  input_git_branch },
-	{"credentials", input_credential }
+        {"credentials", input_credential }
       };
     }
 
