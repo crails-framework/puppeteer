@@ -9,6 +9,7 @@ namespace Views
   template<typename COLLECTION>
   class CollectionSelect : public Crails::Front::Element
   {
+    bool _with_empty_option = false;
   public:
     typedef typename COLLECTION::Model Model;
 
@@ -23,11 +24,28 @@ namespace Views
       collection.fetch().then([this]() { on_fetched(); });
     }
 
+    void with_empty_option(bool val)
+    {
+      if (_with_empty_option != val)
+      {
+        _with_empty_option = val;
+        on_fetched();
+      }
+    }
+
   protected:
     void on_fetched()
     {
       std::vector<Crails::Front::Element> options;
 
+      if (_with_empty_option)
+      {
+        Crails::Front::Element option("option");
+
+        option.attr("value", "0");
+        option.text("");
+        options.push_back(option);
+      }
       collection.each([this, &options](std::shared_ptr<Model> model)
       {
         Crails::Front::Element option("option");

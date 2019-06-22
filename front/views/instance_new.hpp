@@ -22,6 +22,7 @@ namespace Views
       input_user = El("input", {{"name","instance_user"},{"type","text"},{"class","form-control"}});
       input_machine.add_class("form-control");
       input_build.add_class("form-control");
+      input_build.with_empty_option(true);
     }
 
     std::unordered_map<std::string, El> get_inputs()
