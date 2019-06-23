@@ -31,11 +31,10 @@ void NginxPlugin::apply(const std::string& package, const std::string& recipe_fo
 
 void NginxPlugin::setup(const string& recipe_folder, Instance& instance, const map<string,string>& variables, Sync::Stream& stream) const
 {
-  std::string nginx_server_ip = Crails::getenv("NGINX_SERVER_IP");
-
-  if (nginx_server_ip.length())
+  if (variables.find("NGINX_SERVER_IP") != variables.end())
   {
-    std::string config = generate_file_from_template(recipe_folder + "/nginx.conf", variables);
+    const std::string nginx_server_ip = variables.at("NGINX_SERVER_IP");
+    const std::string config = generate_file_from_template(recipe_folder + "/nginx.conf", variables);
     Ssh::Session ssh;
 
     ssh.should_accept_unknown_hosts(true);
