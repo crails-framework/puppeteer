@@ -195,4 +195,80 @@ void Recipe::uninstall_from(Instance& instance, Sync::Task& task)
 {
   exec_package("uninstall", instance, task);
 }
+
+void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string& build_id)
+{
+  const string package = "deploy";
+  Ssh::Session ssh;
+  Sync::Stream stream(task);
+  auto machine = instance.get_machine();
+  auto build   = instance.get_build();
+
+  ssh.should_accept_unknown_hosts(true);
+  ssh.connect(remote_user, machine->get_ip());
+  ssh.authentify_with_pubkey();
+  task.increment();
+  {
+    const string remote_folder      = remote_path + '/' + instance.get_name();
+    const string recipe_folder      = get_repository_path();
+    const string deploy_script_path = recipe_folder + "/deploy.sh";
+    const string build_tarball_filename = build_id + ".tar.gz";
+    const string build_tarball_path = build->get_build_path() + '/' + build_tarball_filename;
+    const string variable_filename = "variables_" + boost::lexical_cast<string>(instance.get_id());
+    const string variable_filepath = remote_folder + '/' + variable_filename;
+    const string app_path;
+    std::map<std::string, std::string> variables;
+
+    // Upload build tarball and deploy script
+    {
+      auto scp = ssh.make_scp_session(remote_folder, SSH_SCP_WRITE);
+
+      stream << "Uploading build tarball...\n";
+      scp->push_file(build_tarball_filename, build_tarball_path);
+      stream << "Done.\nUploading deploy script...\n";
+      scp->push_file("deploy.sh", deploy_script_path);
+      stream << "Done.\n";
+      task.increment();
+    }
+
+    // Upload variables
+    {
+      auto scp = ssh.make_scp_session(remote_folder, SSH_SCP_WRITE);
+
+      VariableSet::collect_global_variables(variables);
+      instance.collect_variables(variables);
+      build->collect_variables(variables);
+      variables["MACHINE_IP"] = machine->get_ip();
+      variables["BUILD_TARBALL"] = (remote_folder + '/' + build_tarball_filename);
+      scp->push_text(generate_variable_file(variables), variable_filename);
+      task.increment();
+    }
+
+    // Run deploy script
+    {
+      int status;
+
+      status = ssh.exec("chmod +x '" + remote_folder + "/deploy.sh" + '\'', stream);
+      if (status)
+        throw std::runtime_error("Recipe(" + get_name() + "): could not chmod script: deploy.sh");
+      stream << "\n## deploy.sh:\n";
+
+      stringstream command_stream;
+      command_stream << "cd '" << app_path << "' && "
+	     << "'./" << remote_folder << "/deploy.sh'"
+	     << " '" << remote_folder << '/' << variable_filename + '\''
+	     << " 2>&1";
+
+      status = ssh.exec(command_stream.str(), stream);
+      if (status)
+      {
+        std::stringstream err_stream;
+        err_stream << "Recipe(" << get_name() << "): remote script `deploy.sh` returned with error status " << status;
+        throw std::runtime_error(err_stream.str());
+      }
+      task.increment();
+    }
+  }
+  instance.set_deployed_build(boost::lexical_cast<unsigned int>(build_id));
+}
 #endif

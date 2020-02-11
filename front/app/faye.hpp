@@ -7,7 +7,7 @@
 
 namespace client
 {
-  class FayeClient
+  class FayeClient : public client::Object
   {
   public:
     FayeClient(const String&);

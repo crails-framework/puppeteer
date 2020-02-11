@@ -12,6 +12,7 @@ public:
   InstanceController(Crails::Params&);
 
   void configure();
+  void deploy();
   void uninstall();
 
   void fetch_state();
@@ -19,6 +20,7 @@ public:
   void stop();
   void restart();
 private:
+  void on_task_started(const std::string& task_name, const std::string& task_uid);
   void open_ssh(std::function<void(Ssh::Session&)>);
 };
 

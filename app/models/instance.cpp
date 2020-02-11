@@ -17,6 +17,7 @@ void Instance::collect_variables(map<string,string>& variables) const
   const VariableList local_variables = get_variables();
 
   variables["INSTANCE_NAME"] = get_name();
+  variables["HOST_IP"]       = get_machine()->get_ip();
   variables["APP_USER"]      = get_user();
   variables["APP_PATH"]      = path == "" ? ("/home/" + get_user()) : path;
   local_variables.to_map(variables);
@@ -36,6 +37,14 @@ void Instance::uninstall(Sync::Task& task)
 
   recipe->uninstall_from(*this, task);
   set_state(Uninstalled);
+}
+
+void Instance::deploy(Sync::Task& task, const std::string& build_id)
+{
+  auto recipe = get_build()->get_recipe();
+
+  recipe->deploy_build_for(*this, task, build_id);
+  set_state(Ready);
 }
 
 void Instance::open_ssh(std::function<void (Ssh::Session&)> callback)

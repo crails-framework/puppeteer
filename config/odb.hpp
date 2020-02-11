@@ -2,7 +2,7 @@
 # define CONFIG_ODB_HPP
 
 // Include this file in your odb headers to enable schema versioning
-# pragma db model version(1,11)
+# pragma db model version(1,12)
 
 # define podb odb::pgsql
 # pragma db map type("INTEGER\\[\\]") as("TEXT") to("(?)::INTEGER[]") from("(?)::TEXT")

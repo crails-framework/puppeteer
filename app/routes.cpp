@@ -19,6 +19,7 @@ void Crails::Router::initialize(void)
 
   SetRoute("GET",  "/instances/:id/state",     InstanceController, fetch_state);
   SetRoute("POST", "/instances/:id/configure", InstanceController, configure);
+  SetRoute("POST", "/instances/:id/deploy",    InstanceController, deploy);
   SetRoute("POST", "/instances/:id/uninstall", InstanceController, uninstall);
   SetRoute("POST", "/instances/:id/start",     InstanceController, restart);
   SetRoute("POST", "/instances/:id/restart",   InstanceController, restart);

@@ -4,10 +4,12 @@
 #include <crails/cookie_data.hpp>
 #include "app/git/git.hpp"
 
+#include "modules/gandi/api.hpp"
+
 using namespace std;
 using namespace Crails;
 
-int main(int argc, char **argv)
+int main(int argc, const char **argv)
 {
   Git::GlobalState git_state;
 

@@ -7,12 +7,12 @@ Model.add "Build", ["Build", "app/models/build.hpp"] do
   order_by 'name'
 
   visibility :protected
-  property 'std::string', 'name'
-  property 'std::string', 'git'
-  property 'std::string', 'branch'
-  property 'std::string', 'options'
-  property 'std::string', 'variables'
-  property 'std::time_t', 'last_build'
+  property 'std::string',  'name'
+  property 'std::string',  'git'
+  property 'std::string',  'branch'
+  property 'std::string',  'options'
+  property 'std::string',  'variables'
+  property 'unsigned int', 'last_build', default: 0, db: { column: 'lastbuild' }
   has_one "Recipe",     "recipe",     joined: false, dependent: :destroy
   has_one "Credential", "credential", joined: false
 end

@@ -22,6 +22,7 @@ void InstanceController::configure()
     task_params["id"] = model->get_id();
     task_uid = Sidekic::async_task("deploy_configuration", task_params.as_data());
     Crails::Controller::render(TEXT, task_uid);
+    on_task_started("deploy_configuration", task_uid);
   }
 }
 
@@ -36,6 +37,7 @@ void InstanceController::uninstall()
     task_params["id"] = model->get_id();
     task_uid = Sidekic::async_task("uninstall_configuration", task_params.as_data());
     Crails::Controller::render(TEXT, task_uid);
+    on_task_started("uninstall_configuration", task_uid);
   }
 }
 
@@ -100,4 +102,32 @@ void InstanceController::restart()
 
     ssh.exec("monit restart -g " + model->get_name(), stream);
   });
+}
+
+void InstanceController::deploy()
+{
+  require_model();
+  if (model)
+  {
+    std::string  task_uid;
+    DataTree     task_params;
+    auto         build    = model->get_build();
+    unsigned int build_id = params["build_id"].defaults_to<unsigned int>(build->get_last_build());
+
+    task_params["id"]       = model->get_id();
+    task_params["build_id"] = build_id;
+    task_uid = Sidekic::async_task("deploy_build", task_params.as_data());
+    Crails::Controller::render(TEXT, task_uid);
+    on_task_started("deploy_build", task_uid);
+  }
+}
+
+void InstanceController::on_task_started(const string& task_name, const string& task_uid)
+{
+  if (model)
+  {
+    model->set_running_task(task_name + ':' + task_uid);
+    database.save(*model);
+    database.commit();
+  }
 }

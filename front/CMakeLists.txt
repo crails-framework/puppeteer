@@ -10,13 +10,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMODELS_CLIENT_SUPER_CLASS=Crails::Fron
 
 include_directories(include /usr/local/include . ..)
 
-if(DEVELOPER_MODE)
-  set(CMAKE_BUILD_TYPE "Debug")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -cheerp-sourcemap=application.js.map -cheerp-sourcemap-standalone")
-else()
+#if(DEVELOPER_MODE)
+#  set(CMAKE_BUILD_TYPE "Debug")
+#  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -cheerp-sourcemap=application.js.map -cheerp-sourcemap-standalone")
+#else()
   set(CMAKE_BUILD_TYPE "Release")
  #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -cheerp-preexecute")
-endif()
+#endif()
 
 file(GLOB_RECURSE front_files
      *.cpp

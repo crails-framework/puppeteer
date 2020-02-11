@@ -30,6 +30,7 @@ public:
 
   std::string get_url()  const { return get_model_url(*this); }
   std::string get_path() const { return '#' + get_url(); }
+  bool can_start_task() const { return running_task.length() == 0; }
 
   void serialize(OArchive&);
   void serialize(IArchive&);
@@ -38,6 +39,7 @@ public:
   void collect_variables(std::map<std::string,std::string>&) const;
   void configure(Sync::Task&);
   void uninstall(Sync::Task&);
+  void deploy(Sync::Task&, const std::string& build_id);
   void open_ssh(std::function<void (Ssh::Session&)>);
 
   bool needs_restart();

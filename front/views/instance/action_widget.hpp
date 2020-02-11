@@ -23,7 +23,7 @@ namespace Views
   class InstanceActionWidget : public Crails::Front::Element, public Crails::Listener
   {
     std::shared_ptr<Puppeteer::Instance> model;
-    Button button_deploy, button_uninstall, button_restart, button_stop;
+    Button button_configure, button_uninstall, button_deploy, button_restart, button_stop;
     ProgressBar     progress_bar;
     ConsoleOutput&  console_output;
     bool performing_action = false;
@@ -32,8 +32,9 @@ namespace Views
 
     void activate(std::shared_ptr<Puppeteer::Instance> instance);
     void render();
-    void deploy(client::Event*);
+    void configure(client::Event*);
     void uninstall(client::Event*);
+    void deploy(client::Event*);
     void restart(client::Event*);
     void stop(client::Event*);
 
@@ -44,13 +45,17 @@ namespace Views
     void on_ajax_action_performed(const Crails::Front::Ajax&) { on_action_performed(); }
     void on_action_performed();
 
-    void on_deploy_start(const Crails::Front::Ajax&);
-    void on_deploy_failure(const Crails::Front::Ajax&);
-    void on_deploy_task_progress(Crails::Front::Object);
+    void on_configure_start(const Crails::Front::Ajax&);
+    void on_configure_failure(const Crails::Front::Ajax&);
+    void on_configure_task_progress(Crails::Front::Object);
 
     void on_uninstall_start(const Crails::Front::Ajax&);
     void on_uninstall_failure(const Crails::Front::Ajax&);
     void on_uninstall_task_progress(Crails::Front::Object);
+
+    void on_deploy_start(const Crails::Front::Ajax&);
+    void on_deploy_failure(const Crails::Front::Ajax&);
+    void on_deploy_task_progress(Crails::Front::Object);
 
     Sync::TaskState on_task_progress(Crails::Front::Object);
 

@@ -91,3 +91,5 @@ endif()
 add_subdirectory(tasks/odb_migrate)
 
 add_subdirectory(tasks/sidekic)
+
+add_subdirectory(tasks/refresh-builds)

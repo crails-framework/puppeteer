@@ -78,21 +78,23 @@ void Build::on_change()
   }
 }
 
-void Build::update_last_build()
+bool Build::update_last_build()
 {
   Jenkins jenkins;
   const DataTree data = jenkins.get_project_data(get_name());
 
-  update_last_build(data);
+  return update_last_build(data);
 }
 
-void Build::update_last_build(const DataTree& data)
+bool Build::update_last_build(const DataTree& data)
 {
   const Data last_successful_build = data["lastSuccessfulBuild"]["number"];
+  auto previous_last_build = get_last_build();
 
   if (last_successful_build.exists())
     set_last_build(last_successful_build);
   else
     set_last_build(0);
+  return previous_last_build != get_last_build();
 }
 #endif

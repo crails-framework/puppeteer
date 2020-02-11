@@ -29,8 +29,8 @@ public:
   static const std::string builds_path;
 
   void on_change();
-  void update_last_build();
-  void update_last_build(const DataTree&);
+  bool update_last_build();
+  bool update_last_build(const DataTree&);
 
   void collect_variables(std::map<std::string,std::string>&);
   std::string get_build_path() const;
