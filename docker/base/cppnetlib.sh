@@ -24,16 +24,6 @@ git checkout 0.13-release
 git submodule init
 git submodule update
 
-## Patch to make cpp-netlib 0.13 compatible with boost >= 1.70
-file_to_patch="boost/network/protocol/stream_handler.hpp"
-line_to_remove=`grep -n "#include <boost/asio/stream_socket_service.hpp>" "../$file_to_patch" | cut -d':' -f1`
-
-if [[ $line_to_remove != "" ]] ; then
-  sed $line_to_remove'd' "../$file_to_patch" > tmp
-  mv tmp "../$file_to_patch"
-fi
-## END PATCH
-
 cmake -DCMAKE_CXX_FLAGS=-std=c++11 \
   -DCPP-NETLIB_BUILD_TESTS=OFF \
   -DCPP-NETLIB_BUILD_EXAMPLES=OFF \
