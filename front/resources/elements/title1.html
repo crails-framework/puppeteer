@@ -1,0 +1,16 @@
+<template>
+  <head>
+    <attribute type="std::string" name="title" />
+  </head>
+
+  <body class="row">
+    <div class="col-lg-12">
+      <div class="overview-wrap" style="padding-bottom:20px">
+        <slot name="title">
+          <h2 class="title-1" text.bind="root->get_title()"></h2>
+        </slot>
+	<slot name="controls"></slot>
+      </div>
+    </div>
+  </body>
+</template>

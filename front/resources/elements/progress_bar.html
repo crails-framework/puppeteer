@@ -1,0 +1,34 @@
+<template>
+  <head>
+    <attribute type="float" name="progress" value="0.f" />
+    <script>
+      void set_active(bool active)
+      {
+        el.toggle_class("progress-bar-animated", active);
+      }
+
+      void update_progress(float value)
+      {
+        if (value != progress)
+        {
+          set_progress(value);
+          signaler.trigger("progressChanged");
+        }
+      }
+
+      std::string get_style()
+      {
+        std::stringstream stream;
+
+        stream << "width:" << (progress * 100) << '%';
+        return stream.str();
+      }
+    </script>
+  </head>
+  <body class="progress mb-3">
+    <div class="progress-bar bg-info progress-bar-striped progress-bar-animated"
+         style.bind="get_style() & signal:progressChanged"
+         ref="el">
+    </div>
+  </body>
+</template>

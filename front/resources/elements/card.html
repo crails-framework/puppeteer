@@ -1,0 +1,14 @@
+<template>
+  <head>
+    <attribute type="std::string" name="title" />
+  </head>
+  <body class="card">
+    <div class="card-header">
+      <strong text.bind="title"></strong>
+    </div>
+
+    <div class="card-body card-block">
+      <slot name="content" />
+    </div>
+  </body>
+</template>

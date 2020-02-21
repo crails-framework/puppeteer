@@ -1,0 +1,14 @@
+<template>
+  <head>
+    <attribute type="std::string" name="label" />
+    <attribute type="std::string" name="name" />
+    <attribute type="std::string" name="type" value='"text"' />
+    <attribute type="std::string" name="value" />
+  </head>
+  <body class="form-group">
+    <label for.bind="name" class="form-control-label" text.bind="label"></label>
+    <slot name="input">
+      <input class="form-control" type.bind="root->get_type()" name.bind="root->get_name()" value.bind="root->get_value()" />
+    </slot>
+  </body>
+</template>

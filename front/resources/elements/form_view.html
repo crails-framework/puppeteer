@@ -1,0 +1,20 @@
+<template>
+  <head>
+    <attribute type="std::string" name="title" />
+    <script>
+      virtual void save_clicked() = 0;
+    </script>
+  </head>
+
+  <body>
+    <card cpp::title.bind="title">
+      <div slot="content">
+        <slot name="inputs"></slot>
+        <button click.trigger='root->save_clicked()'>
+          <fa-icon cpp::name.bind='"save"' />
+          Save
+        </button>
+      </div>
+    </card>
+  </body>
+</template>
