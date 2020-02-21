@@ -86,7 +86,7 @@ void Puppeteer::Router::initialize()
     auto view = std::make_shared<Views::VariableSetForm>();
 
     tintin = view;
-    MainView::instance->attach(*view);
+    MainView::instance->attach(view);
     view->activate();
   });
 

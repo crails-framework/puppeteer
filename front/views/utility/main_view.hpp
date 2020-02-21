@@ -11,8 +11,6 @@ class MainView : public HtmlTemplate::Layout
 public:
   MainView();
 
-  void attach(Crails::Front::Element&);
-
   template<typename VIEW_TYPE>
   void attach(std::shared_ptr<VIEW_TYPE> new_view)
   {
@@ -26,8 +24,6 @@ public:
 
 private:
   void detach_current_view();
-
-  Crails::Front::Element* view;
 };
 
 #endif

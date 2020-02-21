@@ -25,7 +25,10 @@ namespace Views
     std::shared_ptr<MODEL> get_model() const { return model; }
 
   protected:
-    virtual void on_model_received() {}
+    virtual void on_model_received()
+    {
+      VIEW::trigger_binding_updates();
+    }
 
     std::shared_ptr<MODEL> model;
   };
