@@ -4,14 +4,12 @@
 # include "utility/model_view.hpp"
 # include "../app/credentials.hpp"
 
+# include "lib/cheerp-html/views/credential.hpp"
+
 namespace Views
 {
-  class Credential : public ModelView<Puppeteer::Credential>
+  class Credential : public ModelView<Puppeteer::Credential, HtmlTemplate::Credential>
   {
-  public:
-    Credential() : ModelView("Credentials")
-    {
-    }
   };
 }
 

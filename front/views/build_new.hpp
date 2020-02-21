@@ -7,67 +7,36 @@
 # include "../app/builds.hpp"
 # include "../app/recipes.hpp"
 # include "../app/credentials.hpp"
+# include "lib/cheerp-html/views/build_new.hpp"
 
 namespace Views
 {
-  class BuildNew : public ModelForm<Puppeteer::Build>
+  class BuildNew : public ModelForm<Puppeteer::Build, HtmlTemplate::BuildNew>
   {
-    Crails::Front::Element input_name, input_git, input_branch, input_options;
-    CollectionSelectWithName<Puppeteer::Recipes> input_recipe;
-    CollectionSelectWithName<Puppeteer::Credentials> input_credential;
-    VariableListEditor input_variables;
   public:
-    BuildNew() : ModelForm("New build")
-    {
-      input_name    = El("input", {{"name","build_name"},{"type","text"},{"class","form-control"}});
-      input_git     = El("input", {{"name","build_git"},{"type","text"},{"class","form-control"}});
-      input_branch  = El("input", {{"name","build_branch"},{"type","text"},{"class","form-control"}});
-      input_options = El("textarea", {{"name","build_options"},{"class","form-control"}});
-      input_recipe.add_class("form-control");
-      input_credential.add_class("form-control");
-    }
-
-    std::unordered_map<std::string, El> get_inputs()
-    {
-      return {
-        {"name",          input_name},
-        {"recipe",        input_recipe},
-        {"git url",       input_git},
-        {"git branch",    input_branch},
-        {"credentials",   input_credential},
-        {"build options", input_options},
-        {"environment variables", input_variables}
-      };
-    }
+    std::string get_title() const { return model ? model->get_name() : "New build"; }
+    std::string get_build_name() const { return model ? model->get_name() : ""; }
+    std::string get_build_git_url() const { return model ? model->get_git() : ""; }
+    std::string get_build_branch() const { return model ? model->get_branch() : ""; }
+    std::string get_build_options() const { return model ? model->get_options() : ""; }
+    unsigned long get_build_credentials_id() const { return model ? model->get_credential_id() : ODB_NULL_ID; }
+    unsigned long get_build_recipe_id() const { return model ? model->get_recipe_id() : ODB_NULL_ID; }
+    std::string   get_build_variables() const { return model ? model->get_variables() : ""; }
 
     void update_model_attributes()
     {
-      model->set_name(input_name.get_value());
-      model->set_git(input_git.get_value());
-      model->set_branch(input_branch.get_value());
-      model->set_options(input_options.get_value());
-      model->set_recipe_id    ( boost::lexical_cast<unsigned long>(input_recipe.get_value()) );
-      model->set_credential_id( boost::lexical_cast<unsigned long>(input_credential.get_value()) );
-      model->set_variable_list(input_variables.get_value());
-    }
+      auto name_input    = find("[name=\"build_name\"]")[0];
+      auto git_input     = find("[name=\"build_git_url\"")[0];
+      auto branch_input  = find("[name=\"build_branch\"")[0];
+      auto options_input = find("[name=\"build_options\"")[0];
 
-    void update_form_attributes()
-    {
-      input_name.value(model->get_name());
-      input_git.value(model->get_git());
-      input_branch.value(model->get_branch());
-      input_options.value(model->get_options());
-      input_recipe.value    ( boost::lexical_cast<std::string>(model->get_recipe_id()) );
-      input_credential.value( boost::lexical_cast<std::string>(model->get_credential_id()) );
-      input_variables.activate(model->get_variables());
-    }
-
-    void attached()
-    {
-      ModelForm::attached();
-      input_recipe.render();
-      input_credential.render();
-      input_variables.render();
+      model->set_name(name_input.get_value());
+      model->set_git(git_input.get_value());
+      model->set_branch(branch_input.get_value());
+      model->set_credential_id(credentials_input.value<ODB::id_type>());
+      model->set_recipe_id(recipe_input.value<ODB::id_type>());
+      model->set_options(options_input.get_value());
+      model->set_variable_list(variables_input.get_value());
     }
   };
 }

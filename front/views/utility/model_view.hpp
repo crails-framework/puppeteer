@@ -1,56 +1,33 @@
 #ifndef  MODEL_VIEW_HPP
 # define MODEL_VIEW_HPP
 
-# include "template_view.hpp"
-# include "theme.hpp"
+# include <memory>
 
 namespace Views
 {
-  template<typename MODEL>
-  class ModelView : public TemplateView
+  template<typename MODEL, typename VIEW>
+  class ModelView : public VIEW
   {
-    Crails::Front::Element header;
   public:
-    ModelView(const std::string& type_title) : TemplateView("tpl1")
-    {
-      edit_link = El("a", {{"class","au-btn au-btn-icon au-btn--blue"}}).inner({
-        Theme::fa_icon("edit"),
-        El("span").text("Edit")	
-      });
-      title_controls.inner({edit_link});
-      title = El("h3");
-      header.inner({
-        El("h2", {{"class","title-1"}}).text(type_title),
-        title
-      });
-      add_class("container-fluid");
-    }
-
-    void attached()
-    {
-      inner({
-        Theme::title1(header, title_controls),
-        page_content
-      });
-    }
-
     void activate(unsigned long model_id)
     {
       fetch_one<MODEL>(model_id, [this](std::shared_ptr<MODEL> _model)
       {
         this->model = _model;
-        this->edit_link.attr("href", this->model->get_path() + "/edit");
-        title.text(model->get_name());
+        VIEW::wrapper.set_edit_path(this->model->get_path() + "/edit");
+        VIEW::wrapper.set_destroy_path(this->model->get_path() + "/destroy");
+        VIEW::wrapper.set_title(model->get_name());
         on_model_received();
+        VIEW::signaler.trigger("model-changed");
       });
     }
+
+    std::shared_ptr<MODEL> get_model() const { return model; }
 
   protected:
     virtual void on_model_received() {}
 
     std::shared_ptr<MODEL> model;
-    Crails::Front::Element title, title_controls, page_content;
-    Crails::Front::Element edit_link;
   };
 }
 

@@ -10,48 +10,41 @@ typedef Crails::Front::Element El;
 
 extern Sync::Tasks* sync_tasks;
 
-InstanceActionWidget::InstanceActionWidget(ConsoleOutput& console_output) : console_output(console_output)
+InstanceActionWidget::InstanceActionWidget()
 {
-  button_configure.inner({ Theme::fa_icon("cloud-upload-alt"), El("span").text(" Configure") });
-  button_deploy   .inner({ Theme::fa_icon("cloud-upload-alt"), El("span").text(" Deploy") });
-  button_restart  .inner({ Theme::fa_icon("play"),             El("span").text(" Start") });
-  button_stop     .inner({ Theme::fa_icon("stop"),             El("span").text(" Stop") });
-  button_uninstall.inner({ Theme::fa_icon("eraser"),           El("span").text(" Uninstall") });
-
-  for (auto& button : vector<Button*>({ &button_configure, &button_deploy, &button_restart, &button_stop, &button_uninstall }))
-    button->add_class("btn-primary");
-
-  listen_to(button_configure.clicked, std::bind(&InstanceActionWidget::configure, this, std::placeholders::_1));
-  listen_to(button_uninstall.clicked, std::bind(&InstanceActionWidget::uninstall, this, std::placeholders::_1));
-  listen_to(button_restart.clicked,   std::bind(&InstanceActionWidget::restart,   this, std::placeholders::_1));
-  listen_to(button_stop.clicked,      std::bind(&InstanceActionWidget::stop,      this, std::placeholders::_1));
 }
 
-void InstanceActionWidget::activate(std::shared_ptr<Puppeteer::Instance> instance)
+Actions InstanceActionWidget::get_visible_actions()
 {
-  model = instance;
-  listen_to(model->remote_state_changed, std::bind(&InstanceActionWidget::render, this));
-  render();
+  Actions actions;
+
+  if (model->get_state() != 1)
+    actions.push_back(Action("cloud-upload-alt", "Configure", std::bind(&InstanceActionWidget::configure, this)));
+  if (model->get_state() > 0)
+    actions.push_back(Action("cloud-upload-alt", "Deploy", std::bind(&InstanceActionWidget::deploy, this)));
+  if (model->get_state() != 0)
+    actions.push_back(Action("play", "Start", std::bind(&InstanceActionWidget::restart, this)));
+  if (model->get_state() != 0)
+    actions.push_back(Action("stop", "Stop", std::bind(&InstanceActionWidget::stop, this)));
+  if (model->get_state() > 0)
+    actions.push_back(Action("eraser", "Uninstall", std::bind(&InstanceActionWidget::uninstall, this)));
+  return actions;
 }
 
-void InstanceActionWidget::render()
+void InstanceActionWidget::set_model(std::shared_ptr<Puppeteer::Instance> instance)
 {
-  html("");
-  attr("style","text-align:center");
-  inner({
-    El("div", {{"class","btn-group"}}).inner({
-      button_deploy, button_restart, button_stop, button_uninstall
-    }),
-    El("div", {{"class","progress mb-3"},{"style","margin-top:20px"}}).inner({progress_bar})
-  });
-  button_configure.visible(model->get_state() != 1 || model->state.get_needs_configure());
-  button_uninstall.visible(model->get_state()  > 0);
-  button_deploy   .visible(model->get_state()  > 0);
-  button_restart  .visible(model->get_state() != 0);
-  button_stop     .visible(model->get_state() != 0);
+  HtmlTemplate::ActionWidget::set_model(instance);
+  signaler.trigger("model-changed");
+  listen_to(model->remote_state_changed, std::bind(&InstanceActionWidget::on_remote_state_changed, this));
+  on_remote_state_changed();
 }
 
-void InstanceActionWidget::configure(client::Event*)
+void InstanceActionWidget::on_remote_state_changed()
+{
+  signaler.trigger("actions-changed");
+}
+
+void InstanceActionWidget::configure()
 {
   if (!performing_action)
   {
@@ -63,7 +56,7 @@ void InstanceActionWidget::configure(client::Event*)
   }
 }
 
-void InstanceActionWidget::uninstall(client::Event*)
+void InstanceActionWidget::uninstall()
 {
   if (!performing_action)
   {
@@ -75,7 +68,7 @@ void InstanceActionWidget::uninstall(client::Event*)
   }
 }
 
-void InstanceActionWidget::deploy(client::Event*)
+void InstanceActionWidget::deploy()
 {
   if (!performing_action)
   {
@@ -87,7 +80,7 @@ void InstanceActionWidget::deploy(client::Event*)
   }
 }
 
-void InstanceActionWidget::restart(client::Event*)
+void InstanceActionWidget::restart()
 {
   if (!performing_action)
   {
@@ -102,7 +95,7 @@ void InstanceActionWidget::restart(client::Event*)
   }
 }
 
-void InstanceActionWidget::stop(client::Event*)
+void InstanceActionWidget::stop()
 {
   if (!performing_action)
   {
@@ -115,25 +108,25 @@ void InstanceActionWidget::stop(client::Event*)
   }
 }
 
-const vector<El*> InstanceActionWidget::get_buttons()
+std::vector<Crails::Front::Element> InstanceActionWidget::get_buttons()
 {
-  return {&button_configure, &button_uninstall, &button_deploy, &button_restart, &button_stop};
+  return find(".actions > button");
 }
 
 void InstanceActionWidget::on_performing_action()
 {
   performing_action = true;
-  for (auto* button : get_buttons())
-    button->attr("disabled","disabled");
+  for (auto button : get_buttons())
+    button.attr("disabled", "disabled");
   progress_bar.set_active(true);
-  console_output.visible(performing_action);
+  console_output->visible(performing_action);
 }
 
 void InstanceActionWidget::on_action_performed()
 {
   performing_action = false;
-  for (auto* button : get_buttons())
-    (*button)->removeAttribute("disabled");
+  for (auto button : get_buttons())
+    button->removeAttribute("disabled");
   progress_bar.set_active(false);
 }
 
@@ -141,7 +134,7 @@ void InstanceActionWidget::on_uninstall_start(const Crails::Front::Ajax& ajax)
 {
   std::string task_uid = ajax.get_response_text();
 
-  console_output.flush();
+  console_output->flush();
   progress_bar.set_progress(0);
   progress_bar.text("Uninstalling...");
   sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_uninstall_task_progress, this, std::placeholders::_1));
@@ -172,18 +165,18 @@ Sync::TaskState InstanceActionWidget::on_task_progress(Crails::Front::Object res
     float  progress      = client::parseFloat((const client::String*)(*response["progress"]));
 
     if (response->hasOwnProperty("message"))
-      console_output << (std::string)(response["message"]);
+      (*console_output) << (std::string)(response["message"]);
     progress_bar.set_progress(progress);
     if (status == "abort")
     {
       on_action_performed();
-      console_output << "/!\\ Task aborted\n";
+      (*console_output) << "/!\\ Task aborted\n";
       return Sync::Abort;
     }
     else if (progress == 1)
     {
       on_action_performed();
-      console_output << "(!) Task successfully completed\n";
+      (*console_output) << "(!) Task successfully completed\n";
       return Sync::Success;
     }
   }
@@ -194,7 +187,7 @@ void InstanceActionWidget::on_configure_start(const Crails::Front::Ajax& ajax)
 {
   std::string task_uid = ajax.get_response_text();
 
-  console_output.flush();
+  console_output->flush();
   progress_bar.set_progress(0);
   progress_bar.text("Deployment...");
   sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_configure_task_progress, this, std::placeholders::_1));

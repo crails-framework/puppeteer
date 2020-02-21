@@ -29,37 +29,47 @@ void make_routes_for(Puppeteer::Router& router, const std::string& path)
 {
   router.match(path, [](const Params&)
   {
-    auto* view = new INDEX;
+    auto view = std::make_shared<INDEX>();
 
-    MainView::instance->attach(*view);
+    MainView::instance->attach(view);
+    view->activate();
   });
 
   router.match(path + "/new", [](const Params&)
   {
-    auto* view = new EDIT;
+    auto view = std::make_shared<EDIT>();
 
-    MainView::instance->attach(*view);
+    MainView::instance->attach(view);
     view->activate();
   });
 
   router.match(path + "/:resource_id", [](const Params& params)
   {
-    auto* view = new SHOW;
-    auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
+    auto view = std::make_shared<SHOW>();
+    auto id   = boost::lexical_cast<unsigned long>(params.at("resource_id"));
 
-    MainView::instance->attach(*view);
+    MainView::instance->attach(view);
     view->activate(id);
   });
 
   router.match(path + "/:resource_id/edit", [](const Params& params)
   {
-    auto* view = new EDIT;
+    auto view = std::make_shared<EDIT>();
     auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
 
-    MainView::instance->attach(*view);
+    MainView::instance->attach(view);
     view->activate(id);
   });
+
+  router.match(path + "/:resource_id/destroy", [](const Params& params)
+  {
+    auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
+
+    __asm__("throw 'not implemented yet'");
+  });
 }
+
+std::shared_ptr<Views::VariableSetForm> tintin;
 
 void Puppeteer::Router::initialize()
 {
@@ -73,10 +83,15 @@ void Puppeteer::Router::initialize()
 
   match("/variables", [](const Params& params)
   {
-    auto* view = new Views::VariableSetForm;
+    auto view = std::make_shared<Views::VariableSetForm>();
 
+    tintin = view;
     MainView::instance->attach(*view);
-    ((Views::ModelForm<Puppeteer::VariableSet>*)view)->activate(0);
+    view->activate();
+  });
+
+  match("/", [](const Params& params)
+  {
   });
 
   Crails::Front::Router::initialize();

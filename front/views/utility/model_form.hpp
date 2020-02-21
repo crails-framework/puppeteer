@@ -1,92 +1,57 @@
 #ifndef  MODEL_FORM_HPP
 # define MODEL_FORM_HPP
 
-# include "template_view.hpp"
 # include "form_view.hpp"
 # include "../../router.hpp"
 
 namespace Views
 {
-  template<typename MODEL>
-  class ModelForm : public TemplateView
+  template<typename MODEL, typename VIEW>
+  class ModelForm : public VIEW
   {
   protected:
-    FormView               form_view;
     std::shared_ptr<MODEL> model;
   public:
-    ModelForm(const std::string& title) : TemplateView("tpl1"), form_view(title)
+    bool has_model() const { return model.get() != nullptr; }
+
+    virtual void update_model_attributes() = 0;
+
+    virtual void activate()
     {
-      listen_to(form_view.sent, std::bind(&ModelForm<MODEL>::save_clicked, this, std::placeholders::_1));
+      VIEW::trigger_binding_updates();
     }
 
-    virtual std::unordered_map<std::string, El> get_inputs() = 0;
-    virtual void update_model_attributes() = 0; 
-    virtual void update_form_attributes() = 0;
-
-    void initialize_form()
+    virtual void activate(unsigned long id)
     {
-      Crails::Front::Element col_lg_12;
-
-      col_lg_12.add_class("col-lg-12");
-      inner({
-        El("div", {{"class","container-fluid"}}).inner({
-          El("div", {{"class", "row"}}).inner({
-            col_lg_12
-          })
-        })
-      });
-      form_view.set_inputs(get_inputs());
-      form_view.append_to(col_lg_12);
-      form_view.initialize_form();
-    }
-
-    void attached()
-    {
-      initialize_form();
-      form_view.attached();
-    }
-
-    void detached()
-    {
-      form_view.detached();
-    }
-
-    void activate()
-    {
-      model = std::make_shared<MODEL>();
-      update_form_attributes();
-    }
-
-    void activate(unsigned long id)
-    {
+      std::cout << "Activating for id " << id << std::endl;
       fetch_one<MODEL>(id, [this](std::shared_ptr<MODEL> _model)
       {
-        activate(_model);
+        std::cout << "Model fetched, activating now" << std::endl;
+        set_model(_model);
+        std::cout << "After fetch induced activation" << std::endl;
       });
     }
 
-    void activate(std::shared_ptr<MODEL> _model)
+    virtual void set_model(std::shared_ptr<MODEL> _model)
     {
+      std::cout << "Activating view with model " << _model->get_id() << std::endl;
       model = _model;
-      update_form_attributes();
+      if (has_model())
+        std::cout << "View has model" << std::endl;
+      VIEW::trigger_binding_updates();
     }
 
-    unsigned long get_my_id() { return 42; }
-
-    void save_clicked(client::Event*)
+    virtual void on_save_clicked()
     {
+      if (!model)
+        model = std::make_shared<MODEL>();
       update_model_attributes();
       model->save().then([this]() { on_saved(); });
     }
 
     virtual void on_saved()
     {
-	    std::cout << "Gonna navigate to path " << model->get_path() << std::endl;
       Puppeteer::Router::instance->navigate(model->get_path(), true);
-    }
-
-    virtual void on_save_failed()
-    {
     }
   };
 }

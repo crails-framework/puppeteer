@@ -1,28 +1,23 @@
 #ifndef  VIEW_BUILDS_HPP
 # define VIEW_BUILDS_HPP
 
-# include "utility/table_view.hpp"
+# include "utility/index_view.hpp"
 # include "../app/builds.hpp"
 
 namespace Views
 {
-  class Builds : public TableView<Puppeteer::Builds>
+  class Builds : public IndexView<Puppeteer::Builds>
   {
   public:
-    Builds()
-    {
-      title = "Builds";
-    }
+    std::string              get_title() const          { return "Builds"; }
+    std::string              get_new_model_path() const { return "#/builds/new"; }
+    std::vector<std::string> get_column_labels() const  { return {"name"}; }
 
-    std::string get_new_model_path() const { return "#/builds/new"; }
-
-    std::vector<std::string> get_columns() const { return {"name"}; }
-
-    std::vector<El> make_columns_for(std::shared_ptr<Puppeteer::Build> model) const
+    Elements make_columns_for(std::shared_ptr<Puppeteer::Build> model) const
     {
       return {
-        El("td").inner({
-          El("a", {{"href",model->get_path()}}).text(model->get_name())
+        Crails::Front::Element("td").inner({
+          Crails::Front::Element("a", {{"href",model->get_path()}}).text(model->get_name())
         })
       };
     }

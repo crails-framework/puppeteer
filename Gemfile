@@ -8,3 +8,5 @@ gem 'guard-sass'
 #gem 'typescript-node'
 #gem 'coffee-script'
 gem 'uglifier'
+
+gem 'nokogiri'

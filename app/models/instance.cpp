@@ -12,7 +12,7 @@ using namespace std;
 odb_instantiable_impl(Instance)
 
 #ifndef __CHEERP_CLIENT__
-void Instance::collect_variables(map<string,string>& variables) const
+void Instance::collect_variables(map<string,string>& variables)
 {
   const VariableList local_variables = get_variables();
 

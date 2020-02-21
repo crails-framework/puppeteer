@@ -3,41 +3,37 @@
 
 # include "utility/model_form.hpp"
 # include "../app/variable_sets.hpp"
+# include "lib/cheerp-html/views/variable_set_new.hpp"
 
 namespace Views
 {
-  class VariableSetForm : public ModelForm<Puppeteer::VariableSet>
+  class VariableSetForm : public ModelForm<Puppeteer::VariableSet, HtmlTemplate::VariableSetNew>
   {
-    VariableListEditor input_variables;
   public:
-    VariableSetForm() : ModelForm("Global variables")
+    ~VariableSetForm()
     {
+      std::cout << "Destroying variable set form" << std::endl;
     }
 
-    std::unordered_map<std::string, El> get_inputs()
+    std::string get_title() const { return "Global variables"; }
+
+    void activate()
     {
-      return {
-        {"environment variables", input_variables}
-      };
+      variables_input.render();
+      ModelForm::activate(0);
+    }
+
+    void set_model(std::shared_ptr<Puppeteer::VariableSet> _model)
+    {
+      ModelForm::set_model(_model);
+      variables_input.set_value(model->get_value());
+      variables_input.render();
     }
 
     void update_model_attributes()
     {
-      model->set_value(input_variables.get_value());
+      model->set_value(variables_input.get_value());
     }
-
-    void update_form_attributes()
-    {
-      input_variables.activate(model->get_value());
-    }
-
-    void attached()
-    {
-      ModelForm::attached();
-      input_variables.render();
-    }
-
-  private:
   };
 }
 

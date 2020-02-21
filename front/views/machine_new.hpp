@@ -2,45 +2,25 @@
 # define VIEW_MACHINE_NEW_HPP
 
 # include "utility/model_form.hpp"
+# include "lib/cheerp-html/views/machine_new.hpp"
 # include "../app/machines.hpp"
 
 namespace Views
 {
-  class MachineNew : public ModelForm<Puppeteer::Machine>
+  class MachineNew : public ModelForm<Puppeteer::Machine, HtmlTemplate::MachineNew>
   {
-    typedef Crails::Front::Element El;
-    Crails::Front::Element input_name, input_ip;
   public:
-    MachineNew() : ModelForm("New machine")
-    {
-      input_name = El("input", {{"name","machine_name"},{"type","text"},{"class","form-control"}});
-      input_ip   = El("input", {{"name","machine_ip"},{"type","text"},{"class","form-control"}});
-    }
-
-    std::unordered_map<std::string, El> get_inputs()
-    {
-      return {
-        {"name",       input_name},
-        {"ip address", input_ip}
-      };
-    }
+    std::string get_title()        const { return model ? model->get_name() : "New machine"; }
+    std::string get_machine_ip()   const { return model ? model->get_ip() : ""; }
+    std::string get_machine_name() const { return model ? model->get_name() : ""; }
 
     void update_model_attributes()
     {
-      model->set_name(input_name.get_value());
-      model->set_ip(input_ip.get_value());
-    }
+      auto name_input = find("[name=\"machine_name\"]")[0];
+      auto ip_input   = find("[name=\"machine_ip\"]")[0];
 
-    void update_form_attributes()
-    {
-      input_name.value(model->get_name());
-      input_ip.value(model->get_ip());
-    }
-
-    void attached()
-    {
-      std::cout << "MachineNew attached" << std::endl;
-      ModelForm::attached();
+      model->set_name(name_input.get_value());
+      model->set_ip(ip_input.get_value());
     }
 
     void on_saved()

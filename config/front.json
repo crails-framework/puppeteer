@@ -1,0 +1,14 @@
+{
+  "elements": [
+    { "require": "FaIcon", "include": "resources/elements/fa_icon.hpp" },
+    { "require": "Title1", "include": "resources/elements/title1.hpp", "tagName": "title-1" },
+    { "require": "HtmlTemplate::Card", "include": "lib/cheerp-html/resources/elements/card.hpp", "tagName": "card" },
+    { "require": "HtmlTemplate::ResponsiveTable", "include": "lib/cheerp-html/resources/elements/responsive_table.hpp", "tagName": "table-responsive" },
+    { "require": "HtmlTemplate::FormGroup", "include": "lib/cheerp-html/resources/elements/form_group.hpp", "tagName": "form-group" },
+    { "require": "HtmlTemplate::ProgressBar", "include": "lib/cheerp-html/resources/elements/progress_bar.hpp", "tagName": "progress-bar" },
+
+    { "require": "HtmlTemplate::ModelView", "include": "lib/cheerp-html/resources/elements/model_view.hpp", "tagName": "model-view" },
+    { "require": "HtmlTemplate::ModelForm", "include": "lib/cheerp-html/resources/elements/model_form.hpp", "tagName": "model-form" },
+    { "require": "Views::VariableListEditor", "include": "views/utility/variable_list_editor.hpp", "tagName": "variable-list-editor" }
+  ]
+}

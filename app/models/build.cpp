@@ -1,6 +1,7 @@
 #include "build.hpp"
 #ifndef __CHEERP_CLIENT__
 # include "lib/odb/application-odb.hxx"
+# include "instance.hpp"
 # include <crails/password.hpp>
 # include <crails/getenv.hpp>
 # include <crails/read_file.hpp>

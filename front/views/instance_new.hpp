@@ -6,60 +6,30 @@
 # include "utility/variable_list_editor.hpp"
 # include "../app/instances.hpp"
 
+# include "lib/cheerp-html/views/instance_new.hpp"
+
 namespace Views
 {
-  class InstanceNew : public ModelForm<Puppeteer::Instance>
+  class InstanceNew : public ModelForm<Puppeteer::Instance, HtmlTemplate::InstanceNew>
   {
-    typedef Crails::Front::Element El;
-    Crails::Front::Element input_name, input_user;
-    CollectionSelectWithName<Puppeteer::Machines> input_machine;
-    CollectionSelectWithName<Puppeteer::Builds>   input_build;
-    VariableListEditor input_variables;
   public:
-    InstanceNew() : ModelForm("New instance")
-    {
-      input_name = El("input", {{"name","instance_name"},{"type","text"},{"class","form-control"}});
-      input_user = El("input", {{"name","instance_user"},{"type","text"},{"class","form-control"}});
-      input_machine.add_class("form-control");
-      input_build.add_class("form-control");
-      input_build.with_empty_option(true);
-    }
-
-    std::unordered_map<std::string, El> get_inputs()
-    {
-      return {
-        {"name",      input_name},
-        {"user name", input_user},
-        {"machine",   input_machine},
-        {"build",     input_build},
-        {"environment variables", input_variables}
-      };
-    }
+    std::string   get_title() const { return model ? model->get_name() : "New instance"; }
+    std::string   get_instance_name() const       { return model ? model->get_name() : ""; }
+    std::string   get_instance_user() const       { return model ? model->get_user() : ""; }
+    unsigned long get_instance_build_id() const   { return model ? model->get_build_id() : ODB_NULL_ID; }
+    unsigned long get_instance_machine_id() const { return model ? model->get_machine_id() : ODB_NULL_ID; }
+    std::string   get_instance_variables() const  { return model ? model->get_variables() : ""; }
 
     void update_model_attributes()
     {
-      model->set_name(input_name.get_value());
-      model->set_user(input_user.get_value());
-      model->set_machine_id( boost::lexical_cast<unsigned long>(input_machine.get_value()));
-      model->set_build_id  ( boost::lexical_cast<unsigned long>(input_build.get_value()));
-      model->set_variable_list(input_variables.get_value());
-    }
+      auto name_input = find("[name=\"instance_name\"]")[0];
+      auto user_input = find("[name=\"instance_user\"]")[0];
 
-    void update_form_attributes()
-    {
-      input_name.value(model->get_name());
-      input_user.value(model->get_user());
-      input_machine.value(boost::lexical_cast<std::string>(model->get_machine_id()));
-      input_build.value  (boost::lexical_cast<std::string>(model->get_build_id()));
-      input_variables.activate(model->get_variable_list());
-    }
-
-    void attached()
-    {
-      ModelForm::attached();
-      input_machine.render();
-      input_build.render();
-      input_variables.render();
+      model->set_name(name_input.get_value());
+      model->set_user(user_input.get_value());
+      model->set_build_id(build_input.value<ODB::id_type>());
+      model->set_machine_id(machine_input.value<ODB::id_type>());
+      model->set_variable_list(variables_input.get_value());
     }
   };
 }

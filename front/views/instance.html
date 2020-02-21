@@ -1,0 +1,39 @@
+<template>
+  <head>
+    <include src="views/instance/action_widget.hpp" require="InstanceActionWidget" />
+    <include src="views/instance/console_output.hpp" require="ConsoleOutput" />
+    <include src="app/instances.hpp" />
+  <script>
+    virtual std::shared_ptr<Puppeteer::Instance> get_model() const = 0;
+  </script>
+  </head>
+  <body>
+    <model-view cpp::title.bind='"Instance"' ref="wrapper">
+      <div slot="content" class="row">
+        <div class="col-lg-6">
+          <card cpp::title.bind='"State"'>
+            <div slot="content">
+            </div>
+          </card>
+        </div>
+
+        <div class="col-lg-6">
+          <card cpp::title.bind='"Actions"'>
+            <div slot="content">
+              <instance-action-widget cpp::model.bind="root->get_model() & signal:model-changed" ref="action_widget">
+              </instance-action-widget>
+            </div>
+          </card>
+        </div>
+
+        <div class="col-lg-12">
+          <card cpp::title.bind='"Console output"'>
+            <div slot="content">
+              <console-output ref="console_output" />
+            </div>
+          </card>
+        </div>
+      </div>
+    </model-view>
+  </body>
+</template>

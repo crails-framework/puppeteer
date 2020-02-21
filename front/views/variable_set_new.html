@@ -1,0 +1,18 @@
+<template>
+  <head>
+    <script>
+      virtual void on_save_clicked() = 0;
+      virtual std::string get_title() const = 0;
+    </script>
+  </head>
+  <body>
+    <model-form cpp::title.bind="get_title()" cpp::save-clicked.trigger="on_save_clicked()">
+      <div slot="inputs">
+        <form-group cpp::label.bind='"environment variables"'>
+          <variable-list-editor slot="input" ref="variables_input">
+          </variable-list-editor>
+        </form-group>
+      </div>
+    </model-form>
+  </body>
+</template>

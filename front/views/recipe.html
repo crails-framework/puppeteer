@@ -1,0 +1,48 @@
+<template>
+  <head>
+    <script>
+      virtual void on_pull_clicked() = 0;
+      virtual const std::string get_recipe_url() const = 0;
+      virtual const std::string get_recipe_branch() const = 0;
+      virtual const std::string get_recipe_tip() const = 0;
+    </script>
+  </head>
+  <body>
+    <model-view cpp::title.bind='"Recipe"' ref="wrapper">
+      <div slot="content" class="row">
+        <div class="col-lg-6">
+          <card cpp::title.bind='"Informations"'>
+            <div slot="content" class="table table-responsive">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>URL</td>
+		    <td text.bind="root->get_recipe_url() & signal:model-changed"></td>
+                  </tr>
+		  <tr>
+                    <td>Branch</td>
+		    <td text.bind="root->get_recipe_branch() & signal:model-changed"></td>
+		  </tr>
+                  <tr>
+                    <td>Tip</td>
+		    <td text.bind="root->get_recipe_tip() & signal:model-changed"></td>
+                  </tr>
+                </tbody>
+	      </table>
+            </div>
+          </card>
+	</div>
+        <div class="col-lg-6">
+          <card cpp::title.bind='"Actions"'>
+            <div slot="content">
+              <button click.trigger="root->on_pull_clicked()">
+                <fa-icon cpp::name.bind='"download"' />
+                Pull
+              </button>
+            </div>
+          </card>
+        </div>
+      </div>
+    </model-view>
+  </body>
+</template>

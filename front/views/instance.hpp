@@ -10,40 +10,21 @@
 # include "instance/state_widget.hpp"
 # include "instance/console_output.hpp"
 
+# include "lib/cheerp-html/views/instance.hpp"
+
 namespace Views
 {
-  class Instance : public ModelView<Puppeteer::Instance>
+  class Instance : public ModelView<Puppeteer::Instance, HtmlTemplate::Instance>
   {
-    InstanceStateWidget  state_widget;
-    InstanceActionWidget action_widget;
-    ConsoleOutput        console_output;
   public:
-    Instance() : ModelView("Instance"), action_widget(console_output)
+    Instance()
     {
-      page_content.attr("class", "row").inner({
-        El("div", {{"class","col-lg-6"}}).inner({
-          Theme::card("State", state_widget)
-        }),
-        El("div", {{"class","col-lg-6"}}).inner({
-          Theme::card("Actions", action_widget)
-        }),
-        El("div", {{"class","col-lg-12"}}).inner({
-          Theme::card("Console output", console_output)
-        })
-      });
-      console_output.attr("class","console-output");
-      console_output.visible(false);
+      action_widget.set_console_output(&console_output);
     }
 
     void activate(unsigned long instance_id)
     {
       ModelView::activate(instance_id);
-    }
-
-    void on_model_received()
-    {
-      state_widget.activate(model);
-      action_widget.activate(model);
     }
   };
 }

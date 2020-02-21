@@ -33,8 +33,9 @@ file(GLOB_RECURSE crails_app
      app/routes.cpp
      app/invalid_request.cpp
      config/*.cpp
-     lib/*.cpp
-     lib/*.cxx)
+     lib/app/*.cpp
+     lib/odb/*.cxx
+     lib/renderers/*.cpp)
 
 file(GLOB_RECURSE server_files
      app/main.cpp)

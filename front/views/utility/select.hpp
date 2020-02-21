@@ -1,25 +1,37 @@
 #ifndef  SELECT_ELEMENT_HPP
 # define SELECT_ELEMENT_HPP
 
-# include <crails/front/element.hpp>
+# include <crails/front/custom_element.hpp>
 # include <crails/front/mvc/collection.hpp>
 
 namespace Views
 {
   template<typename COLLECTION>
-  class CollectionSelect : public Crails::Front::Element
+  class CollectionSelect : public Crails::Front::CustomElement
   {
     bool _with_empty_option = false;
   public:
     typedef typename COLLECTION::Model Model;
 
-    CollectionSelect() : Element("select")
+    CollectionSelect() : CustomElement("select")
     {
     }
 
     virtual std::string label_for(const Model& model) = 0;
 
-    void render()
+    void bind_attributes()
+    {
+      CustomElement::bind_attributes();
+      fetch();
+    }
+
+    void trigger_binding_updates()
+    {
+      CustomElement::trigger_binding_updates();
+      on_fetched();
+    }
+
+    void fetch()
     {
       collection.fetch().then([this]() { on_fetched(); });
     }
@@ -31,6 +43,12 @@ namespace Views
         _with_empty_option = val;
         on_fetched();
       }
+    }
+
+    template<typename PARAM>
+    void set_value(PARAM __v)
+    {
+      value(__v);
     }
 
   protected:
@@ -54,7 +72,7 @@ namespace Views
         option.text(label_for(*model));
         options.push_back(option);
       });
-      html("").inner(options);
+      empty().inner(options);
     }
 
   private:

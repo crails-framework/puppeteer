@@ -4,40 +4,27 @@
 # include "utility/model_form.hpp"
 # include "../app/credentials.hpp"
 
+# include "lib/cheerp-html/views/credential_new.hpp"
+
 namespace Views
 {
-  class CredentialNew : public ModelForm<Puppeteer::Credential>
+  class CredentialNew : public ModelForm<Puppeteer::Credential, HtmlTemplate::CredentialNew>
   {
-    Crails::Front::Element input_name, input_username, input_password;
   public:
-    CredentialNew() : ModelForm("New credentials")
-    {
-      input_name     = El("input", {{"name","credential_name"},{"type","text"},{"class","form-control"}});
-      input_username = El("input", {{"name","credential_user"},{"type","text"},{"class","form-control"}});
-      input_password = El("input", {{"name","credential_pswd"},{"type","password"},{"class","form-control"}});
-    }
-
-    std::unordered_map<std::string, El> get_inputs()
-    {
-      return {
-        {"title",    input_name},
-        {"username", input_username},
-        {"password", input_password}
-      };
-    }
+    std::string get_title() const { return model ? model->get_name() : "New credentials"; }
+    std::string get_credentials_name() const { return model ? model->get_name() : ""; }
+    std::string get_credentials_user() const { return model ? model->get_username() : ""; }
+    std::string get_credentials_pswd() const { return model ? model->get_password() : ""; }
 
     void update_model_attributes()
     {
-      model->set_name(input_name.get_value());
-      model->set_username(input_username.get_value());
-      model->set_password(input_password.get_value());
-    }
+      auto name_input  = find("[name=\"credentials_name\"]")[0];
+      auto user_input  = find("[name=\"credentials_user\"")[0];
+      auto pswd_input  = find("[name=\"credentials_pswd\"")[0];
 
-    void update_form_attributes()
-    {
-      input_name.value(model->get_name());
-      input_username.value(model->get_username());
-      input_password.value(model->get_password());
+      model->set_name(name_input.get_value());
+      model->set_username(name_input.get_value());
+      model->set_password(pswd_input.get_value());
     }
   };
 }

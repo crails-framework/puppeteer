@@ -1,0 +1,36 @@
+<template>
+  <head>
+  <script>
+    virtual std::string              get_title() const = 0;
+    virtual std::string              get_new_model_path() const = 0;
+    virtual std::vector<std::string> get_column_labels() const = 0;
+  </script>
+  </head>
+  <body>
+    <title-1 cpp::title.bind="get_title()">
+      <div slot="controls">
+        <a class="au-btn au-btn-icon au-btn--blue"
+           href.bind="root->get_new_model_path()">
+          <i class="zmdi zmdi-plus"></i>
+          Add
+        </a>
+      </div>
+    </title-1>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <table-responsive>
+          <thead slot="thead">
+            <tr>
+              <th repeat.for="column of [std::vector<std::string>]root->get_column_labels()"
+                  text.bind="column">
+              </th>
+            </tr>
+          </thead>
+          <tbody slot="tbody" ref="tbody">
+          </tbody>
+        </table-responsive>
+      </div>
+    </div>
+  </body>
+</template>

@@ -7,58 +7,30 @@
 # include "../app/recipes.hpp"
 # include "../app/credentials.hpp"
 
+# include "lib/cheerp-html/views/recipe_new.hpp"
+
 namespace Views
 {
-  class RecipeNew : public ModelForm<Puppeteer::Recipe>
+  class RecipeNew : public ModelForm<Puppeteer::Recipe, HtmlTemplate::RecipeNew>
   {
-    Crails::Front::Element input_name, input_git_url, input_git_branch;
-    CollectionSelectWithName<Puppeteer::Credentials> input_credential;
   public:
-    RecipeNew() : ModelForm("New recipe")
-    {
-      input_name       = El("input", {{"name","recipe_name"},{"type","text"},{"class","form-control"}});
-      input_git_url    = El("input", {
-        {"name","recipe_git_url"},{"type","text"},{"class","form-control"},{"placeholder","https://"}
-      });
-      input_git_branch = El("input", {
-        {"name","recipe_git_branch"},{"type","text"},{"class","form-control"},{"placeholder","master"}
-      });
-      input_credential.add_class("form-control");
-      input_credential.with_empty_option(true);
-    }
-
-    std::unordered_map<std::string, El> get_inputs()
-    {
-      return {
-        {"name",        input_name},
-        {"git url",     input_git_url },
-        {"git branch",  input_git_branch },
-        {"credentials", input_credential }
-      };
-    }
+    std::string   get_title() const { return model ? model->get_name() : "New recipe"; }
+    std::string   get_recipe_name() const { return model ? model->get_name() : ""; }
+    std::string   get_recipe_git_url() const { return model ? model->get_git_url() : ""; }
+    std::string   get_recipe_git_branch() const { return model ? model->get_git_branch() : ""; }
+    unsigned long get_recipe_credentials_id() const { return model ? model->get_credential_id() : ODB_NULL_ID; }
 
     void update_model_attributes()
     {
-      model->set_name(input_name.get_value());
-      model->set_git_url(input_git_url.get_value());
-      model->set_git_branch(input_git_branch.get_value());
-      model->set_credential_id( boost::lexical_cast<unsigned long>(input_credential.get_value()) );
-    }
+      auto name_input    = find("[name=\"recipe_name\"]")[0];
+      auto git_input     = find("[name=\"recipe_git_url\"")[0];
+      auto branch_input  = find("[name=\"recipe_git_branch\"")[0];
 
-    void update_form_attributes()
-    {
-      input_name.value(model->get_name());
-      input_git_url.value(model->get_git_url());
-      input_git_branch.value(model->get_git_branch());
-      input_credential.value( boost::lexical_cast<std::string>(model->get_credential_id()) );
+      model->set_name(name_input.get_value());
+      model->set_git_url(git_input.get_value());
+      model->set_git_branch(branch_input.get_value());
+      model->set_credential_id(credential_input.value<ODB::id_type>());
     }
-
-    void attached()
-    {
-      ModelForm::attached();
-      input_credential.render();
-    }
-  private:
   };
 }
 

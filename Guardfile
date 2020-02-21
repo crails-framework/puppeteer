@@ -14,6 +14,10 @@ group :before_compile do
     watch(%r{app/models/.+.h(pp|xx)?$})
   end
 
+  guard 'crails-cheerp-html' do
+    watch(%r{front/.+\.html$})
+  end
+
   guard 'crails-cheerp' do
     watch(%r{front/.+\.(cpp|hpp)$})
   end

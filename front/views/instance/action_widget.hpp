@@ -1,12 +1,8 @@
 #ifndef  INSTANCE_ACTION_WIDGET_HPP
 # define INSTANCE_ACTION_WIDGET_HPP
 
-# include <crails/front/element.hpp>
-# include <crails/front/signal.hpp>
-# include "front/app/instances.hpp"
-# include "front/views/utility/button.hpp"
-# include "front/views/utility/progress_bar.hpp"
 # include "console_output.hpp"
+# include "lib/cheerp-html/views/instance/action_widget.hpp"
 
 namespace Sync
 {
@@ -18,29 +14,27 @@ namespace Sync
   };
 }
 
-namespace Views
+class InstanceActionWidget : public HtmlTemplate::ActionWidget, public Crails::Listener
 {
-  class InstanceActionWidget : public Crails::Front::Element, public Crails::Listener
-  {
-    std::shared_ptr<Puppeteer::Instance> model;
-    Button button_configure, button_uninstall, button_deploy, button_restart, button_stop;
-    ProgressBar     progress_bar;
-    ConsoleOutput&  console_output;
+    ConsoleOutput* console_output = nullptr;
     bool performing_action = false;
   public:
-    InstanceActionWidget(ConsoleOutput& console_output);
+    InstanceActionWidget();
 
-    void activate(std::shared_ptr<Puppeteer::Instance> instance);
-    void render();
-    void configure(client::Event*);
-    void uninstall(client::Event*);
-    void deploy(client::Event*);
-    void restart(client::Event*);
-    void stop(client::Event*);
+    Actions get_visible_actions();
+
+    void set_console_output(ConsoleOutput* value) { console_output = value; }
+    void set_model(std::shared_ptr<Puppeteer::Instance> instance);
+    void configure();
+    void uninstall();
+    void deploy();
+    void restart();
+    void stop();
 
   private:
-    const std::vector<Crails::Front::Element*> get_buttons();
+    std::vector<Crails::Front::Element> get_buttons();
 
+    void on_remote_state_changed();
     void on_performing_action();
     void on_ajax_action_performed(const Crails::Front::Ajax&) { on_action_performed(); }
     void on_action_performed();
@@ -64,7 +58,6 @@ namespace Views
 
     void on_stopped(const Crails::Front::Ajax&);
     void on_stop_failed(const Crails::Front::Ajax&);
-  };
-}
+};
 
 #endif

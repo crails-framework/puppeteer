@@ -15,11 +15,17 @@ namespace Views
 
     FormView(const std::string& title) : TemplateView("tpl1")
     {
+      std::cout << "FormView constructor" << std::endl;
       Theme::_card(*this, title, form_el);
       button_save = El("button", {{"class","btn btn-lg btn-info btn-block"}}).inner({
         Theme::fa_icon("save"),
         El("span").text(" Save")
       });
+    }
+
+    ~FormView()
+    {
+      std::cout << "FormView destructor" << std::endl;
     }
 
     void initialize_form()
@@ -45,7 +51,7 @@ namespace Views
       button_listener = cheerp::Callback([this](client::Event* event) {
         std::cout << "button_listener triggered" << std::endl;
         sent.trigger(event);
-	std::cout << "button_listener triggered /end" << std::endl;
+        std::cout << "button_listener triggered /end" << std::endl;
       });
       button_save->addEventListener("click", button_listener);
     }

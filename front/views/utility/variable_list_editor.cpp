@@ -1,4 +1,5 @@
 #include "variable_list_editor.hpp"
+#include <iostream>
 
 using namespace Views;
 
@@ -9,6 +10,7 @@ VariableListEditor::VariableListEditor()
   button_add.text("Add variable");
   button_add.add_class("btn-primary");
   listen_to(button_add.clicked, std::bind(&VariableListEditor::on_add_clicked, this, std::placeholders::_1));
+  std::cout << "VariableListEditor constructor" << std::endl;
 }
 
 void VariableListEditor::render()
@@ -17,9 +19,10 @@ void VariableListEditor::render()
   std::vector<Crails::Front::Element> fields;
 
   inputs.clear();
-  View::render();
   html("");
   event_listeners.clear();
+
+  std::cout << "VariableListEditor::render()" << std::endl;
 
   if (!read_only)
     variable_map[""] = "";
@@ -56,8 +59,10 @@ void VariableListEditor::render()
       })
     );
     fields.push_back(El("div",{{"style","clear:both;"}}));
+    std::cout << "VariableListEditor Adding button" << std::endl;
   }
   inner(fields);
+  std::cout << "VariableListEditor render over" << std::endl;
 }
 
 

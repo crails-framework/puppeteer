@@ -36,7 +36,7 @@ public:
   void serialize(IArchive&);
 
 # ifndef __CHEERP_CLIENT__
-  void collect_variables(std::map<std::string,std::string>&) const;
+  void collect_variables(std::map<std::string,std::string>&);
   void configure(Sync::Task&);
   void uninstall(Sync::Task&);
   void deploy(Sync::Task&, const std::string& build_id);

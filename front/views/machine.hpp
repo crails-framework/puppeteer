@@ -3,14 +3,16 @@
 
 # include "utility/model_view.hpp"
 # include "../app/machines.hpp"
+# include "lib/cheerp-html/views/machine.hpp"
 
 namespace Views
 {
-  class Machine : public ModelView<Puppeteer::Machine>
+  class Machine : public ModelView<Puppeteer::Machine, HtmlTemplate::Machine>
   {
   public:
-    Machine() : ModelView("Machine")
+    Machine()
     {
+      trigger_binding_updates();
     }
   };
 }

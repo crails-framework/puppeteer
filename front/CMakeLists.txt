@@ -22,6 +22,7 @@ file(GLOB_RECURSE front_files
      *.cpp
      ../lib/app/data/shared/*.cpp
      ../lib/app/data/*.archive.cpp
+     ../lib/cheerp-html/*.cpp
      ../app/models/*.cpp)
 
 file(GLOB_RECURSE crails_front_files

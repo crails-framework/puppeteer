@@ -306,6 +306,14 @@ section {
     background: #3868cd;
 }
 
+.au-btn--red {
+    background: #fa4251;
+}
+
+.au-btn--red:hover {
+    background: #ff5a67;
+}
+
 .au-btn--blue2 {
     background: #00aced;
 }
@@ -405,6 +413,20 @@ section {
     padding: 0 20px;
     line-height: 40px;
     font-size: 14px;
+}
+
+.btn-group .au-btn {
+  border-radius: 0;
+}
+
+.btn-group .au-btn:first-of-type {
+  border-bottom-left-radius: 3px;
+  border-top-left-radius: 3px;
+}
+
+.btn-group .au-btn:last-of-type {
+  border-bottom-right-radius: 3px;
+  border-top-right-radius: 3px;
 }
 
 /* ----- Form ----- */
