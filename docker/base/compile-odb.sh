@@ -11,6 +11,8 @@ CUTL_VERSION_MINOR=11
 CUTL_VERSION_PATCH=0
 CUTL_VERSION="$CUTL_VERSION_MAJOR.$CUTL_VERSION_MINOR.$CUTL_VERSION_PATCH-a1"
 
+apt-get install -y libpq-dev
+
 PRERELEASE_URL=https://codesynthesis.com/~boris/tmp/odb/pre-release/b.3/
 
 wget "$PRERELEASE_URL/libcutl-$CUTL_VERSION.tar.gz"
