@@ -1,0 +1,16 @@
+{
+  "name": "uniplaned-faye",
+  "description": "Synchronization for uniplaned",
+  "version": "0.1.0",
+  "repository": {
+    "type": "???",
+    "url": "???"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "faye": "^1.2.4",
+    "npid": "^0.4.0"
+  },
+  "peerDependencies": {},
+  "devDependencies": {}
+}

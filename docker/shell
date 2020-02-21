@@ -1,0 +1,31 @@
+#!/bin/sh -ex
+
+machine_name="puppeteer_dock"
+docker_build_options="-q"
+docker_options="-it"
+command=""
+
+while getopts "vac:" option
+do
+  case $option in
+    v)
+      docker_build_options=""
+      ;;
+    a)
+      docker_options="-t"
+      ;;
+    c)
+      command="$OPTARG"
+      ;;
+  esac
+done
+
+mkdir -p docker/build docker/.bundle
+
+docker build $docker_build_options -t "$machine_name" docker/base
+
+docker run --net=host $docker_options --rm \
+  -v "`pwd`:/opt/webapp" \
+  -v "`pwd`/docker/output:/opt/webapp/build" \
+  -v "`pwd`/docker/.bundle:/opt/webapp/.bundle" \
+  "$machine_name" bash $command
