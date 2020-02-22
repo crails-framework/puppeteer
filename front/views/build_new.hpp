@@ -14,6 +14,11 @@ namespace Views
   class BuildNew : public ModelForm<Puppeteer::Build, HtmlTemplate::BuildNew>
   {
   public:
+    BuildNew()
+    {
+      credentials_input.with_empty_option(true);
+    }
+
     std::string get_title() const { return model ? model->get_name() : "New build"; }
     std::string get_build_name() const { return model ? model->get_name() : ""; }
     std::string get_build_git_url() const { return model ? model->get_git() : ""; }
@@ -26,7 +31,7 @@ namespace Views
     void update_model_attributes()
     {
       auto name_input    = find("[name=\"build_name\"]")[0];
-      auto git_input     = find("[name=\"build_git_url\"")[0];
+      auto git_input     = find("[name=\"build_git\"")[0];
       auto branch_input  = find("[name=\"build_branch\"")[0];
       auto options_input = find("[name=\"build_options\"")[0];
 
