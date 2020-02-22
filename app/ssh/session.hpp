@@ -10,35 +10,32 @@ namespace Ssh
   class Channel;
   class Scp;
 
-  class Session
+  struct Session
   {
+    friend class Channel;
+    ssh_session handle;
+    int vbs = SSH_LOG_RARE;
+    bool accepts_unknown_hosts = false;
+    bool is_open = false;
   public:
     Session();
     ~Session();
 
-    void should_accept_unknown_hosts(bool val);
+    void should_accept_unknown_hosts(bool val) { accepts_unknown_hosts = val; }
 
-    void disconnect();
-    void connect(const std::string& username, const std::string& hostname, int port = 22);
-
-    void authentify_host();
-    void authentify(const std::string& password);
+    void connect(const std::string& user, const std::string& ip, const std::string& port = "22");
     void authentify_with_pubkey(const std::string& password = "");
-
-    int exec(const std::string& command, Sync::Stream&);
-
     std::shared_ptr<Channel> make_channel();
     std::shared_ptr<Scp>     make_scp_session(const std::string& path, int mode);
-
-  private:
     void raise(const std::string& message);
 
-    ssh_session handle;
-    int verbosity;
-    int rc;
-    bool authentified = false;
-    bool accepts_unknown_hosts = false;
+    int exec(const std::string& command, Sync::Stream& output);
+
+  private:
   };
 }
+
+# include "channel.hpp"
+# include "scp.hpp"
 
 #endif

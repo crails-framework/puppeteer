@@ -7,20 +7,16 @@
 
 namespace Ssh
 {
+  class Session;
+
   class Channel
   {
+    friend class Session;
+    ssh_channel handle;
   public:
-    Channel(ssh_session session_handle);
     ~Channel();
 
-    void open();
-    void close();
     int exec(const std::string& command, Sync::Stream& output);
-    int exec(const std::string& command);
-
-  private:
-    ssh_channel handle;
-    bool is_open = false;
   };
 }
 

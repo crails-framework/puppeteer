@@ -256,9 +256,9 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
 
       stringstream command_stream;
       command_stream << "cd '" << app_path << "' && "
-	     << "'./" << remote_folder << "/deploy.sh'"
-	     << " '" << remote_folder << '/' << variable_filename + '\''
-	     << " 2>&1";
+             << "'./" << remote_folder << "/deploy.sh'"
+             << " '" << remote_folder << '/' << variable_filename + '\''
+             << " 2>&1";
 
       status = ssh.exec(command_stream.str(), stream);
       if (status)

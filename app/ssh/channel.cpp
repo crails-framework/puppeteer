@@ -3,67 +3,29 @@
 using namespace Ssh;
 using namespace std;
 
-Channel::Channel(ssh_session session_handle)
+int Channel::exec(const string& command, Sync::Stream& output)
 {
-  handle = ssh_channel_new(session_handle);
-  if (handle == NULL)
-    throw std::runtime_error("cannot create an ssh channel");
+  int  timeout_ms = 1000;
+  char buffer[256];
+  int  bytes_red;
+  int rc = ssh_channel_request_exec(handle, command.c_str());
+
+  while (!ssh_channel_is_eof(handle))
+  {
+    bytes_red = ssh_channel_read_timeout(handle, buffer, sizeof(buffer), 0, timeout_ms);
+
+    for (int i = 0 ; i < bytes_red ; ++i)
+      output << buffer[i];
+    std::cout << buffer << std::endl;
+  }
+  return ssh_channel_get_exit_status(handle);
 }
 
 Channel::~Channel()
 {
-  if (handle != NULL)
-  {
-    close();
-    ssh_channel_free(handle);
-  }
-}
-
-void Channel::open()
-{
-  if (!is_open)
-  {
-    int rc = ssh_channel_open_session(handle);
-
-    if (rc != SSH_OK)
-      throw std::runtime_error("cannot open an ssh channel");
-    is_open = true;
-  }
-}
-
-void Channel::close()
-{
-  if (is_open)
+  if (handle)
   {
     ssh_channel_close(handle);
-    is_open = false;
+    ssh_channel_free(handle);
   }
-}
-
-int Channel::exec(const std::string& command, Sync::Stream& output)
-{
-  char buffer[256];
-  int  nbytes;
-  int rc;
-
-  open();
-  rc = ssh_channel_request_exec(handle, command.c_str());
-  if (rc != SSH_OK)
-    throw std::runtime_error("cannot run command `" + command + "` on ssh channel");
-  do {
-    nbytes = ssh_channel_read(handle, buffer, sizeof(buffer), 0);
-    for (int i = 0 ; i < nbytes ; ++i)
-      output << buffer[i];
-  } while (nbytes > 0);
-  if (nbytes == SSH_ERROR)
-    throw std::runtime_error("failed to run command `" + command + "` on ssh channel");
-  ssh_channel_send_eof(handle);
-  return ssh_channel_get_exit_status(handle);
-}
-
-int Channel::exec(const std::string& command)
-{
-  Sync::Stream stream;
-
-  return exec(command, stream);
 }

@@ -45,9 +45,9 @@ namespace Views
         std::cout << "fetched builds" << std::endl;
         std::string buildable = data["buildable"];
 
-	set_enabled_state(buildable == "true");
-	builds = data["builds"];
-	signaler.trigger("builds-fetched");
+        set_enabled_state(buildable == "true");
+        builds = data["builds"];
+        signaler.trigger("builds-fetched");
       }
       else
         std::cout << "fetched builds, but there's no json response" << std::endl;

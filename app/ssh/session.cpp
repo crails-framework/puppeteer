@@ -7,118 +7,74 @@ using namespace Ssh;
 
 Session::Session()
 {
-  rc = SSH_ERROR;
   handle = ssh_new();
-  if (handle == NULL)
-    throw std::runtime_error("cannot start a new ssh session");
   ssh_set_blocking(handle, 1);
-  verbosity = SSH_LOG_PROTOCOL;
 }
 
 Session::~Session()
 {
-  disconnect();
+  std::cout << "Closing ssh session" << std::endl;
   if (handle != NULL)
     ssh_free(handle);
 }
 
-void Session::should_accept_unknown_hosts(bool val) { accepts_unknown_hosts = val; }
-
-void Session::disconnect()
+void Session::connect(const string& user, const string& ip, const string& port)
 {
-  if (rc == SSH_OK)
+  ssh_options_set(handle, SSH_OPTIONS_HOST,          ip.c_str());
+  ssh_options_set(handle, SSH_OPTIONS_PORT_STR,      port.c_str());
+  ssh_options_set(handle, SSH_OPTIONS_USER,          user.c_str());
+  ssh_options_set(handle, SSH_OPTIONS_LOG_VERBOSITY, &vbs);
+  int con_result = ssh_connect(handle);
+  if (con_result != SSH_OK)
   {
-    ssh_disconnect(handle);
-    rc = SSH_ERROR;
-    authentified = false;
+    std::cout << "SSH connection failed. Error code is:  " << con_result << std::endl;
+    raise("SSH connection failed");
   }
 }
 
-void Session::connect(const std::string& username, const std::string& hostname, int port)
+void Session::authentify_with_pubkey(const string& password)
 {
-  disconnect();
-  ssh_options_set(handle, SSH_OPTIONS_HOST, hostname.c_str());
-  ssh_options_set(handle, SSH_OPTIONS_PORT, &port);
-  ssh_options_set(handle, SSH_OPTIONS_USER, username.c_str());
-  ssh_options_set(handle, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
-  rc = ssh_connect(handle);
-  if (rc != SSH_OK)
-    raise("failed to connect");
+  int auth_result = ssh_userauth_publickey_auto(handle, NULL, password.c_str());
+  if (auth_result != SSH_AUTH_SUCCESS)
+  {
+    std::cout << "SSH authentication failed. Error code is:  " << auth_result << std::endl;
+    raise("SSH authentication failed");
+  }
+}
+
+shared_ptr<Channel> Session::make_channel()
+{
+  auto channel = make_shared<Channel>();
+
+  channel->handle = ssh_channel_new(handle);
+  if (channel == NULL)
+  {
+    std::cout << "Failed to create SSH channel." << std::endl;
+    raise("Failed to create SSH channel");
+  }
+
+  ssh_channel_open_session(channel->handle);
+  if (ssh_channel_is_open(channel->handle))
+    std::cout << "Channel is open" << std::endl;
   else
-    authentify_host();
+    std::cout << "Channel is closed" << std::endl;
+  return channel;
 }
 
-void Session::authentify_host()
+shared_ptr<Scp> Session::make_scp_session(const string& path, int mode)
 {
-  int state, hlen;
-  unsigned char* hash = NULL;
-
-  state = ssh_is_server_known(handle);
-  hlen  = ssh_get_pubkey_hash(handle, &hash);
-  switch (state)
-  {
-  case SSH_SERVER_KNOWN_OK:
-    break ;
-  case SSH_SERVER_KNOWN_CHANGED:
-    raise("host key for server changed");
-    break ;
-  case SSH_SERVER_FOUND_OTHER:
-    raise("the host key for this server was not found, but another type of key exists");
-    break ;
-  case SSH_SERVER_FILE_NOT_FOUND:
-  case SSH_SERVER_NOT_KNOWN:
-    if (accepts_unknown_hosts)
-      ssh_write_knownhost(handle);
-    else
-      raise("host is unknown");
-    break ;
-  }
+  return make_shared<Scp>(handle, path, mode);
 }
 
-void Session::authentify(const std::string& password)
-{
-  int result = ssh_userauth_password(handle, NULL, password.c_str());
-
-  if (result == SSH_AUTH_ERROR)
-    raise("failed to authentify");
-  authentified = true;
-}
-
-void Session::authentify_with_pubkey(const std::string& password)
-{
-  int result = ssh_userauth_publickey_auto(handle, NULL, password.c_str());
-
-  if (result == SSH_AUTH_PARTIAL)
-  {
-    std::cout << "/!\\ SSH_AUTH_PARTIAL needs password" << std::endl;
-    authentify(password);
-  }
-  else if (result == SSH_AUTH_ERROR)
-    raise("failed to authentify");
-  else if (result != SSH_AUTH_SUCCESS)
-    std::cout << "/!\\ ssh_userauth_publickey_auto: result was not SSH_AUTH_SUCCESS" << std::endl;
-  authentified = true;
-}
-
-std::shared_ptr<Channel> Session::make_channel()
-{
-  return std::make_shared<Channel>(handle);
-}
-
-std::shared_ptr<Scp> Session::make_scp_session(const std::string& path, int mode)
-{
-  return std::make_shared<Scp>(handle, path, mode);
-}
-
-int Session::exec(const string& command, Sync::Stream& output)
-{
-  return make_channel()->exec(command, output);
-}
-
-void Session::raise(const std::string& message)
+void Session::raise(const string& message)
 {
   std::stringstream stream;
 
   stream << "Ssh::Session " << message << ": " << ssh_get_error(handle);
   throw std::runtime_error(stream.str().c_str());
+}
+
+int Session::exec(const string& command, Sync::Stream& output)
+{
+  return make_channel()->exec(command, output);
 }

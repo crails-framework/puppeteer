@@ -73,6 +73,7 @@ std::shared_ptr<Views::VariableSetForm> tintin;
 
 void Puppeteer::Router::initialize()
 {
+  std::cout << "Router initialize begin" << std::endl;
   instance = this;
 
   make_routes_for<Views::Machines,    Views::Machine,    Views::MachineNew>   (*this, "/machines");
@@ -94,5 +95,7 @@ void Puppeteer::Router::initialize()
   {
   });
 
+  std::cout << "Router initialize end" << std::endl;
   Crails::Front::Router::initialize();
+  std::cout << "Router initialize base end" << std::endl;
 }
