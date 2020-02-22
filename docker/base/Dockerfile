@@ -49,6 +49,7 @@ RUN bash ./crails.sh
 ENV CRAILS_SHARED_DIR /usr/local/share/crails
 
 # BEGIN Dependencies
+RUN apt-get install -y npm
 # END Dependencies
 
 RUN mkdir -p /opt/webapp
