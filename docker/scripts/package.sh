@@ -35,6 +35,7 @@ cmake "$backend_dir" $cmake_options
 # Configure crails-guard
 export CRAILS_BUILD_PATH="$build_dir"
 export CRAILS_PUBLIC_PATH="$public_dir"
+export CRAILS_RUBY_BUNDLE_PATH="$CRAILS_BUILD_PATH"
 
 # BEGIN Build server
 cd "$backend_dir"
@@ -71,6 +72,8 @@ done
 
 # Export assets
 cp -R "$public_source_dir" "$output_dir"
+unlink "$public_dir/assets/application.js"
+cp "$build_dir/front/application.js" "$public_dir/assets"
 
 # Export scripts
 for script in launch.sh stop.sh launch-crailsapp.sh stop-crailsapp.sh launch-faye.sh stop-faye.sh launch-sidekic.sh stop-sidekic.sh; do
