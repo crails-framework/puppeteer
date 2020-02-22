@@ -18,16 +18,19 @@ Actions InstanceActionWidget::get_visible_actions()
 {
   Actions actions;
 
-  if (model->get_state() != 1)
-    actions.push_back(Action("cloud-upload-alt", "Configure", std::bind(&InstanceActionWidget::configure, this)));
-  if (model->get_state() > 0)
-    actions.push_back(Action("cloud-upload-alt", "Deploy", std::bind(&InstanceActionWidget::deploy, this)));
-  if (model->get_state() != 0)
-    actions.push_back(Action("play", "Start", std::bind(&InstanceActionWidget::restart, this)));
-  if (model->get_state() != 0)
-    actions.push_back(Action("stop", "Stop", std::bind(&InstanceActionWidget::stop, this)));
-  if (model->get_state() > 0)
-    actions.push_back(Action("eraser", "Uninstall", std::bind(&InstanceActionWidget::uninstall, this)));
+  if (model)
+  {
+    if (model->get_state() != 1)
+      actions.push_back(Action("cloud-upload-alt", "Configure", std::bind(&InstanceActionWidget::configure, this)));
+    if (model->get_state() > 0)
+      actions.push_back(Action("cloud-upload-alt", "Deploy", std::bind(&InstanceActionWidget::deploy, this)));
+    if (model->get_state() != 0)
+      actions.push_back(Action("play", "Start", std::bind(&InstanceActionWidget::restart, this)));
+    if (model->get_state() != 0)
+      actions.push_back(Action("stop", "Stop", std::bind(&InstanceActionWidget::stop, this)));
+    if (model->get_state() > 0)
+      actions.push_back(Action("eraser", "Uninstall", std::bind(&InstanceActionWidget::uninstall, this)));
+  }
   return actions;
 }
 
@@ -35,8 +38,11 @@ void InstanceActionWidget::set_model(std::shared_ptr<Puppeteer::Instance> instan
 {
   HtmlTemplate::ActionWidget::set_model(instance);
   signaler.trigger("model-changed");
-  listen_to(model->remote_state_changed, std::bind(&InstanceActionWidget::on_remote_state_changed, this));
-  on_remote_state_changed();
+  if (model)
+  {
+    listen_to(model->remote_state_changed, std::bind(&InstanceActionWidget::on_remote_state_changed, this));
+    on_remote_state_changed();
+  }
 }
 
 void InstanceActionWidget::on_remote_state_changed()

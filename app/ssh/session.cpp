@@ -11,6 +11,7 @@ Session::Session()
   handle = ssh_new();
   if (handle == NULL)
     throw std::runtime_error("cannot start a new ssh session");
+  ssh_set_blocking(handle, 1);
   verbosity = SSH_LOG_PROTOCOL;
 }
 
@@ -88,9 +89,14 @@ void Session::authentify_with_pubkey(const std::string& password)
   int result = ssh_userauth_publickey_auto(handle, NULL, password.c_str());
 
   if (result == SSH_AUTH_PARTIAL)
+  {
+    std::cout << "/!\\ SSH_AUTH_PARTIAL needs password" << std::endl;
     authentify(password);
+  }
   else if (result == SSH_AUTH_ERROR)
     raise("failed to authentify");
+  else if (result != SSH_AUTH_SUCCESS)
+    std::cout << "/!\\ ssh_userauth_publickey_auto: result was not SSH_AUTH_SUCCESS" << std::endl;
   authentified = true;
 }
 

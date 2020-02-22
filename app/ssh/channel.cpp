@@ -55,7 +55,7 @@ int Channel::exec(const std::string& command, Sync::Stream& output)
     for (int i = 0 ; i < nbytes ; ++i)
       output << buffer[i];
   } while (nbytes > 0);
-  if (nbytes < 0)
+  if (nbytes == SSH_ERROR)
     throw std::runtime_error("failed to run command `" + command + "` on ssh channel");
   ssh_channel_send_eof(handle);
   return ssh_channel_get_exit_status(handle);

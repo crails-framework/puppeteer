@@ -107,6 +107,7 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
   auto machine = instance.get_machine();
   auto build   = instance.get_build();
 
+  std::cout << "Recipe::exec_package " << remote_user << '@' << machine->get_ip() << std::endl;
   ssh.should_accept_unknown_hosts(true);
   ssh.connect(remote_user, machine->get_ip());
   ssh.authentify_with_pubkey();
