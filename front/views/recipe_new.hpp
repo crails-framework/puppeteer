@@ -14,6 +14,11 @@ namespace Views
   class RecipeNew : public ModelForm<Puppeteer::Recipe, HtmlTemplate::RecipeNew>
   {
   public:
+    RecipeNew()
+    {
+      credential_input.with_empty_option(true);
+    }
+
     std::string   get_title() const { return model ? model->get_name() : "New recipe"; }
     std::string   get_recipe_name() const { return model ? model->get_name() : ""; }
     std::string   get_recipe_git_url() const { return model ? model->get_git_url() : ""; }
