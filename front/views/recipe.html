@@ -35,7 +35,8 @@
         <div class="col-lg-6">
           <card cpp::title.bind='"Actions"'>
             <div slot="content">
-              <button click.trigger="root->on_pull_clicked()">
+              <button class="au-btn au-btn-icon au-btn--blue au-btn--small"
+                      click.trigger="root->on_pull_clicked()">
                 <fa-icon cpp::name.bind='"download"' />
                 Pull
               </button>
