@@ -22,7 +22,7 @@ done
 
 mkdir -p docker/build docker/.bundle
 
-docker build $docker_build_options -t "$machine_name" docker/base
+docker build --network=host $docker_build_options -t "$machine_name" docker/base
 
 docker run --net=host $docker_options --rm \
   -v "`pwd`:/opt/webapp" \
