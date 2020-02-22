@@ -23,7 +23,7 @@ namespace Views
       auto pswd_input  = find("[name=\"credentials_pswd\"")[0];
 
       model->set_name(name_input.get_value());
-      model->set_username(name_input.get_value());
+      model->set_username(user_input.get_value());
       model->set_password(pswd_input.get_value());
     }
   };
