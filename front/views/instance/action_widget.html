@@ -22,7 +22,8 @@
       </div>
 
       <div class="build-deploy-ui" show.bind="can_deploy()">
-        <select ref="build_version_select">
+        <label>Build version:</label>
+        <select class="form-control" ref="build_version_select">
           <option repeat.for="version of [std::vector<std::string>]build_versions" value.bind="version" text.bind="version">
           </option>
         </select>

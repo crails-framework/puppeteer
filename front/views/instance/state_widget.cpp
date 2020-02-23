@@ -27,7 +27,7 @@ void InstanceStateWidget::set_model(ModelPtr value)
 
 void InstanceStateWidget::on_start_clicked()
 {
-  auto request = Http::Request::post(model->get_url() + "/restart");
+  auto request = Http::Request::post(model->get_url() + "/start");
 
   request->set_headers({{"Accept", "text/plain"}});
   request->send().then([this, request]()
