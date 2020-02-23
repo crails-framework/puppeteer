@@ -35,6 +35,11 @@
                         cpp::value.bind="root->get_instance_build_id()">
           </build-select>
         </form-group>
+	<form-group cpp::label.bind='"Automatic deployment"' cpp::name.bind='"instance_auto_deploy"'>
+          <div slot="input">
+            <input slot="input" type="checkbox" name="instance_auto_deploy" ref="auto_deploy_input" />
+          </div>
+	</form-group>
         <form-group cpp::label.bind='"environment variables"'>
           <variable-list-editor slot="input" ref="variables_input" cpp::value.bind="root->get_instance_variables()">
           </variable-list-editor>

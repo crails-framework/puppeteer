@@ -30,6 +30,7 @@ namespace Views
       model->set_build_id(build_input.value<ODB::id_type>());
       model->set_machine_id(machine_input.value<ODB::id_type>());
       model->set_variable_list(variables_input.get_value());
+      model->set_auto_deploy(auto_deploy_input.get_checked());
     }
   };
 }

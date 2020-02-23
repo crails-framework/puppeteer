@@ -10998,3 +10998,30 @@ section {
   float: left;
   width: calc(100% - 250px);
 }
+
+.instance-data {
+  list-style: none;
+}
+
+.instance-data li {
+  border-bottom: 1px solid lightgray;
+}
+
+.instance-data li > label {
+  display: inline-block;
+  width: calc(100% - 50px);
+}
+
+.instance-data li > span {
+  display: inline-block;
+  width: 50px;
+  text-align: right;
+}
+
+.setup-actions > label {
+  padding: 5px 0;
+}
+
+.setup-actions > .btn-group {
+  float: right;
+}

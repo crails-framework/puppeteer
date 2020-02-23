@@ -11,18 +11,21 @@
     </script>
   </head>
   <body>
-    <div style="text-align:center">
-      <div class="btn-group actions">
-        <button repeat.for="action of [Actions]get_visible_actions() & signal:actions-changed"
-                class="au-btn au-btn-icon au-btn--blue au-btn--small"
-                click.trigger="action.callback()">
-          <fa-icon cpp::name.bind="action.icon" />
-          <span text.bind="action.label"></span>
-        </button>
+    <div style="text-align:left">
+      <div class="setup-actions">
+        <label>Recipe</label>
+        <div class="btn-group actions">
+          <button repeat.for="action of [Actions]get_visible_actions() & signal:actions-changed"
+                  class="au-btn au-btn-icon au-btn--blue au-btn--small"
+                  click.trigger="action.callback()">
+            <fa-icon cpp::name.bind="action.icon" />
+            <span text.bind="action.label"></span>
+          </button>
+        </div>
       </div>
 
       <div class="build-deploy-ui" show.bind="can_deploy()">
-        <label>Build version:</label>
+        <label>Build version</label>
         <select class="form-control" ref="build_version_select">
           <option repeat.for="version of [std::vector<std::string>]build_versions" value.bind="version" text.bind="version">
           </option>
