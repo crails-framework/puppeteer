@@ -76,6 +76,7 @@ void InstanceActionWidget::uninstall()
 
 void InstanceActionWidget::deploy()
 {
+  std::cout << "InstanceActionWidget::deploy" << std::endl;
   if (!performing_action)
   {
     on_performing_action();
@@ -84,6 +85,7 @@ void InstanceActionWidget::deploy()
       std::bind(&InstanceActionWidget::on_deploy_failure, this, std::placeholders::_1)
     })();
   }
+  std::cout << "InstanceActionWidget::deploy launched" << std::endl;
 }
 
 void InstanceActionWidget::restart()
@@ -189,13 +191,45 @@ Sync::TaskState InstanceActionWidget::on_task_progress(Crails::Front::Object res
   return Sync::Continue;
 }
 
-void InstanceActionWidget::on_configure_start(const Crails::Front::Ajax& ajax)
+void InstanceActionWidget::on_deploy_start(const Crails::Front::Ajax& ajax)
 {
   std::string task_uid = ajax.get_response_text();
 
   console_output->flush();
   progress_bar.set_progress(0);
   progress_bar.text("Deployment...");
+  sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_deploy_task_progress, this, std::placeholders::_1));
+}
+
+void InstanceActionWidget::on_deploy_failure(const Crails::Front::Ajax& ajax)
+{
+  std::cout << "Deploy query failed" << std::endl;
+}
+
+void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object response)
+{
+  switch (on_task_progress(response))
+  {
+  case Sync::Success:
+    //model->set_state(0);
+    //model->remote_state_changed.trigger();
+    break ;
+  case Sync::Abort:
+    //model->set_state(2);
+    //model->remote_state_changed.trigger();
+    break ;
+  case Sync::Continue:
+    break ;
+  }
+}
+
+void InstanceActionWidget::on_configure_start(const Crails::Front::Ajax& ajax)
+{
+  std::string task_uid = ajax.get_response_text();
+
+  console_output->flush();
+  progress_bar.set_progress(0);
+  progress_bar.text("Configure...");
   sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_configure_task_progress, this, std::placeholders::_1));
 }
 
@@ -210,6 +244,8 @@ void InstanceActionWidget::on_configure_task_progress(Crails::Front::Object resp
   case Sync::Abort:
     model->set_state(2);
     model->remote_state_changed.trigger();
+    break ;
+  case Sync::Continue:
     break ;
   }
 }

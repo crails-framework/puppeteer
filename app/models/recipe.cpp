@@ -224,10 +224,10 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
     {
       auto scp = ssh.make_scp_session(remote_folder, SSH_SCP_WRITE);
 
-      stream << "Uploading build tarball...\n";
-      scp->push_file(build_tarball_filename, build_tarball_path);
+      stream << "Uploading build tarball " << build_tarball_path << '\n';
+      scp->push_file(build_tarball_path, build_tarball_filename);
       stream << "Done.\nUploading deploy script...\n";
-      scp->push_file("deploy.sh", deploy_script_path);
+      scp->push_file(deploy_script_path, "deploy.sh");
       stream << "Done.\n";
       task.increment();
     }

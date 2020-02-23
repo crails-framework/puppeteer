@@ -76,11 +76,17 @@ void Puppeteer::Router::initialize()
   std::cout << "Router initialize begin" << std::endl;
   instance = this;
 
+  std::cout << "Debug #1" << std::endl;
   make_routes_for<Views::Machines,    Views::Machine,    Views::MachineNew>   (*this, "/machines");
+  std::cout << "Debug #2" << std::endl;
   make_routes_for<Views::Builds,      Views::Build,      Views::BuildNew>     (*this, "/builds");
+  std::cout << "Debug #3" << std::endl;
   make_routes_for<Views::Instances,   Views::Instance,   Views::InstanceNew>  (*this, "/instances");
+  std::cout << "Debug #4" << std::endl;
   make_routes_for<Views::Recipes,     Views::Recipe,     Views::RecipeNew>    (*this, "/recipes");
+  std::cout << "Debug #5" << std::endl;
   make_routes_for<Views::Credentials, Views::Credential, Views::CredentialNew>(*this, "/credentials");
+  std::cout << "Debug #6" << std::endl;
 
   match("/variables", [](const Params& params)
   {
@@ -90,10 +96,12 @@ void Puppeteer::Router::initialize()
     MainView::instance->attach(view);
     view->activate();
   });
+  std::cout << "Debug #7" << std::endl;
 
   match("/", [](const Params& params)
   {
   });
+  std::cout << "Debug #8" << std::endl;
 
   std::cout << "Router initialize end" << std::endl;
   Crails::Front::Router::initialize();
