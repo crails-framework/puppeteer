@@ -69,13 +69,16 @@ std::string Build::get_build_config()
 
 void Build::on_change()
 {
-  Jenkins jenkins;
-  int status = jenkins.push_config(get_name(), get_build_config());
-
-  if (status != 200)
+  if (get_id() != ODB_NULL_ID)
   {
-    std::cout << "responded with status " << status << std::endl;
-    throw std::runtime_error("could not create/update jenkins job");
+    Jenkins jenkins;
+    int status = jenkins.push_config(get_name(), get_build_config());
+
+    if (status != 200)
+    {
+      std::cout << "responded with status " << status << std::endl;
+      throw std::runtime_error("could not create/update jenkins job");
+    }
   }
 }
 

@@ -9,6 +9,11 @@ BuildController::BuildController(Params& params) : Super(params)
 {
 }
 
+void BuildController::after_create()
+{
+  model->on_change();
+}
+
 void BuildController::enable()
 {
   require_model();
