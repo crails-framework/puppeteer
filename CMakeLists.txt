@@ -30,6 +30,7 @@ file(GLOB_RECURSE crails_app
      app/ssh/*.cpp
      app/git/*.cpp
      app/jenkins/*.cpp
+     app/recipe_runners/*.cpp
      app/routes.cpp
      app/invalid_request.cpp
      config/*.cpp

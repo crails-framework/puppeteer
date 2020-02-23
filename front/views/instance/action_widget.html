@@ -3,8 +3,11 @@
     <include src="app/instances.hpp" />
     <include src="resources/action.hpp" />
     <attribute type="std::shared_ptr<Puppeteer::Instance>" name="model" />
+    <attribute type="std::vector<std::string>" name="build_versions" />
     <script>
       virtual Actions get_visible_actions() = 0;
+      virtual bool can_deploy() const = 0;
+      virtual void deploy() = 0;
     </script>
   </head>
   <body>
@@ -17,7 +20,19 @@
           <span text.bind="action.label"></span>
         </button>
       </div>
-      <progress-bar style="margin-top:15px;" ref="progress_bar" />
+
+      <div class="build-deploy-ui" show.bind="can_deploy()">
+        <select ref="build_version_select">
+          <option repeat.for="version of [std::vector<std::string>]build_versions" value.bind="version" text.bind="version">
+          </option>
+        </select>
+        <button class="au-btn au-btn-icon au-btn--blue au-btn--small" click.trigger="deploy()">
+          <fa-icon cpp::name.bind='"cloud-upload-alt"' />
+          <span>Deploy</span>
+        </button>
+      </div>
+
+      <progress-bar style="margin-top:15px;" ref="progress_bar_el" />
     </div>
   </body>
 </template>

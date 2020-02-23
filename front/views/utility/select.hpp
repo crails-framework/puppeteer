@@ -48,11 +48,26 @@ namespace Views
     template<typename PARAM>
     void set_value(PARAM __v)
     {
+      typedef Crails::Front::ObjectImpl<client::HTMLOptionElement> OptionEl;
       auto str_value      = boost::lexical_cast<std::string>(__v);
       auto value_elements = find("option[value='" + str_value + "']");
 
       if (value_elements.size() > 0)
-        value_elements[0]->set_selected(true);
+      {
+        client::HTMLElement* html_element = *(value_elements[0]);
+        OptionEl             option(html_element);
+
+	option->set_selected(true);
+      }
+    }
+
+    std::string get_value()
+    {
+      auto value_elements = find("option:checked");
+
+      if (value_elements.size() > 0)
+        return value_elements[0].get_value();
+      return "";
     }
 
   protected:

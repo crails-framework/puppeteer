@@ -1,35 +1,22 @@
 #ifndef  INSTANCE_ACTION_WIDGET_HPP
 # define INSTANCE_ACTION_WIDGET_HPP
 
-# include "console_output.hpp"
+# include "task_runner.hpp"
 # include "lib/cheerp-html/views/instance/action_widget.hpp"
 
-namespace Sync
+class InstanceActionWidget : public HtmlTemplate::ActionWidget, public TaskRunner, public Crails::Listener
 {
-  enum TaskState
-  {
-    Continue = 0,
-    Success  = 1,
-    Abort    = 2
-  };
-}
-
-class InstanceActionWidget : public HtmlTemplate::ActionWidget, public Crails::Listener
-{
-    ConsoleOutput* console_output = nullptr;
     bool performing_action = false;
   public:
     InstanceActionWidget();
 
     Actions get_visible_actions();
+    bool can_deploy() const;
 
-    void set_console_output(ConsoleOutput* value) { console_output = value; }
     void set_model(std::shared_ptr<Puppeteer::Instance> instance);
     void configure();
     void uninstall();
     void deploy();
-    void restart();
-    void stop();
 
   private:
     std::vector<Crails::Front::Element> get_buttons();
@@ -51,13 +38,7 @@ class InstanceActionWidget : public HtmlTemplate::ActionWidget, public Crails::L
     void on_deploy_failure(const Crails::Front::Ajax&);
     void on_deploy_task_progress(Crails::Front::Object);
 
-    Sync::TaskState on_task_progress(Crails::Front::Object);
-
-    void on_restarted(const Crails::Front::Ajax&);
-    void on_restart_failed(const Crails::Front::Ajax&);
-
-    void on_stopped(const Crails::Front::Ajax&);
-    void on_stop_failed(const Crails::Front::Ajax&);
+    std::string get_selected_build_version();
 };
 
 #endif

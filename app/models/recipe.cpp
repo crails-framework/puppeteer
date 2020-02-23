@@ -8,6 +8,8 @@
 # include "app/ssh/session.hpp"
 # include "app/ssh/scp.hpp"
 # include "app/git/git.hpp"
+# include "app/recipe_runners/script_runner.hpp"
+# include "app/recipe_runners/deploy_runner.hpp"
 # include <boost/filesystem.hpp>
 #endif
 
@@ -197,6 +199,29 @@ void Recipe::uninstall_from(Instance& instance, Sync::Task& task)
   exec_package("uninstall", instance, task);
 }
 
+
+void Recipe::exec_script(const std::string& script_name, Instance& instance, Sync::Task& task)
+{
+  instance.open_ssh([this, &script_name, &instance, &task](Ssh::Session& ssh)
+  {
+    ScriptRunner runner(ssh, *this, instance, task);
+
+    runner.upload_variables();
+    runner.upload_script(script_name);
+    runner.run_script(script_name);
+  });
+}
+
+void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string& build_id)
+{
+  instance.open_ssh([this, &instance, &task, &build_id](Ssh::Session& ssh)
+  {
+    DeployRunner runner(ssh, *this, instance, task);
+
+    runner.deploy_build(build_id);
+  });
+}
+/*
 void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string& build_id)
 {
   const string package = "deploy";
@@ -268,4 +293,5 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
   }
   instance.set_deployed_build(boost::lexical_cast<unsigned int>(build_id));
 }
+*/
 #endif

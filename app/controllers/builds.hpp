@@ -14,6 +14,7 @@ public:
   void enable();
   void disable();
   void builds();
+  void available_builds();
 
 protected:
   void after_create();

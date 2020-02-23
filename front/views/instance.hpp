@@ -20,6 +20,8 @@ namespace Views
     Instance()
     {
       action_widget.set_console_output(&console_output);
+      state_widget.set_console_output(&console_output);
+      state_widget.set_progress_bar(action_widget.progress_bar);
     }
 
     void activate(unsigned long instance_id)

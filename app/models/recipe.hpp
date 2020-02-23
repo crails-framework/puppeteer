@@ -43,6 +43,7 @@ public:
   void fetch_recipe();
 
   void exec_package(const std::string&, Instance&, Sync::Task&);
+  void exec_script(const std::string&, Instance&, Sync::Task&);
   void deploy_for(Instance&, Sync::Task&);
   void uninstall_from(Instance&, Sync::Task&);
   void deploy_build_for(Instance&, Sync::Task&, const std::string& build_id);
