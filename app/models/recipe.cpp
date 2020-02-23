@@ -215,9 +215,8 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
     const string deploy_script_path = recipe_folder + "/deploy.sh";
     const string build_tarball_filename = build_id + ".tar.gz";
     const string build_tarball_path = build->get_build_path() + '/' + build_tarball_filename;
-    const string variable_filename = "variables_" + boost::lexical_cast<string>(instance.get_id());
-    const string variable_filepath = remote_folder + '/' + variable_filename;
-    const string app_path;
+    const string variable_filename   = "variables";
+    const string variable_filepath   = remote_folder + '/' + variable_filename;
     std::map<std::string, std::string> variables;
 
     // Upload build tarball and deploy script
@@ -241,7 +240,7 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
       build->collect_variables(variables);
       variables["MACHINE_IP"] = machine->get_ip();
       variables["BUILD_TARBALL"] = (remote_folder + '/' + build_tarball_filename);
-      scp->push_text(generate_variable_file(variables), variable_filename);
+      scp->push_text(generate_variable_file(variables), variable_filepath);
       task.increment();
     }
 
@@ -255,10 +254,7 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
       stream << "\n## deploy.sh:\n";
 
       stringstream command_stream;
-      command_stream << "cd '" << app_path << "' && "
-             << "'./" << remote_folder << "/deploy.sh'"
-             << " '" << remote_folder << '/' << variable_filename + '\''
-             << " 2>&1";
+      command_stream << "cd '" << remote_folder << "' && " << "./deploy.sh 2>&1";
 
       status = ssh.exec(command_stream.str(), stream);
       if (status)
