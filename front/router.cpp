@@ -25,9 +25,10 @@ using namespace Crails::Front;
 Puppeteer::Router* Puppeteer::Router::instance = nullptr;
 
 template<typename INDEX, typename SHOW, typename EDIT>
-void make_routes_for(Puppeteer::Router& router, const std::string& path)
+void make_routes_for(Puppeteer::Router* router, const std::string& path)
 {
-  router.match(path, [](const Params&)
+  std::cout << "make_routes_for debug#1" << std::endl;
+  router->match(path, [](const Params&)
   {
     auto view = std::make_shared<INDEX>();
 
@@ -35,7 +36,8 @@ void make_routes_for(Puppeteer::Router& router, const std::string& path)
     view->activate();
   });
 
-  router.match(path + "/new", [](const Params&)
+  std::cout << "make_routes_for debug#2" << std::endl;
+  router->match(path + "/new", [](const Params&)
   {
     auto view = std::make_shared<EDIT>();
 
@@ -43,7 +45,8 @@ void make_routes_for(Puppeteer::Router& router, const std::string& path)
     view->activate();
   });
 
-  router.match(path + "/:resource_id", [](const Params& params)
+  std::cout << "make_routes_for debug#3" << std::endl;
+  router->match(path + "/:resource_id", [](const Params& params)
   {
     auto view = std::make_shared<SHOW>();
     auto id   = boost::lexical_cast<unsigned long>(params.at("resource_id"));
@@ -52,7 +55,8 @@ void make_routes_for(Puppeteer::Router& router, const std::string& path)
     view->activate(id);
   });
 
-  router.match(path + "/:resource_id/edit", [](const Params& params)
+  std::cout << "make_routes_for debug#4" << std::endl;
+  router->match(path + "/:resource_id/edit", [](const Params& params)
   {
     auto view = std::make_shared<EDIT>();
     auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
@@ -61,7 +65,8 @@ void make_routes_for(Puppeteer::Router& router, const std::string& path)
     view->activate(id);
   });
 
-  router.match(path + "/:resource_id/destroy", [](const Params& params)
+  std::cout << "make_routes_for debug#5" << std::endl;
+  router->match(path + "/:resource_id/destroy", [](const Params& params)
   {
     auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
 
@@ -77,15 +82,15 @@ void Puppeteer::Router::initialize()
   instance = this;
 
   std::cout << "Debug #1" << std::endl;
-  make_routes_for<Views::Machines,    Views::Machine,    Views::MachineNew>   (*this, "/machines");
+  make_routes_for<Views::Machines,    Views::Machine,    Views::MachineNew>   (instance, "/machines");
   std::cout << "Debug #2" << std::endl;
-  make_routes_for<Views::Builds,      Views::Build,      Views::BuildNew>     (*this, "/builds");
+  make_routes_for<Views::Builds,      Views::Build,      Views::BuildNew>     (instance, "/builds");
   std::cout << "Debug #3" << std::endl;
-  make_routes_for<Views::Instances,   Views::Instance,   Views::InstanceNew>  (*this, "/instances");
+  make_routes_for<Views::Instances,   Views::Instance,   Views::InstanceNew>  (instance, "/instances");
   std::cout << "Debug #4" << std::endl;
-  make_routes_for<Views::Recipes,     Views::Recipe,     Views::RecipeNew>    (*this, "/recipes");
+  make_routes_for<Views::Recipes,     Views::Recipe,     Views::RecipeNew>    (instance, "/recipes");
   std::cout << "Debug #5" << std::endl;
-  make_routes_for<Views::Credentials, Views::Credential, Views::CredentialNew>(*this, "/credentials");
+  make_routes_for<Views::Credentials, Views::Credential, Views::CredentialNew>(instance, "/credentials");
   std::cout << "Debug #6" << std::endl;
 
   match("/variables", [](const Params& params)

@@ -1,6 +1,7 @@
 <template>
   <head>
     <attribute type="float" name="progress" value="0.f" />
+    <attribute type="std::string" name="label" />
     <script>
       void set_active(bool active)
       {
@@ -12,7 +13,7 @@
         if (value != progress)
         {
           set_progress(value);
-          signaler.trigger("progressChanged");
+          signaler.trigger("progress-changed");
         }
       }
 
@@ -27,8 +28,9 @@
   </head>
   <body class="progress mb-3">
     <div class="progress-bar bg-info progress-bar-striped progress-bar-animated"
-         style.bind="get_style() & signal:progressChanged"
+         style.bind="get_style() & signal:progress-changed"
          ref="el">
+      <span text.bind="label & signal:progress-changed"></span>
     </div>
   </body>
 </template>

@@ -48,7 +48,11 @@ namespace Views
     template<typename PARAM>
     void set_value(PARAM __v)
     {
-      value(__v);
+      auto str_value      = boost::lexical_cast<std::string>(__v);
+      auto value_elements = find("option[value='" + str_value + "']");
+
+      if (value_elements.size() > 0)
+        value_elements[0]->set_selected(true);
     }
 
   protected:
