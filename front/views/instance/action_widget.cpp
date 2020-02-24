@@ -50,7 +50,7 @@ Actions InstanceActionWidget::get_visible_actions()
 
   if (model)
   {
-    if (model->get_state() != 1)
+    if (model->get_state() == 0)
       actions.push_back(Action("cloud-upload-alt", "Configure", std::bind(&InstanceActionWidget::configure, this)));
     if (model->get_state() > 0)
       actions.push_back(Action("eraser", "Uninstall", std::bind(&InstanceActionWidget::uninstall, this)));

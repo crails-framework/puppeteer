@@ -11019,19 +11019,22 @@ section {
 .instance-data li > .value {
   display: inline-block;
   text-align: right;
+  width: 200px;
 }
 
 .instance-data li > .value > span {
   display: inline-block;
   padding: 5px 10px;
+  margin-left: 5px;
 }
 
-.instnace-data li > .value > span:not(:last-of-type) {
-  margin-right: 5px;
-}
-
-.setup-actions > .btn-group {
+.setup-actions > .btn-group, .build-deploy-ui button {
   float: right;
+}
+
+action-widget progress-bar {
+  clear: both;
+  margin-top: 70px;
 }
 
 action-widget label {

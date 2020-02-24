@@ -5,7 +5,7 @@
       virtual std::shared_ptr<Puppeteer::Instance> get_model() const = 0;
 
       bool has_auto_deploy() const { return get_model() && get_model()->get_auto_deploy(); }
-      bool is_ready() const        { return get_model() && get_model()->get_state() == Puppeteer::Instance::State::Ready; }
+      bool is_ready() const        { return get_model() && get_model()->get_state() == Puppeteer::Instance::State::Deployed; }
 
       std::string get_deployed_build() const
       {
