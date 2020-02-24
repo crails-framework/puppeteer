@@ -38,6 +38,7 @@ class InstanceActionWidget : public HtmlTemplate::ActionWidget, public TaskRunne
     void on_deploy_failure(const Crails::Front::Ajax&);
     void on_deploy_task_progress(Crails::Front::Object);
 
+    void fetch_build_versions();
     std::string get_selected_build_version();
 };
 

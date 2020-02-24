@@ -1,12 +1,13 @@
 #include "action_widget.hpp"
 #include "front/app/sync_task.hpp"
 #include "front/views/utility/theme.hpp"
+#include <crails/front/http.hpp>
+#include "app/builds.hpp"
 #include <iostream>
 
+using namespace Crails::Front;
 using namespace Views;
 using namespace std;
-
-typedef Crails::Front::Element El;
 
 extern Sync::Tasks* sync_tasks;
 
@@ -18,6 +19,29 @@ InstanceActionWidget::InstanceActionWidget()
 bool InstanceActionWidget::can_deploy() const
 {
   return model && model->get_state() > 0;
+}
+
+void InstanceActionWidget::fetch_build_versions()
+{
+  auto url     = Puppeteer::Build::get_available_builds_url_for(model->get_build_id());
+  auto request = Http::Request::get(url);
+
+  request->set_headers({{"Accept","application/json"}});
+  request->send().then([this, request]()
+  {
+    auto response = request->get_response();
+
+    if (response->ok())
+    {
+      DataTree data_tree = response->get_response_data();
+
+      set_build_versions(data_tree.as_data());
+      signaler.trigger("builds-fetched");
+    }
+  })._catch([this]()
+  {
+    std::cout << "Failed to fetch available build versions" << std::endl;
+  });
 }
 
 Actions InstanceActionWidget::get_visible_actions()
@@ -40,6 +64,7 @@ void InstanceActionWidget::set_model(std::shared_ptr<Puppeteer::Instance> instan
   signaler.trigger("model-changed");
   if (model)
   {
+    fetch_build_versions();
     listen_to(model->remote_state_changed, std::bind(&InstanceActionWidget::on_remote_state_changed, this));
     on_remote_state_changed();
   }
@@ -102,7 +127,7 @@ void InstanceActionWidget::deploy()
   std::cout << "InstanceActionWidget::deploy launched" << std::endl;
 }
 
-std::vector<Crails::Front::Element> InstanceActionWidget::get_buttons()
+vector<Element> InstanceActionWidget::get_buttons()
 {
   return find(".actions > button");
 }

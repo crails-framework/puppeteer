@@ -17,6 +17,13 @@ namespace Puppeteer
 
     VariableList get_variable_list() const { return get_variables(); }
     void set_variable_list(const VariableList& list) { set_variables(list); }
+
+    static std::string get_available_builds_url_for(ODB::id_type id)
+    {
+      std::stringstream url;
+      url << "/builds/" << id << "/available-builds";
+      return url.str();
+    }
   };
 
   class Builds : public Crails::Front::Collection<Build>
