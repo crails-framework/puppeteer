@@ -18,7 +18,7 @@ public:
 
   bool is_running() const { return false; }
   bool is_stopped() const { return false; }
-  bool is_dirty() const { return false; }
+  bool is_dirty() const { return model ? model->get_state() == Instance::Dirty : false; }
 
   void on_start_clicked();
   void on_stop_clicked();
