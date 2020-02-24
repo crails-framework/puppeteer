@@ -16,6 +16,8 @@ namespace Sync
 
 struct TaskRunner
 {
+  Crails::Signal<bool> performing_action_signal;
+
   ConsoleOutput*             console_output = nullptr;
   HtmlTemplate::ProgressBar* progress_bar   = nullptr;
   bool performing_action = false;

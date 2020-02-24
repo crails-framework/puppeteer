@@ -19,9 +19,11 @@ namespace Views
   public:
     Instance()
     {
-      action_widget.set_console_output(&console_output);
-      state_widget.set_console_output(&console_output);
       state_widget.set_progress_bar(action_widget.progress_bar);
+      action_widget.set_console_output(&console_output);
+      state_widget .set_console_output(&console_output);
+      action_widget.performing_action_signal.connect(std::bind(&Instance::on_action_state_update, this, std::placeholders::_1));
+      state_widget .performing_action_signal.connect(std::bind(&Instance::on_action_state_update, this, std::placeholders::_1));
     }
 
     void activate(unsigned long instance_id)
@@ -36,6 +38,14 @@ namespace Views
       {
         signaler.trigger("state-changed");
       });
+    }
+
+    void on_action_state_update(bool is_busy)
+    {
+      auto buttons = find("state-widget button, state-widget button");
+
+      for (auto button : buttons)
+        button.toggle_class("disabled", is_busy);
     }
   };
 }

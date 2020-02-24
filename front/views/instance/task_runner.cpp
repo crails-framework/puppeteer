@@ -14,6 +14,7 @@ void TaskRunner::on_performing_action()
     console_output->visible(performing_action);
   else
     std::cout << "/!\\ TaskRunner::console_output unset" << std::endl;
+  performing_action_signal.trigger(true);
 }
 
 void TaskRunner::on_action_performed()
@@ -21,6 +22,7 @@ void TaskRunner::on_action_performed()
   performing_action = false;
   if (progress_bar)
     progress_bar->set_active(false);
+  performing_action_signal.trigger(false);
 }
 
 Sync::TaskState TaskRunner::on_task_progress(Crails::Front::Object response)

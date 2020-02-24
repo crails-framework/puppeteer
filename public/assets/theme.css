@@ -11045,3 +11045,12 @@ state-widget .actions {
   margin-top: 15px;
   text-align: center;
 }
+
+button {
+  transition: all 100ms ease-in;
+}
+
+button.disabled {
+  pointer-events: none;
+  filter: grayscale(1);
+}

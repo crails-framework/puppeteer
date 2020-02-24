@@ -222,9 +222,6 @@ void InstanceActionWidget::on_configure_task_progress(Crails::Front::Object resp
     model->remote_state_changed.trigger();
     break ;
   case Sync::Abort:
-    model->set_state(2);
-    model->remote_state_changed.trigger();
-    break ;
   case Sync::Continue:
     break ;
   }
