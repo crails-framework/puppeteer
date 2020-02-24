@@ -51,6 +51,9 @@ void auto_deploy(Params& params)
         database.commit();
 
         instance.deploy(sync_task, last_build);
+        database.save(instance);
+        database.commit();
+
         instance.stop(sync_task);
         instance.start(sync_task);
 
@@ -60,7 +63,6 @@ void auto_deploy(Params& params)
       }
       catch (...)
       {
-        instance.set_state(Instance::Dirty);
         instance.set_running_task("");
         database.save(instance);
         database.commit();

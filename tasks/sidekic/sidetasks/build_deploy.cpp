@@ -22,8 +22,15 @@ void deploy_build(Params& params)
       if (instance->get_state() != Instance::Uninstalled)
       {
         instance->deploy(sync_task, params["build_id"]);
-        instance->stop(sync_task);
-        instance->start(sync_task);
+        try
+        {
+          instance->stop(sync_task);
+          instance->start(sync_task);
+        }
+        catch (...)
+        {
+          logger << Logger::Error << "Failed to restart instance " << instance->get_name() << " after deploy" << Logger::endl;
+        }
         instance->set_running_task("");
         database.save(*instance);
         database.commit();
