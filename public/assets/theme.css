@@ -11054,3 +11054,9 @@ button.disabled {
   pointer-events: none;
   filter: grayscale(1);
 }
+
+.console-result-line {
+  color: orange;
+  font-weight: bold;
+  text-decoration: blink;
+}

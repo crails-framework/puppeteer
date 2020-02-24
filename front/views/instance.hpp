@@ -42,7 +42,7 @@ namespace Views
 
     void on_action_state_update(bool is_busy)
     {
-      auto buttons = find("state-widget button, state-widget button");
+      auto buttons = find(".actions .au-btn, .build-deploy-ui .au-btn");
 
       for (auto button : buttons)
         button.toggle_class("disabled", is_busy);

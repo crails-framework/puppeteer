@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div class="build-deploy-ui" show.bind="can_deploy()">
+      <div class="build-deploy-ui" show.bind="can_deploy() & signal:actions-changed">
         <label>Build version</label>
         <select class="form-control" ref="build_version_select">
           <option repeat.for="version of [std::vector<std::string>]build_versions & signal:builds-fetched" value.bind="version" text.bind="version">

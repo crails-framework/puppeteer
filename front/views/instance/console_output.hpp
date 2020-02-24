@@ -17,7 +17,6 @@ public:
   {
     buffer.str(std::string());
     html("");
-    //visible(false);
   }
 
   template<typename T>
@@ -29,6 +28,12 @@ public:
     return *this;
   }
 
+  void append_final_line(const std::string& message)
+  {
+    append_new_lines();
+    *this > Crails::Front::Element("div", {{"class","console-output-line console-result-line"}}).text(message);
+  }
+
 private:
   void append_new_lines()
   {
@@ -36,8 +41,18 @@ private:
 
     for (auto line : lines)
       *this > Crails::Front::Element("div", {{"class","console-output-line"}}).text(line);
-    //visible(true);
     buffer.str(std::string());
+    scroll_to_bottom();
+  }
+
+  void scroll_to_bottom()
+  {
+    if (has_parent())
+    {
+      auto parent = get_parent();
+
+      parent->set_scrollTop(parent->get_scrollHeight());
+    }
   }
 };
 

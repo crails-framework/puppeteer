@@ -39,13 +39,13 @@ Sync::TaskState TaskRunner::on_task_progress(Crails::Front::Object response)
     if (status == "abort")
     {
       on_action_performed();
-      (*console_output) << "/!\\ Task aborted\n";
+      console_output->append_final_line("/!\\ Task aborted");
       return Sync::Abort;
     }
     else if (progress == 1)
     {
       on_action_performed();
-      (*console_output) << "(!) Task successfully completed\n";
+      console_output->append_final_line("(!) Task successfully completed");
       return Sync::Success;
     }
   }
