@@ -73,20 +73,32 @@ void BuildController::available_builds()
   {
     auto files = list_directory(model->get_build_path());
     stringstream json;
-    short count = 0;
+    vector<string> filenames;
 
-    json << '[';
     for (const auto& filepath : files)
     {
       if (string_ends_with(filepath, ".tar.gz"))
       {
         string filename = *(split(filepath, '/').rbegin());
 
-	if (count > 0)
-	  json << ',';
-        json << '"' << filename.substr(0, filename.length() - 7) << '"';
-        count++;
+        filenames.push_back(filename.substr(0, filename.length() - 7));
       }
+    }
+    std::sort(filenames.begin(), filenames.end(), [](const std::string& a, const std::string& b) -> bool
+    {
+      stringstream str_a; stringstream str_b;
+      unsigned int int_a, int_b;
+
+      str_a << a;     str_b << b;
+      str_a >> int_a; str_b >> int_b;
+      return int_a > int_b;
+    });
+    json << '[';
+    for (auto it = filenames.begin() ; it != filenames.end() ; ++it)
+    {
+      if (it != filenames.begin())
+        json << ',';
+      json << '"' << (*it) << '"';
     }
     json << ']';
     response["body"] = json.str();
