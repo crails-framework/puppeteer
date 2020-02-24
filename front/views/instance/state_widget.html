@@ -25,18 +25,24 @@
     <ul class="instance-data">
       <li>
         <label>Current state</label>
-        <span class="badge badge-success" show.bind="root->is_running() & signal:state-changed">Running</span>
-        <span class="badge badge-warning" show.bind="root->is_stopped() & signal:state-changed">Stopped</span>
-        <span class="badge badge-danger"  show.bind="root->is_dirty() & signal:state-changed">Dirty</span>
+        <div class="value">
+          <span class="badge badge-success" show.bind="root->is_running() & signal:state-changed">Running</span>
+          <span class="badge badge-warning" show.bind="root->is_stopped() & signal:state-changed">Stopped</span>
+          <span class="badge badge-danger"  show.bind="root->is_dirty() & signal:state-changed">Dirty</span>
+        </div>
       </li>
       <li>
         <label>Build version</label>
-	<span text.bind="root->get_deployed_build() & signal:model-changed"></span>
+        <div class="value">
+          <span text.bind="root->get_deployed_build() & signal:model-changed"></span>
+        </div>
       </li>
       <li>
         <label>Automatic deployment</label>
-        <span class="badge badge-primary"   show.bind="root->has_auto_deploy() & signal:model-changed">Yes</span>
-        <span class="badge badge-secondary" show.bind="!root->has_auto_deploy() & signal:model-changed">No</span>
+        <div class="value">
+          <span class="badge badge-primary"   show.bind="root->has_auto_deploy() & signal:model-changed">Yes</span>
+          <span class="badge badge-secondary" show.bind="!root->has_auto_deploy() & signal:model-changed">No</span>
+        </div>
       </li>
     </ul>
 
