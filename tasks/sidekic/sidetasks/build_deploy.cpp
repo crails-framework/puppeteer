@@ -16,6 +16,7 @@ void deploy_build(Params& params)
   {
     Sync::Task sync_task(params["sidekic"]["task_uid"], 10);
 
+    sync_task.set_task_count(5 + 3 + 3);
     if (database.find_one(instance, params["id"].as<ODB::id_type>()))
     {
       if (instance->get_state() != Instance::Uninstalled)

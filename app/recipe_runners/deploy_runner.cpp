@@ -4,7 +4,6 @@ using namespace std;
 
 DeployRunner::DeployRunner(Ssh::Session& ssh, Recipe& recipe, Instance& instance, Sync::Task& task) : ScriptRunner(ssh, recipe, instance, task)
 {
-  task.set_task_count(5);
 }
 
 void DeployRunner::deploy_build(const string& build_id)
