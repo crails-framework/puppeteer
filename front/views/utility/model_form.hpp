@@ -18,7 +18,7 @@ namespace Views
 
     virtual void activate()
     {
-      VIEW::trigger_binding_updates();
+      trigger_binding_updates();
     }
 
     virtual void activate(unsigned long id)
@@ -38,7 +38,7 @@ namespace Views
       model = _model;
       if (has_model())
         std::cout << "View has model" << std::endl;
-      VIEW::trigger_binding_updates();
+      trigger_binding_updates();
     }
 
     virtual void on_save_clicked()
@@ -52,6 +52,11 @@ namespace Views
     virtual void on_saved()
     {
       Puppeteer::Router::instance->navigate(model->get_path(), true);
+    }
+
+    virtual void trigger_binding_updates()
+    {
+      VIEW::trigger_binding_updates();
     }
   };
 }
