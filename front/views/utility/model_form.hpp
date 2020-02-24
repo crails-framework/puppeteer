@@ -3,6 +3,7 @@
 
 # include "form_view.hpp"
 # include "../../router.hpp"
+# include <crails/front/globals.hpp>
 
 namespace Views
 {
@@ -38,7 +39,10 @@ namespace Views
       model = _model;
       if (has_model())
         std::cout << "View has model" << std::endl;
-      trigger_binding_updates();
+      Crails::Front::window->setTimeout(cheerp::Callback([this]()
+      {
+        trigger_binding_updates();
+      }), 500);
     }
 
     virtual void on_save_clicked()
