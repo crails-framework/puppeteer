@@ -32,6 +32,9 @@ public:
   std::string get_path() const { return '#' + get_url(); }
   bool can_start_task() const { return running_task.length() == 0; }
 
+  void start(Sync::Task&);
+  void stop(Sync::Task&);
+
   void serialize(OArchive&);
   void serialize(IArchive&);
 

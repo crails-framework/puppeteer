@@ -57,6 +57,22 @@ void Instance::open_ssh(std::function<void (Ssh::Session&)> callback)
   callback(ssh);
 }
 
+void Instance::start(Sync::Task& task)
+{
+  auto build  = get_build();
+  auto recipe = build->get_recipe();
+
+  recipe->exec_script("start", *this, task);
+}
+
+void Instance::stop(Sync::Task& task)
+{
+  auto build  = get_build();
+  auto recipe = build->get_recipe();
+
+  recipe->exec_script("stop", *this, task);
+}
+
 bool Instance::needs_restart()
 {
   return get_last_start() <= get_build()->get_last_build();
