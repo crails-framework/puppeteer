@@ -6,6 +6,7 @@
 # include <crails/getenv.hpp>
 # include <crails/read_file.hpp>
 # include "app/jenkins/jenkins.hpp"
+# include <boost/filesystem.hpp>
 #endif
 #include "variable_list.hpp"
 
@@ -57,6 +58,15 @@ std::string generate_file_from_template(const std::string& template_path, std::m
   return content;
 }
 
+static std::string get_build_auto_deploy_command(ODB::id_type build_id)
+{
+  stringstream stream;
+
+  stream << boost::filesystem::current_path().string() << "/bin/tasks/auto-deploy/task";
+  stream << ' ' << build_id;
+  return stream.str();
+}
+
 std::string Build::get_build_config()
 {
   map<string,string> variables;
@@ -64,6 +74,7 @@ std::string Build::get_build_config()
   auto source_path = recipe->get_repository_path() + "/jenkins.xml";
 
   collect_variables(variables);
+  variables["BUILD_AUTO_DEPLOY_COMMAND"] = get_build_auto_deploy_command(get_id());
   return generate_file_from_template(source_path, variables);
 }
 
