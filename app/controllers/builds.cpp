@@ -1,6 +1,7 @@
 #include "lib/odb/application-odb.hxx"
 #include "builds.hpp"
 #include "app/jenkins/jenkins.hpp"
+#include <crails/utils/string.hpp>
 
 using namespace std;
 using namespace Crails;
@@ -75,13 +76,15 @@ void BuildController::available_builds()
     short count = 0;
 
     json << '[';
-    for (const auto& file : files)
+    for (const auto& filepath : files)
     {
-      if (string_ends_with(file, ".tar.gz"))
+      if (string_ends_with(filepath, ".tar.gz"))
       {
+        string filename = *(split(filepath, '/').rbegin());
+
 	if (count > 0)
 	  json << ',';
-        json << file.substr(0, file.length() - 7);
+        json << '"' << filename.substr(0, filename.length() - 7) << '"';
         count++;
       }
     }
