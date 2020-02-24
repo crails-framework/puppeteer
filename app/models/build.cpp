@@ -7,6 +7,7 @@
 # include <crails/read_file.hpp>
 # include "app/jenkins/jenkins.hpp"
 # include <boost/filesystem.hpp>
+# include <crails/utils/string.hpp>
 #endif
 #include "variable_list.hpp"
 
@@ -15,6 +16,8 @@ using namespace std;
 odb_instantiable_impl(Build)
 
 #ifndef __CHEERP_CLIENT__
+std::vector<std::string> list_directory(const std::string& directory_path);
+
 const std::string Build::builds_path = Crails::getenv("PUPPETEER_BUILDS_PATH", "/opt/puppeteer/builds");
 
 void Build::collect_variables(map<string,string>& variables)
@@ -111,5 +114,40 @@ bool Build::update_last_build(const DataTree& data)
   else
     set_last_build(0);
   return previous_last_build != get_last_build();
+}
+
+static bool string_ends_with(std::string const &fullString, std::string const &ending)
+{
+  if (fullString.length() >= ending.length())
+  {
+    return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+  }
+  return false;
+}
+
+vector<string> Build::get_available_builds() const
+{
+  auto files = list_directory(get_build_path());
+  vector<string> filenames;
+
+  for (const auto& filepath : files)
+  {
+    if (string_ends_with(filepath, ".tar.gz"))
+    {
+      string filename = *(Crails::split(filepath, '/').rbegin());
+
+      filenames.push_back(filename.substr(0, filename.length() - 7));
+    }
+  }
+  std::sort(filenames.begin(), filenames.end(), [](const std::string& a, const std::string& b) -> bool
+  {
+    stringstream str_a; stringstream str_b;
+    unsigned int int_a, int_b;
+
+    str_a << a;     str_b << b;
+    str_a >> int_a; str_b >> int_b;
+    return int_a > int_b;
+  });
+  return filenames;
 }
 #endif
