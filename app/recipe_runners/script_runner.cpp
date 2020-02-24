@@ -31,7 +31,7 @@ int ScriptRunner::run_script(const string& script_name)
   command_stream << "cd '" << get_remote_folder() << "' && " << "./" << script_name<< ".sh 2>&1";
 
   status = ssh.exec(command_stream.str(), stream);
-  if (status)
+  if (status && throw_on_failure_status)
   {
     stringstream err_stream;
     err_stream << "Recipe(" << recipe.get_name() << "): remote script `" << script_name << ".sh` returned with error status " << status;

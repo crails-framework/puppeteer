@@ -67,6 +67,9 @@ void InstanceStateWidget::on_start_task_progress(Crails::Front::Object response)
   {
   default:
     break;
+  case Sync::Success:
+    model->set_running(true);
+    break ;
   }
 }
 
@@ -76,11 +79,28 @@ void InstanceStateWidget::on_stop_task_progress(Crails::Front::Object response)
   {
   default:
     break;
+  case Sync::Success:
+    model->set_running(false);
+    break ;
   }
 }
 
 void InstanceStateWidget::fetch_state()
 {
+  auto request = Http::Request::get(model->get_url() + "/state");
+
+  request->set_headers({{"Accept", "text/plain"}});
+  request->send().then([this, request]()
+  {
+    auto response = request->get_response();
+    auto text     = response->get_response_text();
+
+    model->set_running(text == "1");
+    on_state_fetched();
+  })._catch([this]()
+  {
+    std::cout << "FAILED TO FETCH STATE" << std::endl;
+  });
 }
 
 void InstanceStateWidget::on_state_fetched()

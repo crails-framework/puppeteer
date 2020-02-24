@@ -44,6 +44,7 @@ public:
   void configure(Sync::Task&);
   void uninstall(Sync::Task&);
   void deploy(Sync::Task&, const std::string& build_id);
+  void update_running_state(Sync::Task&);
   void open_ssh(std::function<void (Ssh::Session&)>);
 
   bool needs_restart();

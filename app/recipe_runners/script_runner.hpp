@@ -17,6 +17,7 @@ struct ScriptRunner
   Sync::Task&   task;
   Sync::Stream  stream;
   Variables     variables;
+  bool          throw_on_failure_status = true;
 
   ScriptRunner(Ssh::Session&, Recipe&, Instance&, Sync::Task&); 
 

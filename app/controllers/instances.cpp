@@ -80,21 +80,14 @@ void InstanceController::fetch_state()
 {
   require_model();
   if (model)
-    model->get_build()->update_last_build();
-  open_ssh([this](Ssh::Session& ssh)
   {
-    stringstream output;
-    Sync::Stream stream(output);
-    InstanceState state;
-    OArchive      archive;
+    Sync::Task foo_task(3);
+    string response_text;
 
-    state.set_needs_restart(model->needs_restart());
-    state.set_needs_configure(model->needs_configure());
-    ssh.exec("monit status -g " + model->get_name(), stream);
-    state.initialize_from_monit(output.str());
-    state.serialize(archive);
-    render(archive);
-  });
+    model->update_running_state(foo_task);
+    response_text = model->get_running() ? "1" : "0";
+    Crails::Controller::render(TEXT, response_text);
+  }
 }
 
 void InstanceController::on_task_started(const string& task_name, const string& task_uid)

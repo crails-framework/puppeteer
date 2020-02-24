@@ -2,12 +2,14 @@
 #ifndef __CHEERP_CLIENT__
 # include "lib/odb/application-odb.hxx"
 # include "app/ssh/session.hpp"
-# include <crails/sync/task.hpp>
+# include "app/recipe_runners/script_runner.hpp"
+# include <crails/logger.hpp>
 #endif
 #include "variable_list.hpp"
 #include "recipe.hpp"
 
 using namespace std;
+using namespace Crails;
 
 odb_instantiable_impl(Instance)
 
@@ -71,6 +73,36 @@ void Instance::stop(Sync::Task& task)
   auto recipe = build->get_recipe();
 
   recipe->exec_script("stop", *this, task);
+}
+
+void Instance::update_running_state(Sync::Task& task)
+{
+  open_ssh([this, &task](Ssh::Session& ssh)
+  {
+    const string script_name = "state";
+    auto         recipe = get_build()->get_recipe();
+    ScriptRunner runner(ssh, *recipe, *this, task);
+    int          status;
+
+    runner.throw_on_failure_status = false;
+    runner.upload_variables();
+    runner.upload_script(script_name);
+    status = runner.run_script(script_name);
+    switch (status)
+    {
+    case 0:
+      set_running(true);
+      break ;
+    case -1:
+      set_state(Instance::Dirty);
+    case 1:
+      set_running(false);
+      break ;
+    default:
+      logger << Logger::Error << "state script for instance " << get_name() << " returned an unknown status (" << status << ')' << Logger::endl;
+      break ;
+    }
+  });
 }
 
 bool Instance::needs_restart()

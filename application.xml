@@ -1,4 +1,10 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="13">
+    <alter-table name="Instance">
+      <add-column name="running" type="BOOLEAN" null="false"/>
+    </alter-table>
+  </changeset>
+
   <changeset version="12">
     <alter-table name="Build">
       <add-column name="lastbuild" type="INTEGER" null="false"/>
