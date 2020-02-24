@@ -18,13 +18,19 @@ void deploy_build(Params& params)
 
     if (database.find_one(instance, params["id"].as<ODB::id_type>()))
     {
-      instance->deploy(sync_task, params["build_id"]);
-      instance->stop(sync_task);
-      instance->start(sync_task);
-      instance->set_running_task("");
-      database.save(*instance);
-      database.commit();
-      sync_task.increment();
+      if (instance->get_state() != Instance::Uninstalled)
+      {
+        instance->deploy(sync_task, params["build_id"]);
+        instance->stop(sync_task);
+        instance->start(sync_task);
+        instance->set_state(Instance::Deployed);
+        instance->set_running_task("");
+        database.save(*instance);
+        database.commit();
+        sync_task.increment();
+      }
+      else
+        logger << Logger::Error << "Cannot deploy on instance " << instance->get_name() << ": not installed" << Logger::endl;
     }
   }
   catch (...)

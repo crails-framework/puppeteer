@@ -25,7 +25,8 @@ public:
   {
     Uninstalled = 0,
     Ready       = 1,
-    Dirty       = 2
+    Dirty       = 2,
+    Deployed    = 3
   };
 
   std::string get_url()  const { return get_model_url(*this); }
