@@ -29,7 +29,6 @@ void deploy_configuration(Params& params)
   {
     if (instance)
     {
-      instance->set_state(Instance::Dirty);
       instance->set_running_task("");
       database.save(*instance);
       database.commit();
