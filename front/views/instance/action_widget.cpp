@@ -152,7 +152,7 @@ void InstanceActionWidget::on_uninstall_start(const Crails::Front::Ajax& ajax)
 
   console_output->flush();
   progress_bar->set_label("Uninstalling...");
-  progress_bar->set_progress(0);
+  progress_bar->update_progress(0);
   sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_uninstall_task_progress, this, std::placeholders::_1));
 }
 
@@ -179,7 +179,7 @@ void InstanceActionWidget::on_deploy_start(const Crails::Front::Ajax& ajax)
 
   console_output->flush();
   progress_bar->set_label("Deployment...");
-  progress_bar->set_progress(0);
+  progress_bar->update_progress(0);
   sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_deploy_task_progress, this, std::placeholders::_1));
 }
 
@@ -209,7 +209,7 @@ void InstanceActionWidget::on_configure_start(const Crails::Front::Ajax& ajax)
 
   console_output->flush();
   progress_bar->set_label("Configure...");
-  progress_bar->set_progress(0);
+  progress_bar->update_progress(0);
   sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_configure_task_progress, this, std::placeholders::_1));
 }
 

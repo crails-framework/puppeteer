@@ -6,7 +6,7 @@ void TaskRunner::on_performing_action()
   if (progress_bar)
   {
     progress_bar->set_active(true);
-    progress_bar->set_progress(0);
+    progress_bar->update_progress(0);
   }
   else
     std::cout << "/!\\ TaskRunner::progress_bar unset" << std::endl;
@@ -33,7 +33,7 @@ Sync::TaskState TaskRunner::on_task_progress(Crails::Front::Object response)
     if (console_output && response->hasOwnProperty("message"))
       (*console_output) << (std::string)(response["message"]);
     if (progress_bar)
-      progress_bar->set_progress(progress);
+      progress_bar->update_progress(progress);
     if (status == "abort")
     {
       on_action_performed();
