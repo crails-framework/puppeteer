@@ -11018,10 +11018,15 @@ section {
   text-align: right;
 }
 
-.setup-actions > label {
-  padding: 5px 0;
-}
-
 .setup-actions > .btn-group {
   float: right;
+}
+
+action-widget label {
+  padding: 5px 15px 5px 0;
+}
+
+state-widget .actions {
+  margin-top: 15px;
+  text-align: center;
 }

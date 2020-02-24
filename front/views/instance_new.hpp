@@ -32,6 +32,17 @@ namespace Views
       model->set_variable_list(variables_input.get_value());
       model->set_auto_deploy(auto_deploy_input.get_checked());
     }
+
+    void trigger_binding_updates()
+    {
+      ModelForm::trigger_binding_updates();
+      if (model)
+      {
+        auto_deploy_input.checked(model->get_auto_deploy());
+        machine_input.set_value(model->get_machine_id());
+        build_input.set_value(model->get_build_id());
+      }
+    }
   };
 }
 
