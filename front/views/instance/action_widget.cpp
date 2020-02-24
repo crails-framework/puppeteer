@@ -160,13 +160,10 @@ void InstanceActionWidget::on_uninstall_task_progress(Crails::Front::Object resp
   switch (on_task_progress(response))
   {
   default:
+  case Sync::Abort:
     break ;
   case Sync::Success:
-    model->set_state(1);
-    model->remote_state_changed.trigger();
-    break ;
-  case Sync::Abort:
-    model->set_state(2);
+    model->set_state(Instance::Uninstalled);
     model->remote_state_changed.trigger();
     break ;
   }
@@ -217,7 +214,7 @@ void InstanceActionWidget::on_configure_task_progress(Crails::Front::Object resp
   switch (on_task_progress(response))
   {
   case Sync::Success:
-    model->set_state(0);
+    model->set_state(Instance::Ready);
     model->remote_state_changed.trigger();
     break ;
   case Sync::Abort:

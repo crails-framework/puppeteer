@@ -32,6 +32,7 @@ public:
   {
     append_new_lines();
     *this > Crails::Front::Element("div", {{"class","console-output-line console-result-line"}}).text(message);
+    scroll_to_bottom();
   }
 
 private:
