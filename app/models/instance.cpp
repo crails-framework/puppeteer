@@ -46,7 +46,11 @@ void Instance::deploy(Sync::Task& task, const std::string& build_id)
   auto recipe = get_build()->get_recipe();
 
   recipe->deploy_build_for(*this, task, build_id);
-  set_state(Ready);
+  set_state(Deployed);
+
+  stringstream stream; unsigned int a;
+  stream << build_id; stream >> a;
+  set_deployed_build(a);
 }
 
 void Instance::open_ssh(std::function<void (Ssh::Session&)> callback)

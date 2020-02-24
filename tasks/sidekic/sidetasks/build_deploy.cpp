@@ -23,7 +23,6 @@ void deploy_build(Params& params)
         instance->deploy(sync_task, params["build_id"]);
         instance->stop(sync_task);
         instance->start(sync_task);
-        instance->set_state(Instance::Deployed);
         instance->set_running_task("");
         database.save(*instance);
         database.commit();

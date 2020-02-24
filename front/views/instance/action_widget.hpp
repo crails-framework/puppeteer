@@ -7,6 +7,7 @@
 class InstanceActionWidget : public HtmlTemplate::ActionWidget, public TaskRunner, public Crails::Listener
 {
     bool performing_action = false;
+    std::string deploying_build;
   public:
     InstanceActionWidget();
 

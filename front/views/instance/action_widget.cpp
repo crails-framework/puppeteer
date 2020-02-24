@@ -193,13 +193,11 @@ void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object respons
   switch (on_task_progress(response))
   {
   case Sync::Success:
-    //model->set_state(0);
-    //model->remote_state_changed.trigger();
+    model->set_state(Instance::Deployed);
+    model->set_deployed_build(boost::lexical_cast<unsigned int>(deploying_build));
+    model->remote_state_changed.trigger();
     break ;
   case Sync::Abort:
-    //model->set_state(2);
-    //model->remote_state_changed.trigger();
-    break ;
   case Sync::Continue:
     break ;
   }

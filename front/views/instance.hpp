@@ -28,6 +28,15 @@ namespace Views
     {
       ModelView::activate(instance_id);
     }
+
+    void on_model_received()
+    {
+      ModelView::on_model_received();
+      model->remote_state_changed.connect([this]()
+      {
+        signaler.trigger("state-changed");
+      });
+    }
   };
 }
 
