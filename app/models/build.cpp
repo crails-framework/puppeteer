@@ -62,8 +62,8 @@ static std::string get_build_auto_deploy_command(ODB::id_type build_id)
 {
   stringstream stream;
 
-  stream << boost::filesystem::current_path().string() << "/bin/tasks/auto-deploy/task";
-  stream << ' ' << build_id;
+  stream << "cd '" << boost::filesystem::current_path().string() << "' &&";
+  stream << ". ../env && bin/tasks/auto-deploy-for/task " << build_id;
   return stream.str();
 }
 

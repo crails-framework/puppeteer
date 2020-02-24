@@ -43,6 +43,16 @@ namespace Views
       model->set_options(options_input.get_value());
       model->set_variable_list(variables_input.get_value());
     }
+
+    void trigger_binding_updates()
+    {
+      ModelForm::trigger_binding_updates();
+      if (model)
+      {
+        recipe_input.set_value(model->get_recipe_id());
+        credentials_input.set_value(model->get_credential_id());
+      }
+    }
   };
 }
 

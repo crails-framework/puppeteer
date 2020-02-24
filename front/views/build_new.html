@@ -26,8 +26,7 @@
         <form-group cpp::label.bind='"name"' cpp::name.bind='"build_name"' cpp::value.bind="root->get_build_name()">
         </form-group>
 	<form-group cpp::label.bind='"recipe"' cpp::name.bind='"build_recipe"'>
-          <recipe-select slot="input" name="build_recipe" class="form-control" ref="recipe_input"
-                        cpp::value.bind="root->get_build_recipe_id()">
+          <recipe-select slot="input" name="build_recipe" class="form-control" ref="recipe_input">
           </recipe-select>
         </form-group>
         <form-group cpp::label.bind='"git url"' cpp::name.bind='"build_git"' cpp::value.bind="root->get_build_git_url()">
@@ -35,8 +34,7 @@
         <form-group cpp::label.bind='"git branch"' cpp::name.bind='"build_branch"' cpp::value.bind="root->get_build_branch()">
         </form-group>
         <form-group cpp::label.bind='"credentials"' cpp::name.bind='"build_credentials"'>
-          <credentials-select slot="input" name="build_credentials" class="form-control" ref="credentials_input"
-                              cpp::value.bind="root->get_build_credentials_id()">
+          <credentials-select slot="input" name="build_credentials" class="form-control" ref="credentials_input">
           </credentials-select>
         </form-group>
         <form-group cpp::label.bind='"build options"' cpp::name.bind='"build_options"'>
