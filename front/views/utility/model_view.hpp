@@ -2,6 +2,7 @@
 # define MODEL_VIEW_HPP
 
 # include <memory>
+# include "app/model.hpp"
 
 namespace Views
 {

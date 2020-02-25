@@ -31,6 +31,7 @@ void Crails::Router::initialize(void)
   SetRoute("POST", "/builds/:id/enable",  BuildController, enable);
   SetRoute("POST", "/builds/:id/disable", BuildController, disable);
   SetRoute("GET",  "/builds/:id/available-builds", BuildController, available_builds);
+  SetRoute("DELETE", "/builds/:id/build/:build_id", BuildController, remove_build);
 
   SetRoute("GET",  "/variables", VariableSetController, show);
   SetRoute("POST", "/variables", VariableSetController, update);

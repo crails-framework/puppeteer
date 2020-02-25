@@ -2,28 +2,32 @@
   <head>
     <script>
       virtual std::vector<Crails::Front::Object>& get_builds() = 0;
+      virtual void on_remove_build_clicked(std::string) = 0;
     </script>
   </head>
   <body>
     <model-view cpp::title.bind='"Build"' ref="wrapper">
       <div slot="content" class="row">
         <div class="col-lg-12">
-          <card cpp::title.bind='"Builds"'>
-            <div slot="content">
-              <table>
-                <tbody>
-                  <tr repeat.for="build of [std::vector<Crails::Front::Object>]root->get_builds() & signal:builds-fetched">
-                    <td>
-                      <a href.bind='(std::string)build["url"]'
-                         target="_blank"
-                         text.bind='"Build" + (std::string)(build["number"])'>
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </card>
+          <table-responsive>
+            <tbody slot="tbody">
+              <tr repeat.for="build of [std::vector<Crails::Front::Object>]root->get_builds() & signal:builds-fetched">
+                <td>
+                  <a href.bind='(std::string)build["url"]'
+                     target="_blank"
+                     text.bind='"Build" + (std::string)(build["number"])'>
+                  </a>
+                </td>
+                <td style="width:150px">
+                  <button class="au-btn au-btn-icon au-btn--red au-btn--small"
+                          click.trigger='root->on_remove_build_clicked((std::string)(build["number"]))'>
+                    <i class="fa fa-trash"></i>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table-responsive>
         </div>
       </div>
     </model-view>

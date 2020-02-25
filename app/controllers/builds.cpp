@@ -74,3 +74,10 @@ void BuildController::available_builds()
     response["body"] = json.str();
   }
 }
+
+void BuildController::remove_build()
+{
+  require_model();
+  if (model)
+    model->remove_build(params["build_id"].as<unsigned int>());
+}

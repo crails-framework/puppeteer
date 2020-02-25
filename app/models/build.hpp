@@ -32,6 +32,7 @@ public:
   void on_change();
   bool update_last_build();
   bool update_last_build(const DataTree&);
+  void remove_build(unsigned int build_id);
 
   void collect_variables(std::map<std::string,std::string>&);
   std::string get_build_path() const;

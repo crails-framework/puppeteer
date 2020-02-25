@@ -82,6 +82,26 @@ std::string Build::get_build_config()
   return generate_file_from_template(source_path, variables);
 }
 
+void Build::remove_build(unsigned int build_id)
+{
+  Jenkins jenkins;
+  int status = jenkins.delete_build(get_name(), build_id);
+
+  if (status != 200)
+  {
+    std::cout << "responded with status " << status << std::endl;
+    throw std::runtime_error("could not remove build from jenkins");
+  }
+
+  stringstream tarball_path_stream;
+  string tarball_path;
+
+  tarball_path_stream << get_build_path() << '/' << build_id << ".tar.gz";
+  tarball_path = tarball_path_stream.str();
+  if (boost::filesystem::exists(tarball_path))
+    boost::filesystem::remove(tarball_path);
+}
+
 void Build::on_change()
 {
   if (get_id() != ODB_NULL_ID)

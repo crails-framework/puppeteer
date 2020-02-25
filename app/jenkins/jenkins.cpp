@@ -45,6 +45,11 @@ string Jenkins::job_url(const string& jobname) const
   return puppeteer_folder_url() + "/job/" + jobname;
 }
 
+string Jenkins::build_url(const string& jobname, const string& build_id) const
+{
+  return job_url(jobname) + '/' + build_id;
+}
+
 void Jenkins::prepare_query(boost::network::http::client::request& request)
 {
   string authorization = "Basic ";
@@ -97,6 +102,21 @@ int Jenkins::push_config(const std::string& jobname, const std::string& config)
   std::cout << "[Jenkins] Pushing config " << jobname << ':' << std::endl << config << std::endl << std::endl;
 
   auto response = client.post(request);
+  return boost::network::http::status(response);
+}
+
+int Jenkins::delete_build(const string& jobname, unsigned int build_id)
+{
+  delete_build(jobname, boost::lexical_cast<string>(build_id));
+}
+
+int Jenkins::delete_build(const string& jobname, const string& build_id)
+{
+  string url = build_url(jobname, build_id) + "/doDelete";
+  boost::network::http::client::request request(url);
+  prepare_query(request);
+  auto response = client.post(request);
+
   return boost::network::http::status(response);
 }
 
