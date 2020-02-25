@@ -107,7 +107,7 @@ int Jenkins::push_config(const std::string& jobname, const std::string& config)
 
 int Jenkins::delete_build(const string& jobname, unsigned int build_id)
 {
-  delete_build(jobname, boost::lexical_cast<string>(build_id));
+  return delete_build(jobname, boost::lexical_cast<string>(build_id));
 }
 
 int Jenkins::delete_build(const string& jobname, const string& build_id)

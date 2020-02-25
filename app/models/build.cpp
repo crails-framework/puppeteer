@@ -87,7 +87,7 @@ void Build::remove_build(unsigned int build_id)
   Jenkins jenkins;
   int status = jenkins.delete_build(get_name(), build_id);
 
-  if (status != 200)
+  if (status >= 400)
   {
     std::cout << "responded with status " << status << std::endl;
     throw std::runtime_error("could not remove build from jenkins");
