@@ -1,4 +1,7 @@
 #include "task_runner.hpp"
+#include "front/app/sync_task.hpp"
+
+extern Sync::Tasks* sync_tasks;
 
 void TaskRunner::on_performing_action()
 {
@@ -11,7 +14,10 @@ void TaskRunner::on_performing_action()
   else
     std::cout << "/!\\ TaskRunner::progress_bar unset" << std::endl;
   if (console_output)
+  {
+    console_output->flush();
     console_output->visible(performing_action);
+  }
   else
     std::cout << "/!\\ TaskRunner::console_output unset" << std::endl;
   performing_action_signal.trigger(true);
@@ -38,12 +44,16 @@ Sync::TaskState TaskRunner::on_task_progress(Crails::Front::Object response)
       progress_bar->update_progress(progress);
     if (status == "abort")
     {
+      if (response->hasOwnProperty("id"))
+        sync_tasks->stop_listening((std::string)(response["id"]));
       on_action_performed();
       console_output->append_final_line("/!\\ Task aborted");
       return Sync::Abort;
     }
     else if (progress == 1)
     {
+      if (response->hasOwnProperty("id"))
+        sync_tasks->stop_listening((std::string)(response["id"]));
       on_action_performed();
       console_output->append_final_line("(!) Task successfully completed");
       return Sync::Success;

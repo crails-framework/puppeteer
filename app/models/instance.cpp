@@ -30,7 +30,8 @@ void Instance::configure(Sync::Task& task)
   auto recipe = get_build()->get_recipe();
 
   recipe->deploy_for(*this, task);
-  set_state(Ready);
+  if (state == Uninstalled)
+    set_state(Ready);
 }
 
 void Instance::uninstall(Sync::Task& task)
