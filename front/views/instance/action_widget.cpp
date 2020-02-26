@@ -116,7 +116,10 @@ void InstanceActionWidget::deploy()
     std::string build_version = get_selected_build_version();
 
     if (build_version.length() > 0)
+    {
       url += '/' + build_version;
+      deploying_build = build_version;
+    }
     on_performing_action();
     Crails::Front::Ajax::query("POST", url).callbacks({
       std::bind(&InstanceActionWidget::on_deploy_start,   this, std::placeholders::_1),
@@ -188,7 +191,8 @@ void InstanceActionWidget::on_deploy_task_progress(Crails::Front::Object respons
   {
   case Sync::Success:
     model->set_state(Instance::Deployed);
-    model->set_deployed_build(boost::lexical_cast<unsigned int>(deploying_build));
+    if (deploying_build.length() > 0)
+      model->set_deployed_build(boost::lexical_cast<unsigned int>(deploying_build));
     model->remote_state_changed.trigger();
     break ;
   case Sync::Abort:

@@ -37,7 +37,6 @@ void InstanceStateWidget::on_start_clicked()
 
     on_performing_action();
     sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_start_task_progress, this, std::placeholders::_1));
-    std::cout << "RESTARteD SUCESSFULLY RUN '" << task_uid << "'" << std::endl;
   })._catch([this]()
   {
     std::cout << "RESTART FAILED TO HAPPEN" << std::endl;
@@ -56,7 +55,6 @@ void InstanceStateWidget::on_stop_clicked()
 
     on_performing_action();
     sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_stop_task_progress, this, std::placeholders::_1));
-    std::cout << "STOP SUCCESSFULLY RUN" << std::endl;
   })._catch([this]()
   {
     std::cout << "STOP FAILED TO HAPPEN" << std::endl;
@@ -71,6 +69,7 @@ void InstanceStateWidget::on_start_task_progress(Crails::Front::Object response)
     break;
   case Sync::Success:
     model->set_running(true);
+    signaler.trigger("state-changed");
     break ;
   }
 }
@@ -83,6 +82,7 @@ void InstanceStateWidget::on_stop_task_progress(Crails::Front::Object response)
     break;
   case Sync::Success:
     model->set_running(false);
+    signaler.trigger("state-changed");
     break ;
   }
 }
