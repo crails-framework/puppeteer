@@ -171,4 +171,21 @@ vector<string> Build::get_available_builds() const
   });
   return filenames;
 }
+
+void log_destroy_failure_on_bounded_resources(const std::string& resource, unsigned long count, const std::string& bound_resources);
+
+bool Build::can_destroy() const
+{
+  auto& database = *(ODB::Connection::instance);
+  unsigned long bound_instance_count;
+
+  bound_instance_count = database.count<Instance>(odb::query<Instance>::build_id == get_id());
+  if (bound_instance_count)
+    log_destroy_failure_on_bounded_resources("build `" + get_name() + '`', bound_instance_count, "instances");
+  return bound_instance_count == 0;
+}
+
+void Build::before_destroy()
+{
+}
 #endif

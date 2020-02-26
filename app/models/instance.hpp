@@ -49,6 +49,9 @@ public:
 
   bool needs_restart();
   bool needs_configure();
+
+  bool can_destroy() const;
+  void before_destroy();
 #endif
 };
 

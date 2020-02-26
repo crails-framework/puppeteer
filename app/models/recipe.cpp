@@ -221,77 +221,21 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
     runner.deploy_build(build_id);
   });
 }
-/*
-void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string& build_id)
+
+void log_destroy_failure_on_bounded_resources(const std::string& resource, unsigned long count, const std::string& bound_resources);
+
+bool Recipe::can_destroy() const
 {
-  const string package = "deploy";
-  Ssh::Session ssh;
-  Sync::Stream stream(task);
-  auto machine = instance.get_machine();
-  auto build   = instance.get_build();
+  auto& database = *(ODB::Connection::instance);
+  unsigned long bound_build_count;
 
-  ssh.should_accept_unknown_hosts(true);
-  ssh.connect(remote_user, machine->get_ip());
-  ssh.authentify_with_pubkey();
-  task.increment();
-  {
-    const string remote_folder      = remote_path + '/' + instance.get_name();
-    const string recipe_folder      = get_repository_path();
-    const string deploy_script_path = recipe_folder + "/deploy.sh";
-    const string build_tarball_filename = build_id + ".tar.gz";
-    const string build_tarball_path = build->get_build_path() + '/' + build_tarball_filename;
-    const string variable_filename   = "variables";
-    const string variable_filepath   = remote_folder + '/' + variable_filename;
-    std::map<std::string, std::string> variables;
-
-    // Upload build tarball and deploy script
-    {
-      auto scp = ssh.make_scp_session(remote_folder, SSH_SCP_WRITE);
-
-      stream << "Uploading build tarball " << build_tarball_path << '\n';
-      scp->push_file(build_tarball_path, build_tarball_filename);
-      stream << "Done.\nUploading deploy script...\n";
-      scp->push_file(deploy_script_path, "deploy.sh");
-      stream << "Done.\n";
-      task.increment();
-    }
-
-    // Upload variables
-    {
-      auto scp = ssh.make_scp_session(remote_folder, SSH_SCP_WRITE);
-
-      VariableSet::collect_global_variables(variables);
-      instance.collect_variables(variables);
-      build->collect_variables(variables);
-      variables["MACHINE_IP"] = machine->get_ip();
-      variables["BUILD_TARBALL"] = (remote_folder + '/' + build_tarball_filename);
-      scp->push_text(generate_variable_file(variables), variable_filepath);
-      task.increment();
-    }
-
-    // Run deploy script
-    {
-      int status;
-
-      status = ssh.exec("chmod +x '" + remote_folder + "/deploy.sh" + '\'', stream);
-      if (status)
-        throw std::runtime_error("Recipe(" + get_name() + "): could not chmod script: deploy.sh");
-      stream << "\n## deploy.sh:\n";
-
-      stringstream command_stream;
-      command_stream << "cd '" << remote_folder << "' && " << "./deploy.sh 2>&1";
-
-      status = ssh.exec(command_stream.str(), stream);
-      if (status)
-      {
-        std::stringstream err_stream;
-        err_stream << "Recipe(" << get_name() << "): remote script `deploy.sh` returned with error status " << status;
-        throw std::runtime_error(err_stream.str());
-      }
-      task.increment();
-    }
-  }
-  instance.set_deployed_build(boost::lexical_cast<unsigned int>(build_id));
+  bound_build_count = database.count<Build>(odb::query<Build>::recipe_id == get_id());
+  if (bound_build_count)
+    log_destroy_failure_on_bounded_resources("recipe `" + get_name() + '`', bound_build_count, "builds");
+  return bound_build_count == 0;
 }
-*/
+
+void Recipe::before_destroy()
+{
+}
 #endif

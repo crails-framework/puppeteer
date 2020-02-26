@@ -125,4 +125,13 @@ bool Instance::needs_configure()
   }
   return true;
 }
+
+bool Instance::can_destroy() const
+{
+  return state == Uninstalled;
+}
+
+void Instance::before_destroy()
+{
+}
 #endif

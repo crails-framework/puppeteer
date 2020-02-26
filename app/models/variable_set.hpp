@@ -29,6 +29,8 @@ public:
 
 # ifndef __CHEERP_CLIENT__
   static void collect_global_variables(std::map<std::string,std::string>& variables);
+
+  bool can_destroy() const { return true; }
 # endif
 };
 

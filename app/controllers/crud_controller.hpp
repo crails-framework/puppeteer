@@ -12,6 +12,15 @@ namespace Crud
     typedef Crud::Controller<MODEL, QUERY_OBJECT> Super;
   public:
     ArchiveController(Crails::Params& params) : Super(params) {}
+
+    virtual void destroy()
+    {
+      if (Super::model->can_destroy())
+        Super::destroy();
+      else
+        Super::respond_with(Super::ResponseStatus::bad_request);
+    }
+
   protected:
     virtual bool edit_model(Data data)
     {

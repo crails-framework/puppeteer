@@ -29,6 +29,8 @@ public:
 # ifndef __CHEERP_CLIENT__
   static const std::string builds_path;
 
+  bool can_destroy() const;
+  void before_destroy();
   void on_change();
   bool update_last_build();
   bool update_last_build(const DataTree&);

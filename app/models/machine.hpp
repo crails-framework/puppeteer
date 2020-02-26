@@ -24,6 +24,11 @@ public:
 
   void serialize(OArchive&);
   void serialize(IArchive&);
+
+#ifndef __CHEERP_CLIENT__
+  void before_destroy();
+  bool can_destroy() const;
+#endif
 };
 
 #endif

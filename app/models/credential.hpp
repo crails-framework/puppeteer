@@ -28,6 +28,7 @@ public:
   std::string get_jenkins_id() const;
 
 # ifndef __CHEERP_CLIENT__
+  bool can_destroy() const;
   void on_change();
   void before_destroy();
 # endif

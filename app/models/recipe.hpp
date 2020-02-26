@@ -37,6 +37,8 @@ public:
   static const std::string base_path, remote_path, remote_user;
   static const std::vector<std::shared_ptr<Plugin> > plugins;
 
+  bool can_destroy() const;
+  void before_destroy();
   void on_change();
 
   std::string get_repository_path() const;
