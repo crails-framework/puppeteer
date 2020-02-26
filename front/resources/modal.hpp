@@ -2,6 +2,8 @@
 # define FRONT_MODAL_HPP
 
 # include "lib/cheerp-html/resources/modal.hpp"
+# include <crails/front/globals.hpp>
+# include <iostream>
 
 template<typename ELEMENT>
 class Modal : public HtmlTemplate::Modal
@@ -13,7 +15,13 @@ public:
 
   Modal()
   {
+    std::cout << "Modal constructor" << std::endl;
     container > el;
+  }
+
+  ~Modal()
+  {
+    std::cout << "Modal destroyed" << std::endl;
   }
 
   void bind_attributes()
@@ -34,7 +42,6 @@ public:
 
     self->set_title(title);
     self->bind_attributes();
-    //self->signaler.trigger("modal-changed");
     return self;
   }
 

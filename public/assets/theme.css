@@ -11061,6 +11061,19 @@ button.disabled {
   text-decoration: blink;
 }
 
+.build-table td.status {
+  width: 150px;
+  padding: 12px 5px;
+}
+
+.build-table td.link {
+  width: calc(100% - 300px);
+}
+
+.build-table td.actions {
+  width: 150px;
+}
+
 /* modal */
 modal {
   position: absolute;

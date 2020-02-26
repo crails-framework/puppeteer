@@ -9,6 +9,7 @@ namespace Views
 {
   class Build : public ModelView<Puppeteer::Build, HtmlTemplate::Build>
   {
+    std::string job_url;
   public:
     Build()
     {
@@ -20,6 +21,7 @@ namespace Views
     }
 
     std::vector<Crails::Front::Object>& get_builds() { return builds; }
+    std::string get_badge_for_build(std::string);
 
     void set_enabled_state(bool value);
     void refresh_builds();
@@ -31,6 +33,7 @@ namespace Views
       std::cout << "failed to fetch builds" << std::endl;
     }
 
+    void on_enable_build_clicked(bool value);
     void on_remove_build_clicked(std::string build_number);
 
   private:

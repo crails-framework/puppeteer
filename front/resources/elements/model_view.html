@@ -7,18 +7,20 @@
   <body>
     <title-1 cpp::title.bind="title & signal:model-changed">
       <div slot="controls">
-        <div class="btn-group" ref="controls">
-          <a class="au-btn au-btn-icon au-btn--blue"
-             href.bind="root->edit_path & signal:model-changed">
-            <fa-icon cpp::name.bind='"edit"' />
-            Edit
-          </a>
-          <a class="au-btn au-btn-icon au-btn--red"
-             href.bind="root->destroy_path & signal:model-changed">
-            <fa-icon cpp::name.bind='"times"' />
-            Destroy
-	  </a>
-	</div>
+        <slot name="controls">
+          <div class="btn-group" ref="controls">
+            <a class="au-btn au-btn-icon au-btn--blue"
+               href.bind="root->edit_path & signal:model-changed">
+              <fa-icon cpp::name.bind='"edit"' />
+              Edit
+            </a>
+            <a class="au-btn au-btn-icon au-btn--red"
+               href.bind="root->destroy_path & signal:model-changed">
+              <fa-icon cpp::name.bind='"times"' />
+              Destroy
+  	    </a>
+          </div>
+        </slot>
       </div>
     </title-1>
     <slot name="content">

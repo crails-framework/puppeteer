@@ -1,8 +1,24 @@
 #include <crails/front/http.hpp>
+#include <crails/utils/string.hpp>
 #include "build.hpp"
+#include "resources/modal.hpp"
+#include "lib/cheerp-html/views/delete/delete_build_version.hpp"
 
 using namespace std;
 using namespace Crails::Front;
+
+std::string Views::Build::get_badge_for_build(std::string number)
+{
+  stringstream stream;
+  vector<string> parts;
+
+  for (auto part : Crails::split(job_url, '/'))
+    parts.push_back(part);
+  stream << parts.at(0) << "//" << parts.at(1)
+         << "/buildStatus/icon?job=" << parts.at(3) << "%2F" << parts.at(5)
+         << "&build=" << number;
+  return stream.str();
+}
 
 void Views::Build::refresh_builds()
 {
@@ -22,6 +38,7 @@ void Views::Build::on_builds_fetched(const Ajax& ajax)
     std::string buildable = data["buildable"];
 
     set_enabled_state(buildable == "true");
+    job_url = (std::string)(data["url"]);
     builds = data["builds"];
     signaler.trigger("builds-fetched");
   }
@@ -31,35 +48,50 @@ void Views::Build::on_builds_fetched(const Ajax& ajax)
 
 void Views::Build::on_remove_build_clicked(string build_number)
 {
-  auto request = Http::Request::_delete(model->get_url() + "/build/" + build_number);
+  auto modal = Modal<HtmlTemplate::DeleteBuildVersion>::make("Deleting build " + build_number);
 
-  request->send().then([this, request, build_number]()
+  modal->open().then([this, modal, build_number]()
   {
-    auto response = request->get_response();
+    if (modal->ok())
+    {
+      auto request = Http::Request::_delete(model->get_url() + "/build/" + build_number);
 
-    if (response->ok())
-    {
-      std::cout << "Removed build " << build_number << std::endl;
-      refresh_builds();
-    }
-    else
-    {
-      std::cout << "Failed to remove build " << build_number << std::endl;
+      request->send().then([this, request, build_number]()
+      {
+        auto response = request->get_response();
+
+        if (response->ok())
+        {
+          std::cout << "Removed build " << build_number << std::endl;
+          refresh_builds();
+        }
+        else
+        {
+          std::cout << "Failed to remove build " << build_number << std::endl;
+        }
+      });
     }
   });
 }
 
 void Views::Build::set_enabled_state(bool value)
 {
+  set_is_enabled(value);
+  signaler.trigger("enabled-state-changed");
+}
+
+void Views::Build::on_enable_build_clicked(bool value)
+{
   string action  = value ? "enable" : "disable";
   auto   request = Http::Request::post(model->get_url() + '/' + action);
 
-  request->send().then([this, request]()
+  request->send().then([this, request, value]()
   {
     auto response = request->get_response();
 
     if (response->ok())
     {
+      set_enabled_state(value);
       std::cout << "Successfully changed enable state" << std::endl;
     }
     else
