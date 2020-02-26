@@ -65,6 +65,7 @@ static std::string get_build_auto_deploy_command(ODB::id_type build_id)
 {
   stringstream stream;
 
+  stream << "chmod g+w \"$BUILD_PATH/$BUILD_NUMBER.tar.gz\"\n";
   stream << "cd '" << boost::filesystem::current_path().string() << "'\n";
   stream << ". ../env\n";
   stream << "bin/tasks/auto-deploy-for/task " << build_id;
