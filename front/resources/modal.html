@@ -1,0 +1,36 @@
+<template>
+  <head>
+    <attribute type="std::string" name="title" />
+    <attribute type="std::string" name="yes_label" value='"Yes"' />
+    <attribute type="std::string" name="no_label" value='"No"' />
+    <script>
+      virtual void on_accepted() = 0;
+      virtual void on_rejected() = 0;
+    </script>
+  </head>
+  <body>
+    <div class="modal-header">
+      <h2 text.bind="title & signal:modal-changed"></h2>
+      <button class="au-btn au-btn--red au-btn--small" click.trigger="on_rejected()">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-container" ref="container"></div>
+      <div class="modal-actions">
+        <slot name="actions">
+          <div class="btn-group">
+            <button class="au-btn au-btn-icon au-btn--blue" click.trigger="root->on_accepted()">
+              <i class="fa fa-check"></i>
+	      <span text.bind="root->yes_label & signal:modal-changed"></span>
+            </button>
+            <button class="au-btn au-btn-icon au-btn--red" click.trigger="root->on_rejected()">
+              <i class="fa fa-times"></i>
+	      <span text.bind="root->no_label & signal:modal-changed"></span>
+            </button>
+          </div>
+        </slot>
+      </div>
+    </div>
+  </body>
+</template>
