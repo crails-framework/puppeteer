@@ -150,6 +150,18 @@ int Jenkins::disable_job(const string& jobname)
   return boost::network::http::status(response);
 }
 
+int Jenkins::delete_credentials(const string& id)
+{
+  string url = get_url()
+             + "/credentials/store/system/domain/_/credential/"
+             + Crails::Http::Url::Encode(id) + "/doDelete";
+  boost::network::http::client::request request(url);
+
+  prepare_query(request);
+  auto response = client.post(request);
+  return boost::network::http::status(response);
+}
+
 int Jenkins::create_credentials(const string& id, const string& username, const string& password)
 {
   string url = get_url() + "/credentials/store/system/domain/_/createCredentials";

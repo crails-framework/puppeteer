@@ -29,6 +29,7 @@ public:
 
 # ifndef __CHEERP_CLIENT__
   void on_change();
+  void before_destroy();
 # endif
 };
 

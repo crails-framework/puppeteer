@@ -22,4 +22,13 @@ void Credential::on_change()
   if (status >= 400)
     throw std::runtime_error("unable to sync credentials with jenkins");
 }
+
+void Credential::before_destroy()
+{
+  Jenkins jenkins;
+  int status = jenkins.delete_credentials(get_jenkins_id());
+
+  if (status >= 400)
+    throw std::runtime_error("unable to destroy jenkins credential " + get_jenkins_id());
+}
 #endif

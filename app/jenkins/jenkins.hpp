@@ -34,6 +34,7 @@ public:
   DataTree get_project_data(const std::string& jobname);
 
   int create_credentials(const std::string& id, const std::string& username, const std::string& password);
+  int delete_credentials(const std::string& id);
 
 private:
   void prepare_query(boost::network::http::client::request&);
