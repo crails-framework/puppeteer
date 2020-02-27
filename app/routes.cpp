@@ -5,6 +5,7 @@
 #include "controllers/builds.hpp"
 #include "controllers/recipes.hpp"
 #include "controllers/credentials.hpp"
+#include "controllers/backups.hpp"
 #include "controllers/variable_sets.hpp"
 
 void Crails::Router::initialize(void)
@@ -17,20 +18,27 @@ void Crails::Router::initialize(void)
   crudify(router, "/recipes",     RecipeController);
   crudify(router, "/credentials", CredentialController);
 
-  SetRoute("GET",  "/instances/:id/state",            InstanceController, fetch_state);
-  SetRoute("POST", "/instances/:id/configure",        InstanceController, configure);
-  SetRoute("POST", "/instances/:id/deploy/:build_id", InstanceController, deploy);
-  SetRoute("POST", "/instances/:id/deploy",           InstanceController, deploy);
-  SetRoute("POST", "/instances/:id/uninstall",        InstanceController, uninstall);
-  SetRoute("POST", "/instances/:id/start",            InstanceController, start);
-  SetRoute("POST", "/instances/:id/stop",             InstanceController, stop);
+  SetRoute("GET",    "/instances/:id/state",            InstanceController, fetch_state);
+  SetRoute("POST",   "/instances/:id/configure",        InstanceController, configure);
+  SetRoute("POST",   "/instances/:id/deploy/:build_id", InstanceController, deploy);
+  SetRoute("POST",   "/instances/:id/deploy",           InstanceController, deploy);
+  SetRoute("POST",   "/instances/:id/uninstall",        InstanceController, uninstall);
+  SetRoute("POST",   "/instances/:id/start",            InstanceController, start);
+  SetRoute("POST",   "/instances/:id/stop",             InstanceController, stop);
 
-  SetRoute("POST", "/recipes/:id/fetch", RecipeController, fetch);
+  SetRoute("GET",    "/instances/:instance_id/backup",         BackupController, show);
+  SetRoute("POST",   "/instances/:instance_id/backup",         BackupController, create_or_update);
+  SetRoute("POST",   "/instances/:instance_id/backup/enable",  BackupController, enable);
+  SetRoute("POST",   "/instances/:instance_id/backup/disable", BackupController, disable);
+  SetRoute("GET",    "/instances/:instance_id/backup/builds",  BackupController, builds);
+  SetRoute("POST",   "/instances/:instance_id/backup/restore/:number", BackupController, restore);
 
-  SetRoute("GET",  "/builds/:id/builds",  BuildController, builds);
-  SetRoute("POST", "/builds/:id/enable",  BuildController, enable);
-  SetRoute("POST", "/builds/:id/disable", BuildController, disable);
-  SetRoute("GET",  "/builds/:id/available-builds", BuildController, available_builds);
+  SetRoute("POST",   "/recipes/:id/fetch", RecipeController, fetch);
+
+  SetRoute("GET",    "/builds/:id/builds",  BuildController, builds);
+  SetRoute("POST",   "/builds/:id/enable",  BuildController, enable);
+  SetRoute("POST",   "/builds/:id/disable", BuildController, disable);
+  SetRoute("GET",    "/builds/:id/available-builds", BuildController, available_builds);
   SetRoute("DELETE", "/builds/:id/build/:build_id", BuildController, remove_build);
 
   SetRoute("GET",  "/variables", VariableSetController, show);

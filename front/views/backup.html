@@ -1,17 +1,17 @@
 <template>
   <head>
-    <include src="app/builds.hpp" />
+    <include src="app/backups.hpp" />
     <attribute type="bool" name="is_enabled" value="true" />
     <script>
-      virtual std::shared_ptr<Puppeteer::Build> get_model() const = 0;
+      virtual std::shared_ptr<Puppeteer::Backup> get_model() const = 0;
       virtual std::vector<Crails::Front::Object>& get_builds() = 0;
-      virtual std::string get_badge_for_build(std::string) = 0;
+      virtual void on_restore_build_clicked(std::string) = 0;
       virtual void on_remove_build_clicked(std::string) = 0;
-      virtual void on_enable_build_clicked(bool) = 0;
+      virtual void on_enabled_clicked(bool) = 0;
     </script>
   </head>
   <body>
-    <model-view cpp::title.bind='root->get_model() ? root->get_model()->get_name() : "Build"' ref="wrapper">
+    <model-view cpp::title.bind='root->get_model() ? root->get_model()->get_name() : "Backup"' ref="wrapper">
       <div slot="controls">
         <div class="btn-group" ref="controls">
           <a class="au-btn au-btn-icon au-btn--blue"
@@ -20,45 +20,46 @@
             Edit
           </a>
           <a class="au-btn au-btn-icon au-btn--blue" href="javascript:"
-             click.trigger="root->on_enable_build_clicked(true)"
+             click.trigger="root->on_enabled_clicked(true)"
              show.bind="!root->is_enabled & signal:enabled-state-changed">
             <fa-icon cpp::name.bind='"play"' />
             Enable
           </a>
           <a class="au-btn au-btn-icon au-btn--blue" href="javascript:"
-             click.trigger="root->on_enable_build_clicked(false)"
+             click.trigger="root->on_enabled_clicked(false)"
              show.bind="root->is_enabled & signal:enabled-state-changed">
             <fa-icon cpp::name.bind='"pause"' />
             Disable
           </a>
-          <a class="au-btn au-btn-icon au-btn--red"
-             href.bind="root->wrapper.get_destroy_path() & signal:model-changed">
-            <fa-icon cpp::name.bind='"times"' />
-            Destroy
-          </a>
         </div>
       </div>
+
       <div slot="content" class="row">
         <div class="col-lg-12">
-          <table-responsive role="build-table">
+          <table-responsive role="backup-table">
+            <thead slot="thead">
+              <tr>
+                <th>Number</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
             <tbody slot="tbody">
               <tr repeat.for="build of [std::vector<Crails::Front::Object>]root->get_builds() & signal:builds-fetched">
-		<td class="status">
-                  <img src.bind='root->get_badge_for_build(build["number"])' />
-		</td>
-                <td class="link">
-                  <a href.bind='(std::string)build["url"]'
-                     target="_blank"
-                     text.bind='"Build " + (std::string)(build["number"])'>
-                  </a>
-                </td>
-                <td class="actions">
+                <td text.bind='(std::string)(build["number"])'></td>
+		<td>-</td>
+		<td class="btn-group">
+                  <button class="au-btn au-btn-icon au-btn--blue au-btn--small"
+                          click.trigger='root->on_restore_build_clicked((std::string)(build["number"]))'>
+                    <i class="fa fa-trash"></i>
+                    Restore
+                  </button>
                   <button class="au-btn au-btn-icon au-btn--red au-btn--small"
                           click.trigger='root->on_remove_build_clicked((std::string)(build["number"]))'>
                     <i class="fa fa-trash"></i>
                     Delete
                   </button>
-                </td>
+		</td>
               </tr>
             </tbody>
           </table-responsive>

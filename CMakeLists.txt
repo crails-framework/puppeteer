@@ -95,3 +95,5 @@ add_subdirectory(tasks/odb_migrate)
 add_subdirectory(tasks/sidekic)
 
 add_subdirectory(tasks/auto-deploy-for)
+
+add_subdirectory(tasks/backup)

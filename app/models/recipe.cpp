@@ -209,6 +209,7 @@ void Recipe::exec_script(const std::string& script_name, Instance& instance, Syn
     runner.upload_variables();
     runner.upload_script(script_name);
     runner.run_script(script_name);
+    runner.cleanup();
   });
 }
 
@@ -219,6 +220,7 @@ void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string
     DeployRunner runner(ssh, *this, instance, task);
 
     runner.deploy_build(build_id);
+    runner.cleanup();
   });
 }
 

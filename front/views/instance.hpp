@@ -5,6 +5,7 @@
 # include "utility/button.hpp"
 # include <iostream>
 # include "../app/instances.hpp"
+# include "../app/backups.hpp"
 
 # include "instance/action_widget.hpp"
 # include "instance/state_widget.hpp"
@@ -46,6 +47,11 @@ namespace Views
 
       for (auto button : buttons)
         button.toggle_class("disabled", is_busy);
+    }
+
+    std::string get_backup_path() const
+    {
+      return Puppeteer::Backup::get_path_for_instance(model->get_id());
     }
   };
 }

@@ -9,6 +9,7 @@ namespace Ssh
 {
   class Scp
   {
+    const std::string path;
   public:
     Scp(ssh_session session_handle, const std::string& path, int mode);
     ~Scp();
@@ -19,6 +20,9 @@ namespace Ssh
     void push_directory(const std::string& path, int mode = S_IRWXU);
     void push_file(const std::string& source, const std::string& target, int mode = S_IRUSR | S_IWUSR);
     void push_text(const std::string& text,   const std::string& target, int mode = S_IRUSR | S_IWUSR);
+
+    void pull_file(std::ostream&);
+    void pull_file(const std::string& target);
 
   private:
     inline void require_opened_session() { if (!is_open) { open(); } }

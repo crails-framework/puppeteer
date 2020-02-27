@@ -6,10 +6,32 @@
     <include src="app/instances.hpp" />
   <script>
     virtual std::shared_ptr<Puppeteer::Instance> get_model() const = 0;
+    virtual std::string get_backup_path() const = 0;
   </script>
   </head>
   <body>
     <model-view cpp::title.bind='get_model() ? get_model()->get_name() : "Instance"' ref="wrapper">
+      <div slot="controls">
+        <div class="btn-group" ref="controls">
+          <a class="au-btn au-btn-icon au-btn--blue"
+	     href.bind="root->get_backup_path() & signal:model-changed">
+            <fa-icon cpp::name.bind='"save"' />
+            Backups
+          </a>
+          <a class="au-btn au-btn-icon au-btn--blue"
+             href.bind="root->wrapper.get_edit_path() & signal:model-changed">
+            <fa-icon cpp::name.bind='"edit"' />
+            Edit
+          </a>
+          <a class="au-btn au-btn-icon au-btn--red"
+             href.bind="root->wrapper.get_destroy_path() & signal:model-changed"
+	     show.bind="root->get_model() && root->get_model()->get_state() == Puppeteer::Instance::Uninstalled & signal:model-changed">
+            <fa-icon cpp::name.bind='"times"' />
+            Destroy
+          </a>
+        </div>
+      </div>
+
       <div slot="content" class="row">
         <div class="col-lg-6">
           <card cpp::title.bind='"State"'>

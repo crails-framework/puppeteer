@@ -1,11 +1,12 @@
 #include "scp.hpp"
 #include <stdexcept>
 #include <crails/read_file.hpp>
+#include <fstream>
 
 using namespace Ssh;
 using namespace std;
 
-Scp::Scp(ssh_session session_handle, const string& path, int mode) : session_handle(session_handle)
+Scp::Scp(ssh_session session_handle, const string& path, int mode) : path(path), session_handle(session_handle)
 {
   handle = ssh_scp_new(session_handle, mode, path.c_str());
   if (handle == NULL)
@@ -67,4 +68,56 @@ void Scp::push_text(const std::string& content, const std::string& target, int m
   rc = ssh_scp_write(handle, content.c_str(), content.length());
   if (rc != SSH_OK)
     throw std::runtime_error("Ssh::Scp: cannot write remote file " + target);
+}
+
+void Scp::pull_file(const std::string& target)
+{
+  ofstream target_file;
+
+  target_file.open(target.c_str());
+  if (target_file.is_open())
+  {
+    pull_file(target_file);
+    target_file.close();
+  }
+  else
+    throw runtime_error("Ssh::Scp: cannot open file " + target);
+}
+
+void Scp::pull_file(std::ostream& output)
+{
+  bool done = false;
+
+  require_opened_session();
+  do
+  {
+    switch (ssh_scp_pull_request(handle))
+    {
+    default:
+      throw runtime_error("Ssh::Scp: ssh_scp_pull_request returned with an unepexcted status");
+    case SSH_SCP_REQUEST_NEWDIR:
+    case SSH_SCP_REQUEST_ENDDIR:
+      throw runtime_error("Ssh::Scp: cannot pull file " + path + ": it's a directory");
+    case SSH_ERROR:
+      throw runtime_error("Ssh::Scp: cannot pull file " + path);
+    case SSH_SCP_REQUEST_NEWFILE:
+      {
+        int  to_read  = ssh_scp_request_get_size(handle);
+        int  read     = 0;
+        char buffer[16384];
+
+        while (read < to_read)
+        {
+          int  r = ssh_scp_read(handle, buffer, sizeof(buffer));
+
+          output.write(buffer, r);
+          read += r;
+        }
+      }
+      break ;
+    case SSH_SCP_REQUEST_EOF:
+      done = true;
+      break ;
+    }
+  } while (!done);
 }

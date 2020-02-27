@@ -27,10 +27,18 @@ namespace Views
       std::cout << "Activating for id " << id << std::endl;
       fetch_one<MODEL>(id, [this](std::shared_ptr<MODEL> _model)
       {
-        std::cout << "Model fetched, activating now" << std::endl;
-        set_model(_model);
-        std::cout << "After fetch induced activation" << std::endl;
+        activate(_model);
       });
+    }
+
+    virtual void activate(std::shared_ptr<MODEL> _model)
+    {
+      set_model(_model);
+    }
+
+    std::shared_ptr<MODEL> get_model() const
+    {
+      return model;
     }
 
     virtual void set_model(std::shared_ptr<MODEL> _model)
@@ -45,10 +53,15 @@ namespace Views
       }), 500);
     }
 
+    virtual std::shared_ptr<MODEL> new_model()
+    {
+      return std::make_shared<MODEL>();
+    }
+
     virtual void on_save_clicked()
     {
       if (!model)
-        model = std::make_shared<MODEL>();
+        model = new_model();
       update_model_attributes();
       model->save().then([this]() { on_saved(); });
     }

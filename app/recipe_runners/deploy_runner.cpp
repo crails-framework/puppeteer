@@ -22,6 +22,7 @@ void DeployRunner::upload_build(const string& build_id)
   auto scp = ssh.make_scp_session(get_remote_folder(), SSH_SCP_WRITE);
 
   stream << "Uploading build tarball" << tarball_src << '\n';
+  require_remote_folder();
   scp->push_file(tarball_src, get_tarball_filename(build_id));
   stream << "Done.\n";
   task.increment();

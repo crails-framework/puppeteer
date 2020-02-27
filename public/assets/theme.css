@@ -11061,17 +11061,21 @@ button.disabled {
   text-decoration: blink;
 }
 
-.build-table td.status {
+responsive-table[role="build-table"] td.status {
   width: 150px;
   padding: 12px 5px;
 }
 
-.build-table td.link {
+responsive-table[role="build-table"] td.link {
   width: calc(100% - 300px);
 }
 
-.build-table td.actions {
+responsive-table[role="build-table"] td.actions {
   width: 150px;
+}
+
+responsive-table[role="backup-table"] td:nth-of-type(3) {
+  width: 200px;
 }
 
 /* modal */

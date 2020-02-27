@@ -16,6 +16,8 @@ std::string render_recipe_show_archive(const Crails::Renderer* renderer, Crails:
 std::string render_recipe_index_archive(const Crails::Renderer* renderer, Crails::SharedVars& vars);
 std::string render_credential_show_archive(const Crails::Renderer* renderer, Crails::SharedVars& vars);
 std::string render_credential_index_archive(const Crails::Renderer* renderer, Crails::SharedVars& vars);
+std::string render_backup_show_archive(const Crails::Renderer* renderer, Crails::SharedVars& vars);
+std::string render_backup_index_archive(const Crails::Renderer* renderer, Crails::SharedVars& vars);
 std::string render_variable_set_show_archive(const Crails::Renderer* renderer, Crails::SharedVars& vars);
 std::string render_variable_set_index_archive(const Crails::Renderer* renderer, Crails::SharedVars& vars);
 
@@ -50,6 +52,12 @@ ArchiveRenderer::ArchiveRenderer()
   );
   templates.insert(
     pair<string, Generator>("credential_index", render_credential_index_archive)
+  );
+  templates.insert(
+    pair<string, Generator>("backup_show", render_backup_show_archive)
+  );
+  templates.insert(
+    pair<string, Generator>("backup_index", render_backup_index_archive)
   );
   templates.insert(
     pair<string, Generator>("variable_set_show", render_variable_set_show_archive)

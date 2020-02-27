@@ -18,6 +18,7 @@ struct ScriptRunner
   Sync::Stream  stream;
   Variables     variables;
   bool          throw_on_failure_status = true;
+  bool          remote_folder_created = false;
 
   ScriptRunner(Ssh::Session&, Recipe&, Instance&, Sync::Task&); 
 
@@ -36,9 +37,11 @@ struct ScriptRunner
     return recipe.get_repository_path() + '/' + script_name + ".sh";
   }
 
+  void require_remote_folder();
   virtual void upload_variables();
   virtual void upload_script(const std::string& script_name);
   virtual int run_script(const std::string& script_name);
+  virtual void cleanup();
 };
 
 #endif
