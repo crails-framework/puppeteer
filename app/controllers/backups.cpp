@@ -1,6 +1,7 @@
 #include "lib/odb/application-odb.hxx"
 #include "backups.hpp"
 #include "app/jenkins/jenkins.hpp"
+#include <boost/filesystem.hpp>
 
 using namespace std;
 using namespace Crails;
@@ -82,6 +83,20 @@ void BackupController::builds()
     Jenkins  jenkins;
     DataTree data = jenkins.get_project_data(model->get_name());
 
+    data["builds"].each([this](Data build) -> bool
+    {
+      auto number   = build["number"].as<string>();
+      auto filename = model->get_backup_folder() + '/' + number + ".tar.gz";
+
+      if (boost::filesystem::exists(filename))
+      {
+        build["success"] = true;
+        build["timestamp"] = boost::filesystem::last_write_time(filename);
+      }
+      else
+        build["success"] = false;
+      return true;
+    });
     response["body"] = data.as_data().to_json();
     database.save(*model);
   }
