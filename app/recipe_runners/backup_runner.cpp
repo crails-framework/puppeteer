@@ -28,7 +28,7 @@ void BackupRunner::upload_backup_script(Backup::Action action)
     script << "chmod 777 \"$BACKUP_DIR\"" << std::endl;
     script << backup.get_backup_script() << std::endl;
     script << "cd \"$BACKUP_DIR\"" << std::endl;
-    script << "tar -czvf " << remote_backup_path << " *" << std::endl;
+    script << "tar -czvf " << remote_backup_path << " * > /dev/null" << std::endl;
     script << "rm -Rf \"" << get_remote_folder() << "\"" << std::endl;
     break ;
   case Backup::RestoreAction:
