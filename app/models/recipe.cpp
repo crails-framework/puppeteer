@@ -150,7 +150,6 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
       instance.collect_variables(variables);
       if (build)
         build->collect_variables(variables);
-      variables["MACHINE_IP"] = machine->get_ip();
       scp->push_text(generate_variable_file(variables), "variables");
       task.increment();
     }
