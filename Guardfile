@@ -2,6 +2,10 @@ $: << ENV['CRAILS_SHARED_DIR']
 $: << "#{Dir.pwd}/scripts"
 $: << "#{Dir.pwd}"
 
+group :assets do
+  guard 'sass', input: 'app/assets/stylesheets', output: 'public/assets'
+end
+
 group :before_compile do
   guard 'crails-models', input: ["app/data"], output: "lib",
                   generators: [:edit_with_front, :data_with_front, :view, :destroy, :query, :archive] do

@@ -1,0 +1,45 @@
+@media (max-width: 991px) {
+  $mobile-header-height: 88px;
+
+  aside.menu-sidebar {
+    display: block !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: $mobile-header-height;
+    width: 100%;
+    background-color: #f5f5f5;
+
+    > .logo {
+      img { height: $mobile-header-height !important; }
+      height: $mobile-header-height;
+      display: inline-block;
+      font-size: 0;
+    }
+
+    .menu-sidebar__content {
+      display: inline-block;
+      height: #{$mobile-header-height - 1}px;
+
+      nav {
+        padding: 10px;
+        ul {
+          li {
+            display: inline-block;
+	    margin-right: 20px;
+            i {
+              margin-right: 5px;
+            }
+            span {
+              font-size: 0.8em;
+            }
+          }
+	}
+      }
+    }
+  }
+
+  header.header-desktop {
+    height: 80px;
+  }
+}
