@@ -2,10 +2,6 @@ $: << ENV['CRAILS_SHARED_DIR']
 $: << "#{Dir.pwd}/scripts"
 $: << "#{Dir.pwd}"
 
-group :assets do
-  guard 'sass', input: 'app/assets/stylesheets', output: 'public/assets'
-end
-
 group :before_compile do
   guard 'crails-models', input: ["app/data"], output: "lib",
                   generators: [:edit_with_front, :data_with_front, :view, :destroy, :query, :archive] do
@@ -21,13 +17,15 @@ group :before_compile do
   guard 'crails-cheerp-html' do
     watch(%r{front/.+\.html$})
   end
+end
+
+group :compile do
+  guard 'sass', input: 'app/assets/stylesheets', output: 'public/assets'
 
   guard 'crails-cheerp' do
     watch(%r{front/.+\.(cpp|hpp)$})
   end
-end
 
-group :compile do
   guard 'crails-cmake' do
     watch('CMakeLists.txt')
     watch('build/CMakeCache.txt')
