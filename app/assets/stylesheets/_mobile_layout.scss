@@ -1,5 +1,7 @@
 @media (max-width: 991px) {
   $mobile-header-height: 88px;
+  $adjusted-header-height: $mobile-header-height - 2;
+  $menu-item-height: 47px;
 
   aside.menu-sidebar {
     display: block !important;
@@ -9,6 +11,7 @@
     height: $mobile-header-height;
     width: 100%;
     background-color: #f5f5f5;
+    overflow: hidden;
 
     > .logo {
       img { height: $mobile-header-height !important; }
@@ -19,16 +22,20 @@
 
     .menu-sidebar__content {
       display: inline-block;
-      height: #{$mobile-header-height - 1}px;
+      height: $adjusted-header-height !important;
 
       nav {
         padding: 10px;
+        height: $adjusted-header-height !important;
         ul {
+          height: 100%;
           li {
             display: inline-block;
-	    margin-right: 20px;
+            margin-right: 20px;
+	    vertical-align: middle;
+	    height: $menu-item-height;
             i {
-              margin-right: 5px;
+              margin-right: 10px;
             }
             span {
               font-size: 0.8em;
@@ -41,5 +48,25 @@
 
   header.header-desktop {
     height: 80px;
+  }
+}
+
+@media (max-width: 766px) {
+  aside.menu-sidebar {
+    text-align: center;
+
+    > .logo {
+      float: left;
+    }
+
+    .menu-sidebar__content {
+      nav {
+        ul {
+          li {
+            span { font-size: 0; }
+          }
+        }
+      }
+    }
   }
 }
