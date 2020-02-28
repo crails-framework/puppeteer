@@ -14,6 +14,10 @@ struct DeployRunner : public ScriptRunner
 
   void deploy_build(const std::string& build_id);
   void upload_build(const std::string& build_id);
+
+  void cleanup();
+private:
+  std::string remote_tarball_path;
 };
 
 #endif

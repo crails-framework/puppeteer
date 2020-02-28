@@ -24,6 +24,13 @@ void DeployRunner::upload_build(const string& build_id)
   stream << "Uploading build tarball" << tarball_src << '\n';
   require_remote_folder();
   scp->push_file(tarball_src, get_tarball_filename(build_id));
+  remote_tarball_path = get_remote_folder() + '/' + get_tarball_filename(build_id);
   stream << "Done.\n";
   task.increment();
+}
+
+void DeployRunner::cleanup()
+{
+  ssh.exec("rm " + remote_tarball_path, stream);
+  ScriptRunner::cleanup();
 }

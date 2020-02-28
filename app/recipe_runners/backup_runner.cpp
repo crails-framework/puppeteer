@@ -24,31 +24,23 @@ void BackupRunner::upload_backup_script(Backup::Action action)
 
   script << "#!/bin/bash" << std::endl << std::endl;
   script << "source " << get_variable_filepath() << std::endl;
+  script << "export BACKUP_DIR=\"" << get_backup_tmp_folder() << "\"" << std::endl;
   switch (action)
   {
   case Backup::BackupAction:
     generate_backup_path();
-    script << "export BACKUP_DIR=\"" << get_backup_tmp_folder() << "\"" << std::endl;
     script << "mkdir -p \"$BACKUP_DIR\"" << std::endl;
     script << "chmod 777 \"$BACKUP_DIR\"" << std::endl;
     script << backup.get_backup_script() << std::endl;
     script << "cd \"$BACKUP_DIR\"" << std::endl;
-    script << "tar -czvf " << remote_backup_path << " * > /dev/null" << std::endl;
+    script << "tar -czf " << remote_backup_path << " *" << std::endl;
     script << "rm -Rf \"" << get_remote_folder() << "\"" << std::endl;
     break ;
   case Backup::RestoreAction:
-    script << "export RESTORE_TARBALL=\"";
-    script << get_remote_folder() << '/' << "restore.tar.gz";
     script << '"' << std::endl;
     script << backup.get_restore_script();
     break ;
   }
-
-  std::cout << "DEBUG DATA" << std::endl;
-  std::cout << "Instance id: " << instance.get_id() << ", name: " << instance.get_name() << std::endl;
-  std::cout << "Remote folder: " << get_remote_folder() << std::endl;
-  std::cout << "Script:" << std::endl << script.str() << std::endl << std::endl;
-  std::cout << "END DEBUG DATA" << std::endl;
 
   stream << "Uploading " << backup_script_name << ".sh script...\n";
   scp->push_text(script.str(), backup_script_name + ".sh");
@@ -63,10 +55,15 @@ void BackupRunner::run_backup_script()
 
 void BackupRunner::push_tarball(const std::string& source)
 {
-  auto scp = ssh.make_scp_session(get_remote_folder(), SSH_SCP_WRITE);
+  remote_backup_path = get_backup_tmp_folder() + "/restore.tar.gz";
+  {
+    auto scp = ssh.make_scp_session(get_remote_folder(), SSH_SCP_WRITE);
 
-  stream << "Uploading " << source << "...\n";
-  scp->push_file(source, "restore.tar.gz");
+    stream << "Uploading " << source << "...\n";
+    scp->push_file(source, "restore.tar.gz");
+  }
+  stream << "Extracting " << source << "...\n";
+  ssh.exec("cd \"" + get_backup_tmp_folder() + "\" && tar -xf \"" + remote_backup_path + '"', stream);
   stream << "Done.\n";
   task.increment();
 }
