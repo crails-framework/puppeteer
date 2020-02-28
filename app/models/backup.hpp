@@ -38,11 +38,15 @@ public:
   std::string get_backup_folder();
   std::string get_backup_script() const;
   std::string get_restore_script() const;
+  std::string get_tarball_path_for_backup(unsigned int);
+  std::string get_tarball_path_for_backup(const std::string&);
 
   bool can_destroy() const;
   void before_destroy();
   void on_change();
   void perform(Action, const std::string& tarball, Sync::Task&);
+  void clean_up_backup_folder();
+  void remove_build(unsigned int);
 private:
   static const std::string base_path;
 # endif

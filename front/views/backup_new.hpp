@@ -17,9 +17,11 @@ namespace Views
 
     void update_model_attributes()
     {
-      auto schedule_input = find("[name=\"backup_schedule\"]")[0];
+      auto schedule_input    = find("[name=\"backup_schedule\"]")[0];
+      auto max_history_input = find("[name=\"backup_max_history\"]")[0];
 
       model->set_schedule(schedule_input.get_value());
+      model->set_max_history(max_history_input.value<unsigned short>());
     }
 
     void set_instance_id(ODB::id_type value) { instance_id = value; }

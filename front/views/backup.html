@@ -8,6 +8,8 @@
       virtual void on_restore_build_clicked(std::string) = 0;
       virtual void on_remove_build_clicked(std::string) = 0;
       virtual void on_enabled_clicked(bool) = 0;
+
+      virtual std::string get_date_string(Crails::Front::Object) const = 0;
     </script>
   </head>
   <body>
@@ -41,24 +43,27 @@
               <tr>
                 <th>Number</th>
                 <th>Date</th>
-                <th>Actions</th>
+                <th style="width:280px">Actions</th>
               </tr>
             </thead>
             <tbody slot="tbody">
               <tr repeat.for="build of [std::vector<Crails::Front::Object>]root->get_builds() & signal:builds-fetched">
                 <td text.bind='(std::string)(build["number"])'></td>
-		<td>-</td>
-		<td class="btn-group">
-                  <button class="au-btn au-btn-icon au-btn--blue au-btn--small"
-                          click.trigger='root->on_restore_build_clicked((std::string)(build["number"]))'>
-                    <i class="fa fa-trash"></i>
-                    Restore
-                  </button>
-                  <button class="au-btn au-btn-icon au-btn--red au-btn--small"
-                          click.trigger='root->on_remove_build_clicked((std::string)(build["number"]))'>
-                    <i class="fa fa-trash"></i>
-                    Delete
-                  </button>
+		<td text.bind='root->get_date_string(build["timestamp"])'></td>
+                <td style="text-align:right">
+                  <div class="btn-group">
+                    <button class="au-btn au-btn-icon au-btn--blue au-btn--small"
+                            click.trigger='root->on_restore_build_clicked((std::string)(build["number"]))'
+                            show.bind='(std::string)(build["success"]) == "true"'>
+                      <i class="fa fa-upload"></i>
+                      Restore
+                    </button>
+                    <button class="au-btn au-btn-icon au-btn--red au-btn--small"
+                            click.trigger='root->on_remove_build_clicked((std::string)(build["number"]))'>
+                      <i class="fa fa-trash"></i>
+                      Delete
+                    </button>
+                  </div>
 		</td>
               </tr>
             </tbody>

@@ -23,6 +23,8 @@ namespace Views
     void on_restore_build_clicked(std::string);
     void on_remove_build_clicked(std::string);
 
+    std::string get_date_string(Crails::Front::Object) const;
+
   private:
     std::vector<Crails::Front::Object> builds;
   };

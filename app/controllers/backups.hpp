@@ -16,6 +16,7 @@ public:
   void disable();
   void builds();
   void restore();
+  void remove_build();
 
 protected:
   bool find_model();

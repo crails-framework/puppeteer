@@ -26,11 +26,13 @@ void Crails::Router::initialize(void)
   SetRoute("POST",   "/instances/:id/start",            InstanceController, start);
   SetRoute("POST",   "/instances/:id/stop",             InstanceController, stop);
 
-  SetRoute("GET",    "/instances/:instance_id/backup",         BackupController, show);
-  SetRoute("POST",   "/instances/:instance_id/backup",         BackupController, create_or_update);
-  SetRoute("POST",   "/instances/:instance_id/backup/enable",  BackupController, enable);
-  SetRoute("POST",   "/instances/:instance_id/backup/disable", BackupController, disable);
-  SetRoute("GET",    "/instances/:instance_id/backup/builds",  BackupController, builds);
+  SetRoute("GET",    "/instances/:instance_id/backup",                 BackupController, show);
+  SetRoute("POST",   "/instances/:instance_id/backup",                 BackupController, create_or_update);
+  SetRoute("PUT",    "/instances/:instance_id/backup",                 BackupController, create_or_update);
+  SetRoute("POST",   "/instances/:instance_id/backup/enable",          BackupController, enable);
+  SetRoute("POST",   "/instances/:instance_id/backup/disable",         BackupController, disable);
+  SetRoute("GET",    "/instances/:instance_id/backup/builds",          BackupController, builds);
+  SetRoute("DELETE", "/instances/:instance_id/backup/builds/:number",  BackupController, remove_build);
   SetRoute("POST",   "/instances/:instance_id/backup/restore/:number", BackupController, restore);
 
   SetRoute("POST",   "/recipes/:id/fetch", RecipeController, fetch);

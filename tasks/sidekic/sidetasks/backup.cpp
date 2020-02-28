@@ -32,6 +32,14 @@ void backup_sidetask(Params& params)
     {
       logger << Logger::Error << "Failed to complete backup " << backup->get_id() << Logger::endl;
     }
+    try
+    {
+      backup->clean_up_backup_folder();
+    }
+    catch (...)
+    {
+      logger << Logger::Error << "Failed to clean up backup folder for " << backup->get_id() << Logger::endl;
+    }
   }
   else
     logger << Logger::Error << "Did not find backup " << params["backup_id"].as<ODB::id_type>() << Logger::endl;

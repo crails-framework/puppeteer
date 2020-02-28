@@ -86,7 +86,7 @@ void BackupController::builds()
     data["builds"].each([this](Data build) -> bool
     {
       auto number   = build["number"].as<string>();
-      auto filename = model->get_backup_folder() + '/' + number + ".tar.gz";
+      auto filename = model->get_tarball_path_for_backup(number);
 
       if (boost::filesystem::exists(filename))
       {
@@ -105,4 +105,11 @@ void BackupController::builds()
 void BackupController::restore()
 {
   throw runtime_error("not implemented");
+}
+
+void BackupController::remove_build()
+{
+  require_model();
+  if (model)
+    model->remove_build(params["number"].as<unsigned int>());
 }

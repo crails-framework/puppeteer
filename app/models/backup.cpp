@@ -109,6 +109,46 @@ void Backup::perform(Action action, const std::string& filename, Sync::Task& tas
   });
 }
 
+std::string Backup::get_tarball_path_for_backup(unsigned int number)
+{
+  return get_tarball_path_for_backup(boost::lexical_cast<std::string>(number));
+}
+
+std::string Backup::get_tarball_path_for_backup(const std::string& number)
+{
+  return get_backup_folder() + '/' + number + ".tar.gz";
+}
+
+void Backup::clean_up_backup_folder()
+{
+  if (max_history != 0)
+  {
+    Jenkins jenkins;
+    DataTree data = jenkins.get_project_data(get_name());
+    unsigned short count = 0;
+
+    data["builds"].each([this, &count](Data build) -> bool
+    {
+      if (count > max_history)
+        remove_build(build["number"].as<unsigned int>());
+      count += 1;
+      return true;
+    });
+  }
+}
+
+void Backup::remove_build(unsigned int build_id)
+{
+  Jenkins jenkins;
+  int     status       = jenkins.delete_build(get_name(), build_id);
+  auto    tarball_path = get_tarball_path_for_backup(build_id);
+
+  if (status >= 400)
+    logger << Logger::Error << "Failed to remove jenkins log for backup " << get_id() << " build's " << build_id << Logger::endl;
+  if (boost::filesystem::exists(tarball_path))
+    boost::filesystem::remove(tarball_path);
+}
+
 string Backup::get_backup_script() const
 {
   stringstream stream;
