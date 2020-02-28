@@ -16,6 +16,8 @@ int Channel::exec(const string& command, Sync::Stream& output)
   {
     bool is_eof = ssh_channel_is_eof(handle);
 
+    std::cout << "Ssh::Channel ssh_channel_request_exec successfull" << std::endl;
+    std::cout << "Ssh::Channel running command `" << command << '`' << std::endl;
     while (!is_eof)
     {
       bytes_read = ssh_channel_read_timeout(handle, buffer, sizeof(buffer), 0, timeout_ms);

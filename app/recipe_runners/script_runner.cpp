@@ -38,7 +38,7 @@ int ScriptRunner::run_script(const string& script_name)
 
   status = ssh.exec("chmod +x '" + get_remote_folder() + '/' + script_name + ".sh" + '\'', stream);
   if (status)
-    throw std::runtime_error("Recipe(" + recipe.get_name() + "): could not chmod script: deploy.sh");
+    throw std::runtime_error("Recipe(" + recipe.get_name() + "): could not chmod script: " + script_name + ".sh");
   stream << "\n## " << script_name << ".sh:\n";
 
   stringstream command_stream;
@@ -82,16 +82,4 @@ void ScriptRunner::upload_variables()
 
 void ScriptRunner::cleanup()
 {
-  stringstream command;
-  int status;
-
-  stream << "Cleaning up...\n";
-  command << "rm -Rf \"" << get_remote_folder() << '"';
-  status = ssh.exec(command.str(), stream);
-  if (status)
-  {
-    logger << Logger::Error << "ScriptRunner::cleanup: failed to clean up "
-           << get_remote_folder() << " in "
-           << instance.get_machine()->get_name() << Logger::endl;
-  }
 }

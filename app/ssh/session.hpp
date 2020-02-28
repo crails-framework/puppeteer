@@ -31,6 +31,8 @@ namespace Ssh
 
     int exec(const std::string& command, Sync::Stream& output);
 
+    std::string get_error();
+
   private:
   };
 }

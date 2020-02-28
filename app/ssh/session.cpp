@@ -78,3 +78,8 @@ int Session::exec(const string& command, Sync::Stream& output)
 {
   return make_channel()->exec(command, output);
 }
+
+std::string Session::get_error()
+{
+  return ssh_get_error(handle);
+}

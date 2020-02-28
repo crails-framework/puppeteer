@@ -11,6 +11,11 @@ BackupRunner::BackupRunner(Ssh::Session& s, Backup& b, Instance& i, Recipe& r, S
 {
 }
 
+std::string BackupRunner::get_backup_tmp_folder()
+{
+  return get_remote_folder() + "/output";
+}
+
 void BackupRunner::upload_backup_script(Backup::Action action)
 {
   require_remote_folder();
@@ -23,7 +28,7 @@ void BackupRunner::upload_backup_script(Backup::Action action)
   {
   case Backup::BackupAction:
     generate_backup_path();
-    script << "export BACKUP_DIR=\"" << get_remote_folder() << "/output\"" << std::endl;
+    script << "export BACKUP_DIR=\"" << get_backup_tmp_folder() << "\"" << std::endl;
     script << "mkdir -p \"$BACKUP_DIR\"" << std::endl;
     script << "chmod 777 \"$BACKUP_DIR\"" << std::endl;
     script << backup.get_backup_script() << std::endl;
@@ -86,5 +91,6 @@ void BackupRunner::generate_backup_path()
 void BackupRunner::cleanup()
 {
   ssh.exec("rm " + remote_backup_path, stream);
+  ssh.exec("rm -Rf \"" + get_backup_tmp_folder() + "\"", stream);
   ScriptRunner::cleanup();
 }

@@ -21,6 +21,7 @@ struct BackupRunner : public ScriptRunner
 
 private:
   void generate_backup_path();
+  std::string get_backup_tmp_folder();
 };
 
 #endif

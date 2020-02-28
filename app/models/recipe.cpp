@@ -124,7 +124,10 @@ void Recipe::exec_package(const std::string& package, Instance& instance, Sync::
 
     std::cout << "SET TASK COUNT: " << (package_files.size() + 4) << std::endl;
     task.set_task_count(package_files.size() + 4);
-    ssh.exec("mkdir -p " + remote_package_folder, stream);
+
+    int status = ssh.exec("mkdir -p \"" + remote_package_folder + '"', stream);
+    if (status)
+      throw std::runtime_error("failed to create remote_package_folder `" + remote_package_folder + '`');
 
     // scp recipe
     {
