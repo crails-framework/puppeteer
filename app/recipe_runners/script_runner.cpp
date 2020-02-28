@@ -22,7 +22,7 @@ ScriptRunner::ScriptRunner(Ssh::Session& ssh, Recipe& recipe, Instance& instance
 
 void ScriptRunner::require_remote_folder()
 {
-  if (remote_folder_created)
+  if (!remote_folder_created)
   {
     int status = ssh.exec("mkdir -p \"" + get_remote_folder() + '"', stream);
 

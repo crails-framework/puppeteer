@@ -99,12 +99,13 @@ void Backup::perform(Action action, const std::string& filename, Sync::Task& tas
     runner.run_backup_script();
     if (action == BackupAction)
     {
-      if (boost::filesystem::create_directory(get_backup_folder()))
+      if (boost::filesystem::exists(get_backup_folder())
+       || boost::filesystem::create_directory(get_backup_folder()))
         runner.pull_tarball(tarball_path);
       else
         throw runtime_error("Cannot create directory " + get_backup_folder());
     }
-    //runner.cleanup();
+    runner.cleanup();
   });
 }
 

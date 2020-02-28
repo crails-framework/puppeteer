@@ -85,6 +85,6 @@ void BackupRunner::generate_backup_path()
 
 void BackupRunner::cleanup()
 {
-  //ssh.exec("rm " + remote_backup_path, stream);
+  ssh.exec("rm " + remote_backup_path, stream);
   ScriptRunner::cleanup();
 }
