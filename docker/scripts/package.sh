@@ -75,6 +75,10 @@ cp -R "$public_source_dir" "$output_dir"
 unlink "$public_dir/assets/application.js"
 cp "$build_dir/front/application.js" "$public_dir/assets"
 
+# Gzip assets
+gzip < "$public_dir/assets/application.js"  > "$public_dir/assets/application.js.gz"
+gzip < "$public_dir/assets/application.css" > "$public_dir/assets/application.css.gz"
+
 # Export scripts
 for script in launch.sh stop.sh launch-crailsapp.sh stop-crailsapp.sh launch-faye.sh stop-faye.sh launch-sidekic.sh stop-sidekic.sh; do
   cp "$docker_dir/scripts/$script" "$output_dir/"
