@@ -37,7 +37,7 @@ void InstanceStateWidget::on_start_clicked()
 
     on_performing_action();
     sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_start_task_progress, this, std::placeholders::_1));
-  })._catch([this]()
+  })._catch([]()
   {
     std::cout << "RESTART FAILED TO HAPPEN" << std::endl;
   });
@@ -55,7 +55,7 @@ void InstanceStateWidget::on_stop_clicked()
 
     on_performing_action();
     sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_stop_task_progress, this, std::placeholders::_1));
-  })._catch([this]()
+  })._catch([]()
   {
     std::cout << "STOP FAILED TO HAPPEN" << std::endl;
   });
@@ -99,7 +99,7 @@ void InstanceStateWidget::fetch_state()
 
     model->set_running(text == "1");
     on_state_fetched();
-  })._catch([this]()
+  })._catch([]()
   {
     std::cout << "FAILED TO FETCH STATE" << std::endl;
   });

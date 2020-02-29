@@ -50,7 +50,7 @@ void Views::Backup::on_restore_build_clicked(string build_number)
 {
   auto modal = Modal<HtmlTemplate::BackupRestore>::make("Restoring from backup " + build_number);
 
-  modal->open().then([this, modal, build_number]()
+  modal->open().then([modal, build_number]()
   {
     if (modal->ok())
     {

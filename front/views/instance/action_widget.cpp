@@ -38,7 +38,7 @@ void InstanceActionWidget::fetch_build_versions()
       set_build_versions(data_tree.as_data());
       signaler.trigger("builds-fetched");
     }
-  })._catch([this]()
+  })._catch([]()
   {
     std::cout << "Failed to fetch available build versions" << std::endl;
   });

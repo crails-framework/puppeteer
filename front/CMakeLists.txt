@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.0)
 project(puppeteer-front)
 option(DEVELOPER_MODE "enable debugging tools" ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unknown-pragmas -pedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__CHEERP_CLIENT__")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMODELS_CLIENT_SUPER_CLASS=Crails::Front::ArchiveModel")
 
@@ -15,7 +16,8 @@ if(DEVELOPER_MODE)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -cheerp-sourcemap=application.js.map -cheerp-sourcemap-standalone")
 else()
   set(CMAKE_BUILD_TYPE "Release")
- #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -cheerp-preexecute")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O4")
+  #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -cheerp-preexecute")
 endif()
 
 file(GLOB_RECURSE front_files
