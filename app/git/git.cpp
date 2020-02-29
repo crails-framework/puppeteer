@@ -63,6 +63,24 @@ std::string Repository::get_tip_oid() const
   return oid;
 }
 
+// WARN This method does not work, it apparently doesn't do anything
+void Repository::fast_forward_merge(const std::string& branch)
+{
+  const string   fullname = "refs/remotes/origin/" + branch;
+  const git_oid* head_oid = NULL;
+  git_reference* head_ref = NULL;
+  git_reference* new_ref  = NULL;
+  int error;
+
+  error = git_reference_lookup(&head_ref, handle, fullname.c_str());
+  if (error < 0)
+    throw Git::Exception(error);
+  head_oid = git_reference_target(head_ref);
+  error = git_reference_set_target(&new_ref, head_ref, head_oid, NULL);
+  if (error < 0)
+    throw Git::Exception(error);
+}
+
 //
 // Object
 //

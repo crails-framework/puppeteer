@@ -5,6 +5,7 @@
 # include <crails/getenv.hpp>
 # include <crails/utils/string.hpp>
 # include <crails/sync/task.hpp>
+# include <crails/logger.hpp>
 # include "app/ssh/session.hpp"
 # include "app/ssh/scp.hpp"
 # include "app/git/git.hpp"
@@ -14,6 +15,7 @@
 #endif
 
 using namespace std;
+using namespace Crails;
 
 odb_instantiable_impl(Recipe)
 
@@ -66,6 +68,17 @@ static std::string initialize_git_repository(const std::string& path, const std:
     repository.clone(url, path);
   repository.checkout(branch, GIT_CHECKOUT_FORCE);
   repository.find_remote("origin")->pull();
+  //repository.checkout("refs/remotes/origin/" + branch, GIT_CHECKOUT_FORCE);
+  //repository.fast_forward_merge(branch);
+  // Well... since nothing else works... let's just do this:
+  {
+    stringstream merge_command;
+
+    merge_command << "cd " << '"' << path << '"' << " && git merge";
+    auto status = std::system(merge_command.str().c_str());
+    if (status != 0)
+      logger << Logger::Error << "Failed to pull repository at " << path << Logger::endl;
+  }
   return repository.get_tip_oid();
 }
 

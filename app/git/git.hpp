@@ -47,6 +47,7 @@ namespace Git
 
     std::shared_ptr<Remote> find_remote(const std::string& name);
     void checkout(const std::string& name, int strategy = GIT_CHECKOUT_SAFE);
+    void fast_forward_merge(const std::string& branch);
     std::string get_tip_oid() const;
 
   private:
