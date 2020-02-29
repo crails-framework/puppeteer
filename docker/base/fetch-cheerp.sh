@@ -15,8 +15,8 @@ git clone https://github.com/leaningtech/cheerp-libcxx		# 1fadaf39e57b555c699d0d
 git clone https://github.com/leaningtech/cheerp-libcxxabi	# 9ae50ecf5a7a4ab24113dff37a389cace8b535e1
 git clone https://github.com/leaningtech/cheerp-libs		# 9eb512dd1f6c430dfdf43749dabb554fb6edabc5
 
-cd $CHEERP_SRC/cheerp-llvm             && git checkout 58650eeadc8b22cf81419ce08ffa1ee7ad21c292
-cd $CHEERP_SRC/cheerp-llvm/tools/clang && git checkout 224dff3a1c14d2f5697e0ed1565ad019f8430442
+cd $CHEERP_SRC/cheerp-llvm             && git checkout 9645b3e8c7082cd13311c24745300f806e5b67b9
+cd $CHEERP_SRC/cheerp-llvm/tools/clang && git checkout ec1bc780107675a8043b9220d2bdb2b125a3f459
 cd $CHEERP_SRC/cheerp-utils            && git checkout 63b8c37c5faead3483322ba321a3ee4ec7e3498f
 cd $CHEERP_SRC/cheerp-newlib           && git checkout 875ad4f30b1ade8f005366e76cb66a7dbb411987
 cd $CHEERP_SRC/cheerp-libcxx           && git checkout 1fadaf39e57b555c699d0deb2277e94f6594651c
