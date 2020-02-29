@@ -97,9 +97,22 @@ void make_routes_for(Puppeteer::Router* router, const std::string& path)
 
 std::shared_ptr<Views::VariableSetForm> tintin;
 
+static void workaround_router_unexplained_crash(Puppeteer::Router* router)
+{
+  // Weirdly, if we call Crails::RouterBase::match before this code, it will crash.
+  // This issue doesn't happen in all the builds of the application.
+  // For now, it's only been seen on ubuntu:19.04 docker instances.
+  Crails::Front::Router::Item item;
+
+  router->routes.push_back(item);
+  router->routes.empty();
+}
+
 void Puppeteer::Router::initialize()
 {
   instance = this;
+
+  workaround_router_unexplained_crash(instance);
 
   make_routes_for<Views::Machines,    Views::Machine,    Views::MachineNew,    Views::DeleteMachine>   (instance, "/machines");
   make_routes_for<Views::Builds,      Views::Build,      Views::BuildNew,      Views::DeleteBuild>     (instance, "/builds");
