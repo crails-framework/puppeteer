@@ -12,4 +12,5 @@ lib/
 tasks/odb_migrate/application-schema.cxx
 public/assets/application.js
 public/assets/application.js.map
+public/assets/application.css
 front/app/data
