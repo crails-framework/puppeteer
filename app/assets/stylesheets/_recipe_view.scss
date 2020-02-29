@@ -1,0 +1,7 @@
+.recipe-view {
+  .table-responsive {
+    td:last-of-type {
+      word-break: break-all;
+    }
+  }
+}
