@@ -17,17 +17,17 @@
     </button>
     <div class="results" show.bind="results != nullptr & signal:results-changed">
       <ul>
-        <li>Machines</li>
+        <li><fa-icon cpp::name.bind='"server"' />Machines</li>
 	<li repeat.for="model of [std::vector<Puppeteer::Machine>]get_machines() & signal:results-changed">
           <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
 	</li>
 
-        <li>Instances</li>
+        <li><fa-icon cpp::name.bind='"cloud"' />Instances</li>
 	<li repeat.for="model of [std::vector<Puppeteer::Instance>]get_instances() & signal:results-changed">
           <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
 	</li>
 
-        <li>Builds</li>
+        <li><fa-icon cpp::name.bind='"archive"' />Builds</li>
 	<li repeat.for="model of [std::vector<Puppeteer::Build>]get_builds() & signal:results-changed">
           <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
 	</li>

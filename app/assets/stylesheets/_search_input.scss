@@ -1,0 +1,31 @@
+search-input {
+
+  .results {
+    display: block;
+    background-color: white;
+    position: absolute;
+    top: 44px;
+    left: 46px;
+    padding: 10px;
+    right: 109px;
+
+    ul {
+      list-style: none;
+
+      li {
+        > span {
+          font-weight: bold;
+       }
+
+        > a {
+          display: inline-block;
+          width: 100%;
+          &:hover {
+            background-color: blue;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
