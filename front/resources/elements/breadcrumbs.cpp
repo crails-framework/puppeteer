@@ -43,27 +43,27 @@ void Breadcrumbs::done()
 
 void Breadcrumbs::set_machine(ODB::id_type id)
 {
-  instance->set_model<Puppeteer::Machine>(id, "Machine", "Machines");
+  instance->set_model<Puppeteer::Machine>(id, "Machine", "Machine");
 }
 
 void Breadcrumbs::set_instance(ODB::id_type id)
 {
-  instance->set_model<Puppeteer::Instance>(id, "Instances", "Instance");
+  instance->set_model<Puppeteer::Instance>(id, "Instance", "Instances");
 }
 
 void Breadcrumbs::set_build(ODB::id_type id)
 {
-  instance->set_model<Puppeteer::Build>(id, "Builds", "Build");
+  instance->set_model<Puppeteer::Build>(id, "Build", "Builds");
 }
 
 void Breadcrumbs::set_recipe(ODB::id_type id)
 {
-  instance->set_model<Puppeteer::Recipe>(id, "Recipes", "Recipe");
+  instance->set_model<Puppeteer::Recipe>(id, "Recipe", "Recipes");
 }
 
 void Breadcrumbs::set_credential(ODB::id_type id)
 {
-  instance->set_model<Puppeteer::Credential>(id, "Credentials", "Credential");
+  instance->set_model<Puppeteer::Credential>(id, "Credential", "Credentials");
 }
 
 void Breadcrumbs::set_index_crumbs(const string& label, const string& path)
