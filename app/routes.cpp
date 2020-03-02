@@ -7,6 +7,7 @@
 #include "controllers/credentials.hpp"
 #include "controllers/backups.hpp"
 #include "controllers/variable_sets.hpp"
+#include "controllers/searches.hpp"
 
 void Crails::Router::initialize(void)
 {
@@ -46,4 +47,6 @@ void Crails::Router::initialize(void)
   SetRoute("GET",  "/variables", VariableSetController, show);
   SetRoute("POST", "/variables", VariableSetController, update);
   SetRoute("PUT",  "/variables", VariableSetController, update);
+
+  SetRoute("GET", "/search", SearchesController, search);
 }

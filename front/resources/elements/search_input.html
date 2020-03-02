@@ -1,0 +1,37 @@
+<template>
+  <head>
+    <include src="front/app/searches.hpp" />
+    <attribute type="std::shared_ptr<SearchQuery>" name="results" />
+    <script>
+      virtual const std::vector<Puppeteer::Machine>&  get_machines()  const = 0;
+      virtual const std::vector<Puppeteer::Instance>& get_instances() const = 0;
+      virtual const std::vector<Puppeteer::Build>&    get_builds()    const = 0;
+
+      virtual void on_search_clicked() = 0;
+    </script>
+  </head>
+  <body data-active.bind='results ? "true" : "false" & signal:results-changed'>
+    <input class="au-input au-input--xl" type="text" name="search" placeholder="search for machines, instances or builds" style="width:100%" ref="input" />
+    <button class="au-btn--submit" click.trigger="on_search_clicked()">
+      <i class="zmdi zmdi-search"></i>
+    </button>
+    <div class="results" show.bind="results != nullptr & signal:results-changed">
+      <ul>
+        <li>Machines</li>
+	<li repeat.for="model of [std::vector<Puppeteer::Machine>]get_machines() & signal:results-changed">
+          <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
+	</li>
+
+        <li>Instances</li>
+	<li repeat.for="model of [std::vector<Puppeteer::Instance>]get_instances() & signal:results-changed">
+          <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
+	</li>
+
+        <li>Builds</li>
+	<li repeat.for="model of [std::vector<Puppeteer::Build>]get_builds() & signal:results-changed">
+          <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
+	</li>
+      </ul>
+    </div>
+  </body>
+</template>

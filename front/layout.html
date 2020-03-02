@@ -1,6 +1,7 @@
 <template>
   <head>
-    <include src="resources/menu_entry.hpp" />
+    <include src="front/resources/menu_entry.hpp" />
+    <include src="front/resources/elements/search_input.hpp" require="::SearchInput" />
     <script>
       const std::vector<MenuEntry> menu_entries = {
         MenuEntry("server",      "Machines",    "#/machines"),
@@ -44,12 +45,8 @@
           <div class="section__content section__content--p30">
             <div class="container-fluid">
               <div class="header-wrap">
-                <form class="form-header" action="" method="post" style="width:100%">
-                  <input class="au-input au-input--xl" type="text" name="search" placeholder="search for machines, instances or builds" style="width:100%" />
-                  <button class="au-btn--submit" type="submit">
-                    <i class="zmdi zmdi-search"></i>
-                  </button>
-                </form>
+                <search-input class="form-header" style="width:100%">
+                </search-input>
               </div>
             </div>
           </div>
