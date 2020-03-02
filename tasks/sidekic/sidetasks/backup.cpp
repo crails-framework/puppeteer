@@ -3,9 +3,13 @@
 #include <crails/odb/connection.hpp>
 #include <crails/params.hpp>
 #include <crails/sync/task.hpp>
+#include <crails/sentry.hpp>
+#include <crails/getenv.hpp>
 
 using namespace std;
 using namespace Crails;
+
+extern thread_local Sentry sentry;
 
 void backup_sidetask(Params& params)
 {
@@ -27,6 +31,8 @@ void backup_sidetask(Params& params)
     {
       logger << Logger::Error << "Failed to complete backup " << backup->get_id() << ":\n\t";
       logger << e.what() << Logger::endl;
+      if (Crails::getenv("SENTRY_ENABLED") == "true")
+        sentry.capture_exception(params.as_data(), e);
     }
     catch (...)
     {

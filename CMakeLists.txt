@@ -72,6 +72,7 @@ set(dependencies crails-core${crails-suffix}
 )
 
 # Custom dependencies (do not modify this line)
+set(dependencies ${dependencies} crails-sentry${crails-suffix})
 set(dependencies ${dependencies} crails-xmlrpc${crails-suffix})
 set(dependencies ${dependencies} crails-sync${crails-suffix})
 set(dependencies ${dependencies} crails-sidekic${crails-suffix})

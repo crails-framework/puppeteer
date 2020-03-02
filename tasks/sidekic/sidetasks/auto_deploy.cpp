@@ -3,9 +3,13 @@
 #include <crails/odb/connection.hpp>
 #include <crails/params.hpp>
 #include <crails/sync/task.hpp>
+#include <crails/sentry.hpp>
+#include <crails/getenv.hpp>
 
 using namespace std;
 using namespace Crails;
+
+extern thread_local Sentry sentry;
 
 static list<Instance> fetch_instances(ODB::Connection& database, ODB::id_type build_id)
 {
@@ -60,6 +64,14 @@ void auto_deploy(Params& params)
         instance.set_running_task("");
         database.save(instance);
         database.commit();
+      }
+      catch (const std::exception& e)
+      {
+        instance.set_running_task("");
+        database.save(instance);
+        database.commit();
+        if (Crails::getenv("SENTRY_ENABLED") == "true")
+          sentry.capture_exception(params.as_data(), e);
       }
       catch (...)
       {
