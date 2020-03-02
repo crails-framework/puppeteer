@@ -48,5 +48,5 @@ void Crails::Router::initialize(void)
   SetRoute("POST", "/variables", VariableSetController, update);
   SetRoute("PUT",  "/variables", VariableSetController, update);
 
-  SetRoute("GET", "/search", SearchesController, search);
+  SetRoute("GET", "/search/:query", SearchesController, search);
 }
