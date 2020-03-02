@@ -20,6 +20,11 @@ public:
     new_view->trigger_binding_updates();
   }
 
+  void on_route_executed()
+  {
+    searchInput.reset();
+  }
+
   static MainView* instance;
 
 private:

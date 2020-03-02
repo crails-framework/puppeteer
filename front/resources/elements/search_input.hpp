@@ -14,6 +14,7 @@ public:
   }
 
   void on_search_clicked();
+  void reset();
 
   const std::vector<Puppeteer::Machine>&  get_machines() const;
   const std::vector<Puppeteer::Instance>& get_instances() const;

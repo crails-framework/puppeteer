@@ -3,6 +3,12 @@
 
 using namespace std;
 
+void SearchInput::reset()
+{
+  set_results(nullptr);
+  signaler.trigger("results-changed");
+}
+
 void SearchInput::on_search_clicked()
 {
   const string query = input.get_value();

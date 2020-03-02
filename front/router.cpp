@@ -175,7 +175,14 @@ void Puppeteer::Router::initialize()
 
   match("/", [](const Params& params)
   {
+    std::cout << "Router route matched" << std::endl;
   });
 
+  on_route_executed.connect([](std::string)
+  {
+    MainView::instance->on_route_executed();
+  });
+
+  std::cout << "Router initialized" << std::endl;
   Crails::Front::Router::initialize();
 }
