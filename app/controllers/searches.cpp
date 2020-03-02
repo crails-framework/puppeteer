@@ -27,9 +27,9 @@ void SearchesController::search()
   odb::result<Instance> instances;
   odb::result<Build>    builds;
 
-  database.find<Machine> (machines,  odb::query<Machine> ::name.like(search_term));
-  database.find<Instance>(instances, odb::query<Instance>::name.like(search_term));
-  database.find<Build>   (builds,    odb::query<Build>   ::name.like(search_term));
+  database.find<Machine> (machines,  odb::query<Machine> ::name.like('%' + search_term + '%'));
+  database.find<Instance>(instances, odb::query<Instance>::name.like('%' + search_term + '%'));
+  database.find<Build>   (builds,    odb::query<Build>   ::name.like('%' + search_term + '%'));
 
   append_search_results_to_archive<Machine> (machines,  archive);
   append_search_results_to_archive<Instance>(instances, archive);
