@@ -1,11 +1,11 @@
 <template>
   <head>
     <include src="front/resources/crumb.hpp" />
-    <attribute type="std::vector<Crumb>" name="crumbs" />
+    <attribute type="std::list<Crumb>" name="crumbs" />
   </head>
   <body>
     <ul>
-      <li repeat.for="crumb of [std::vector<Crumb>]root->crumbs & signal:crumbs-changed">
+      <li repeat.for="crumb of [std::list<Crumb>]root->crumbs">
         <a href.bind="crumb.path" text.bind="crumb.label"></a>
       </li>
     </ul>

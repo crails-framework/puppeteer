@@ -13,9 +13,10 @@ Breadcrumbs* Breadcrumbs::instance = nullptr;
 
 Breadcrumbs::Breadcrumbs()
 {
-  crumbs.reserve(MAX_CRUMBS_DEPTH);
-  set_crumb(0, "Dashboard", "#/");
+  //crumbs.reserve(MAX_CRUMBS_DEPTH);
+  crumbs.push_back(Crumb("Dashboard", "#/"));
   instance = this;
+  trigger_binding_updates();
 }
 
 Breadcrumbs::~Breadcrumbs()
@@ -26,13 +27,16 @@ Breadcrumbs::~Breadcrumbs()
 void Breadcrumbs::reset()
 {
   if (instance)
-    instance->crumbs.resize(1);
+  {
+    instance->crumbs.clear();
+    instance->crumbs.push_back(Crumb("Dashboard", "#/"));
+  }
 }
 
 void Breadcrumbs::done()
 {
   if (instance)
-    instance->signaler.trigger("crumbs-changed");
+    instance->trigger_binding_updates();
   else
     std::cerr << "Calling Breadcrumbs::done, but Breadcrumbs haven't been initailized" << std::endl;
 }
@@ -66,30 +70,12 @@ void Breadcrumbs::set_index_crumbs(const string& label, const string& path)
 {
   reset();
   if (instance)
-    instance->set_crumb(1, label, path);
+    instance->crumbs.push_back(Crumb(label, path));
   done();
 }
 
 void Breadcrumbs::add_crumb(const string& label, const string& path)
 {
   if (instance)
-  {
-    unsigned short index = instance->crumbs.size();
-
-    instance->set_crumb(index, label, path);
-  }
-}
-
-void Breadcrumbs::set_crumb(unsigned short index, const string& label, const string& path)
-{
-  if (crumbs.size() < index)
-  {
-    if (crumbs[index].path != path)
-      crumbs[index] = Crumb(label, path);
-  }
-  else
-  {
-    crumbs.resize(index);
-    crumbs[index] = Crumb(label, path);
-  }
+    instance->crumbs.push_back(Crumb(label, path));
 }

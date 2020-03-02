@@ -24,16 +24,14 @@ public:
   static void set_index_crumbs(const std::string& label, const std::string& path);
 
 private:
-  void set_crumb(unsigned short index, const std::string& label, const std::string& paht);
-
   template<typename MODEL>
   void set_model(ODB::id_type id, const std::string& label_singular, const std::string& label_plural)
   {
-    set_crumb(1, label_plural, MODEL::get_index_path());
+    crumbs.push_back(Crumb(label_plural, MODEL::get_index_path()));
     if (id != ODB_NULL_ID)
     {
       MODEL model(id);
-      set_crumb(2, label_singular, model.get_path());
+      crumbs.push_back(Crumb(label_singular, model.get_path()));
     }
   }
 };

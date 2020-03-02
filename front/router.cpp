@@ -105,7 +105,7 @@ static void workaround_router_unexplained_crash(Puppeteer::Router* router)
   Crails::Front::Router::Item item;
 
   router->routes.push_back(item);
-  router->routes.empty();
+  router->routes.clear();
 }
 
 void Puppeteer::Router::initialize()
