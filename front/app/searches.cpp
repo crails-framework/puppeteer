@@ -7,7 +7,7 @@ using namespace Crails::Front;
 
 void SearchQuery::find(const string& query, Callback callback)
 {
-  auto request = Http::Request::get("/search");
+  auto request = Http::Request::get("/search/" + query);
 
   request->send().then([request, callback]()
   {
