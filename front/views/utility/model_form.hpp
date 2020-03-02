@@ -1,6 +1,7 @@
 #ifndef  MODEL_FORM_HPP
 # define MODEL_FORM_HPP
 
+# include "front/app/model.hpp"
 # include "form_view.hpp"
 # include "../../router.hpp"
 # include <crails/front/globals.hpp>
@@ -16,6 +17,7 @@ namespace Views
     bool has_model() const { return model.get() != nullptr; }
 
     virtual void update_model_attributes() = 0;
+    virtual void initialize_breadcrumbs() {};
 
     virtual void activate()
     {
@@ -34,6 +36,7 @@ namespace Views
     virtual void activate(std::shared_ptr<MODEL> _model)
     {
       set_model(_model);
+      initialize_breadcrumbs();
     }
 
     std::shared_ptr<MODEL> get_model() const

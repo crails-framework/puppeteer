@@ -14,6 +14,10 @@ void fetch_one(unsigned long id, std::function<void (std::shared_ptr<MODEL>)> ca
 
 # define model_class(scope) \
   static std::string get_scope() { return scope; } \
+  static std::string get_index_path() \
+  { \
+    return "#/" + get_scope(); \
+  } \
   \
   std::string get_url() const \
   { \

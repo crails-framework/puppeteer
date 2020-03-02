@@ -14,10 +14,9 @@ namespace Views
   class BuildNew : public ModelForm<Puppeteer::Build, HtmlTemplate::BuildNew>
   {
   public:
-    BuildNew()
-    {
-      credentials_input.with_empty_option(true);
-    }
+    BuildNew();
+
+    void initialize_breadcrumbs();
 
     std::string get_title() const { return model ? model->get_name() : "New build"; }
     std::string get_build_name() const { return model ? model->get_name() : ""; }
@@ -28,21 +27,7 @@ namespace Views
     unsigned long get_build_recipe_id() const { return model ? model->get_recipe_id() : ODB_NULL_ID; }
     std::string   get_build_variables() const { return model ? model->get_variables() : ""; }
 
-    void update_model_attributes()
-    {
-      auto name_input    = find("[name=\"build_name\"]")[0];
-      auto git_input     = find("[name=\"build_git\"")[0];
-      auto branch_input  = find("[name=\"build_branch\"")[0];
-      auto options_input = find("[name=\"build_options\"")[0];
-
-      model->set_name(name_input.get_value());
-      model->set_git(git_input.get_value());
-      model->set_branch(branch_input.get_value());
-      model->set_credential_id(credentials_input.value<ODB::id_type>());
-      model->set_recipe_id(recipe_input.value<ODB::id_type>());
-      model->set_options(options_input.get_value());
-      model->set_variable_list(variables_input.get_value());
-    }
+    void update_model_attributes();
 
     void trigger_binding_updates()
     {

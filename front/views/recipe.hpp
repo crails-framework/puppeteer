@@ -13,27 +13,11 @@ namespace Views
   {
     const std::string null_string;
   public:
-    void on_pull_clicked()
-    {
-      if (model)
-      {
-        Crails::Front::Ajax::query("POST", model->get_url() + "/fetch").callbacks({
-          std::bind(&Recipe::on_fetched,      this, std::placeholders::_1),
-          std::bind(&Recipe::on_fetch_failed, this, std::placeholders::_1)
-        })();
-      }
-    }
+    void initialize_breadcrumbs();
 
-    void on_fetched(const Crails::Front::Ajax&)
-    {
-      std::cout << "recipe fetched" << std::endl;
-      model->fetch().then([this]() { signaler.trigger("model-changed"); });
-    }
-
-    void on_fetch_failed(const Crails::Front::Ajax&)
-    {
-      std::cout << "recipe fetch failed" << std::endl;
-    }
+    void on_pull_clicked();
+    void on_fetched(const Crails::Front::Ajax&);
+    void on_fetch_failed(const Crails::Front::Ajax&);
 
     const std::string get_recipe_url() const
     {

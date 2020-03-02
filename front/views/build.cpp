@@ -1,11 +1,22 @@
 #include <crails/front/http.hpp>
 #include <crails/utils/string.hpp>
+#include "front/resources/elements/breadcrumbs.hpp"
 #include "build.hpp"
 #include "resources/modal.hpp"
 #include "lib/cheerp-html/views/delete/delete_build_version.hpp"
 
 using namespace std;
 using namespace Crails::Front;
+
+void Views::Build::initialize_breadcrumbs()
+{
+  if (model)
+  {
+    Breadcrumbs::reset();
+    Breadcrumbs::set_build(model->get_id());
+    Breadcrumbs::done();
+  }
+}
 
 std::string Views::Build::get_badge_for_build(std::string number)
 {

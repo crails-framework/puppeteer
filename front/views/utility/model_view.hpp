@@ -10,6 +10,8 @@ namespace Views
   class ModelView : public VIEW
   {
   public:
+    virtual void initialize_breadcrumbs() {}
+
     void activate(unsigned long model_id)
     {
       fetch_one<MODEL>(model_id, [this](std::shared_ptr<MODEL> _model)
@@ -26,6 +28,7 @@ namespace Views
       VIEW::wrapper.set_title(model->get_name());
       on_model_received();
       VIEW::signaler.trigger("model-changed");
+      initialize_breadcrumbs();
     }
 
     std::shared_ptr<MODEL> get_model() const { return model; }

@@ -2,6 +2,7 @@
   <head>
     <include src="front/resources/menu_entry.hpp" />
     <include src="front/resources/elements/search_input.hpp" require="::SearchInput" />
+    <include src="front/resources/elements/breadcrumbs.hpp" require="::Breadcrumbs" />
     <script>
       const std::vector<MenuEntry> menu_entries = {
         MenuEntry("server",      "Machines",    "#/machines"),
@@ -55,6 +56,7 @@
 
         <!-- MAIN CONTENT-->
         <div class="main-content" id="page-container">
+          <breadcrumbs ref="breadcrumbs" />
           <div class="container-fluid">
             <slot name="content"></slot>
           </div>

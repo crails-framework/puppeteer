@@ -4,6 +4,7 @@
 # include "utility/model_view.hpp"
 # include "../app/machines.hpp"
 # include "lib/cheerp-html/views/machine.hpp"
+# include "front/resources/elements/breadcrumbs.hpp"
 
 namespace Views
 {
@@ -13,6 +14,16 @@ namespace Views
     Machine()
     {
       trigger_binding_updates();
+    }
+
+    void initialize_breadcrumbs()
+    {
+      if (model)
+      {
+        Breadcrumbs::reset();
+        Breadcrumbs::set_machine(model->get_id());
+        Breadcrumbs::done();
+      }
     }
   };
 }

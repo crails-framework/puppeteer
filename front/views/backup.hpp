@@ -10,6 +10,8 @@ namespace Views
   class Backup : public ModelView<Puppeteer::Backup, HtmlTemplate::Backup>
   {
   public:
+    void initialize_breadcrumbs();
+
     void on_model_received()
     {
       refresh_builds();

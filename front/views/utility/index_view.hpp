@@ -2,6 +2,7 @@
 # define INDEX_VIEW_HPP
 
 # include "lib/cheerp-html/views/utility/index_view.hpp"
+# include "front/resources/elements/breadcrumbs.hpp"
 # include <iostream>
 
 namespace Views
@@ -17,9 +18,8 @@ namespace Views
 
     void activate()
     {
-      std::cout << "Binding view attributes" << std::endl;
-      //trigger_binding_updates();
       collection.fetch().then([this]() { on_fetched(); });
+      initialize_breadcrumbs();
     }
 
     void attached() // TODO delete this method
@@ -43,6 +43,14 @@ namespace Views
         row.inner(make_columns_for(model));
         tbody > row;
       });
+    }
+
+    virtual void initialize_breadcrumbs()
+    {
+      Breadcrumbs::set_index_crumbs(
+        COLLECTION::Model::get_scope(),
+        COLLECTION::Model::get_index_path()
+      );
     }
 
   private:

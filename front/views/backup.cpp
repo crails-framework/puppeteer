@@ -3,11 +3,25 @@
 #include "resources/modal.hpp"
 #include "lib/cheerp-html/views/delete/delete_backup_version.hpp"
 #include "lib/cheerp-html/views/backup_restore.hpp"
+#include "front/resources/elements/breadcrumbs.hpp"
 #include <ctime>
 #include <iomanip>
 
 using namespace std;
 using namespace Crails::Front;
+
+void Views::Backup::initialize_breadcrumbs()
+{
+  if (model)
+  {
+    Breadcrumbs::reset();
+    Breadcrumbs::set_instance(model->get_instance_id());
+    Breadcrumbs::add_crumb("Backups", model->get_path());
+    Breadcrumbs::done();
+  }
+  else
+    std::cerr << "Cannot initialize breadcrumbs without a Backup model" << std::endl;
+}
 
 string Views::Backup::get_date_string(Object data) const
 {

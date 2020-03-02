@@ -15,6 +15,8 @@ namespace Views
     {
     }
 
+    void initialize_breadcrumbs();
+
     void on_model_received()
     {
       refresh_builds();
