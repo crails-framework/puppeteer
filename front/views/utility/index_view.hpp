@@ -22,11 +22,6 @@ namespace Views
       initialize_breadcrumbs();
     }
 
-    void attached() // TODO delete this method
-    {
-      activate();
-    }
-
     virtual void on_fetched()
     {
       std::cout << "IndexView::on_fetched" << std::endl;
