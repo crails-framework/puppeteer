@@ -8,6 +8,7 @@
 #include "controllers/backups.hpp"
 #include "controllers/variable_sets.hpp"
 #include "controllers/searches.hpp"
+#include "controllers/dashboard.hpp"
 
 void Crails::Router::initialize(void)
 {
@@ -49,4 +50,6 @@ void Crails::Router::initialize(void)
   SetRoute("PUT",  "/variables", VariableSetController, update);
 
   SetRoute("GET", "/search/:query", SearchesController, search);
+
+  SetRoute("GET", "/dashboard/last_builds", DashboardController, last_builds);
 }

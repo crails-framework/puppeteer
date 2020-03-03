@@ -32,6 +32,7 @@ public:
   int      delete_build(const std::string& jobname, unsigned int build_id);
   int      delete_build(const std::string& jobname, const std::string& build_id);
   DataTree get_project_data(const std::string& jobname);
+  DataTree get_last_builds();
 
   int create_credentials(const std::string& id, const std::string& username, const std::string& password);
   int delete_credentials(const std::string& id);

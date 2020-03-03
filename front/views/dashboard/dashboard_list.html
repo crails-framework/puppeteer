@@ -1,0 +1,23 @@
+<template>
+  <body>
+    <div class="au-card au-card--no-shadow au-card--no-pad m-b-40">
+      <div class="au-card-title" style="background-image:url('/images/bg-title-02.jpg')">
+        <div class="bg-overlay bg-overlay--blue"></div>
+	<slot name="title"></slot>
+      </div>
+      <div class="au-inbox-wrap">
+        <div class="au-message">
+          <div class="au-message__noti">
+            <slot name="header"></slot>
+          </div>
+          <div class="au-message-list">
+            <slot name="content"></slot>
+          </div>
+          <div class="au-message__footer">
+            <slot name="footer"></slot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</template>

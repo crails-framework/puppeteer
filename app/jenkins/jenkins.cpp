@@ -68,6 +68,31 @@ bool Jenkins::job_exists(const std::string& jobname)
   return !(status == 404);
 }
 
+DataTree Jenkins::get_last_builds()
+{
+  const string limit = "10";
+  const string url   = puppeteer_folder_url() + "/api/json";
+  const string param = "jobs[name,url,builds[number,result,duration,url]{0," + limit + "}]";
+  DataTree result;
+
+  boost::network::http::client::request request(
+    url + "?tree=" + Crails::Http::Url::Encode(param)
+  );
+
+  prepare_query(request);
+  auto response = client.get(request);
+  auto status = boost::network::http::status(response);
+
+  if (status == 200)
+  {
+    string body = boost::network::http::body(response);
+
+    boost::replace_all(body, "http://jenkins", public_url);
+    result.from_json(body);
+  }
+  return result;
+}
+
 DataTree Jenkins::get_project_data(const std::string& jobname)
 {
   const string url = job_url(jobname) + "/api/json";

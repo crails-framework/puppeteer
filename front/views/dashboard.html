@@ -1,56 +1,89 @@
 <template>
   <head>
+    <include src="front/datatree.hpp" />
+    <include src="lib/cheerp-html/views/dashboard/dashboard_list.hpp"
+             require="HtmlTemplate::DashboardList"
+             tag-name="dashboard-list" />
+    <include src="lib/cheerp-html/views/dashboard/dashboard_list_item.hpp"
+             require="HtmlTemplate::DashboardListItem"
+             tag-name="dashboard-list-item" />
+    <attribute type="std::vector<Data>" name="last_builds" />
   </head>
   <body>
     <title-1 cpp::title.bind='"Overview"'></title-1>
     <div class="row">
-      <div class="col-lg-6"></div>
       <div class="col-lg-6">
+        <dashboard-list>
+          <h3 slot="title">
+            <i class="zmdi zmdi-calendar-note"></i> Last jobs
+          </h3>
 
-      <div class="au-card au-card--no-shadow au-card--no-pad m-b-40">
-        <div class="au-card-title" style="background-image:url('/images/bg-title-02.jpg')">
-          <div class="bg-overlay bg-overlay--blue"></div>
-          <h3><i class="zmdi zmdi-comment-text"></i> Last events</h3>
-        </div>
-	<div class="au-inbox-wrap">
-          <div class="au-message">
-            <div class="au-message__noti">
-              You have <span>2</span> new messages.
-            </div>
-            <div class="au-message-list">
-              <div class="au-message__item unread">
-                <div class="au-message__item-inner">
-                  <div class="au-message__item-text">
-                    <div class="avatar-wrap">
-                    </div>
-		    <div class="text">
-                      <h5 class="name">Successful deployment</h5>
-		      <p>Instance [...] deployed a new build successfully</p>
-		    </div>
-		  </div>
-		  <div class="au-message__item-time"><span>12 min ago</span></div>
-                </div>
-	      </div>
-	      <div class="au-message__item">
-                <div class="au-message__item-inner">
-                  <div class="au-message__item-text">
-                    <div class="avatar-wrap">
-                    </div>
-		    <div class="text">
-                      <h5 class="name">Backup failed</h5>
-		      <p>Instance [...] failed to backup</p>
-		    </div>
-		  </div>
-		  <div class="au-message__item-time"><span>12 min ago</span></div>
-                </div>
-	      </div>
-            </div>
-	    <div class="au-message__footer">
-	    </div>
+          <div slot="content">
+
+    <div class="au-message__item unread" repeat.for="build of [std::vector<Data>]root->last_builds & signal:last-builds-changed">
+      <div class="au-message__item-inner">
+        <div class="au-message__item-text">
+          <div class="avatar-wrap">
+            <fa-icon cpp::name.bind='build["result"].as<std::string>() == "SUCCESS" ? "thumbs-up" : "thumbs-down"'/>
           </div>
-	</div>
+          <div class="text">
+            <h5 class="name" text.bind='build["name"].as<std::string>()'></h5>
+            <p>
+              <a href.bind='build["url"].as<std::string>()'>
+                Build number <span text.bind='build["number"].as<std::string>()'></span>
+	      </a>
+              completed in <span text.bind='build["duration"].as<std::string>()'></span>
+            </p>
+          </div>
+        </div>
+	<div class="au-message__item-time"><span text.bind='build["timestamp"].as<std::string>()'></span></div>
+      </div>
+    </div>
+
+
+          </div>
+        </dashboard-list>
       </div>
 
+      <div class="col-lg-6">
+        <dashboard-list>
+          <h3 slot="title">
+            <i class="zmdi zmdi-comment-text"></i> Last events
+          </h3>
+
+          <span slot="header">
+            You have <span>2</span> new messages.
+          </span>
+
+	  <div slot="content">
+            <div class="au-message__item unread">
+              <div class="au-message__item-inner">
+                <div class="au-message__item-text">
+                  <div class="avatar-wrap">
+                  </div>
+                  <div class="text">
+                    <h5 class="name">Successful deployment</h5>
+                    <p>Instance [...] deployed a new build successfully</p>
+                  </div>
+                </div>
+                <div class="au-message__item-time"><span>12 min ago</span></div>
+              </div>
+            </div>
+            <div class="au-message__item">
+              <div class="au-message__item-inner">
+                <div class="au-message__item-text">
+                  <div class="avatar-wrap">
+                  </div>
+                  <div class="text">
+                    <h5 class="name">Backup failed</h5>
+                    <p>Instance [...] failed to backup</p>
+                  </div>
+                </div>
+                <div class="au-message__item-time"><span>12 min ago</span></div>
+              </div>
+            </div>
+	  </div>
+        </dashboard-list>
       </div>
     </div>
   </body>

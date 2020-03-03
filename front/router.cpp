@@ -23,7 +23,7 @@
 #include "views/delete/credential.hpp"
 #include "views/variable_set_new.hpp"
 #include "views/not_found.hpp"
-#include "lib/cheerp-html/views/dashboard.hpp"
+#include "views/dashboard.hpp"
 
 #include <crails/front/globals.hpp>
 #include <boost/lexical_cast.hpp>
@@ -58,10 +58,10 @@ static void global_variables_view(const Params& params)
 
 static void dashboard_view(const Params& params)
 {
-  auto view = std::make_shared<HtmlTemplate::Dashboard>();
+  auto view = std::make_shared<Views::Dashboard>();
 
   MainView::instance->attach(view);
-  //view->activate();
+  view->activate();
 }
 
 void Puppeteer::Router::initialize()
