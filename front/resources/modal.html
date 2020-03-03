@@ -20,11 +20,15 @@
       <div class="modal-actions">
         <slot name="actions">
           <div class="btn-group">
-            <button class="au-btn au-btn-icon au-btn--blue" click.trigger="root->on_accepted()">
+            <button class="au-btn au-btn-icon au-btn--blue"
+                    click.trigger="root->on_accepted()"
+                    show.bind="root->yes_label.length() > 0 & signal:modal-changed">
               <i class="fa fa-check"></i>
-	      <span text.bind="root->yes_label & signal:modal-changed"></span>
+              <span text.bind="root->yes_label & signal:modal-changed"></span>
             </button>
-            <button class="au-btn au-btn-icon au-btn--red" click.trigger="root->on_rejected()">
+            <button class="au-btn au-btn-icon au-btn--red"
+                    click.trigger="root->on_rejected()"
+                    show.bind="root->no_label.length() > 0 & signal:modal-changed">
               <i class="fa fa-times"></i>
 	      <span text.bind="root->no_label & signal:modal-changed"></span>
             </button>

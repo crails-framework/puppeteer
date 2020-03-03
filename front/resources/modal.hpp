@@ -2,6 +2,7 @@
 # define FRONT_MODAL_HPP
 
 # include "lib/cheerp-html/resources/modal.hpp"
+# include <crails/front/promise.hpp>
 # include <crails/front/globals.hpp>
 # include <iostream>
 

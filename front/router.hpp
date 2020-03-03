@@ -11,6 +11,8 @@ namespace Puppeteer
     void initialize();
 
     static Router* instance;
+  private:
+    void initialize_backup_routes();
   };
 }
 

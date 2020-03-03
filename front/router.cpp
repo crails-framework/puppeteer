@@ -1,4 +1,5 @@
 #include "router.hpp"
+#include "resources/crud_routes.hpp"
 #include "views/utility/main_view.hpp"
 #include "views/machines.hpp"
 #include "views/machine_new.hpp"
@@ -20,10 +21,8 @@
 #include "views/credential.hpp"
 #include "views/credential_new.hpp"
 #include "views/delete/credential.hpp"
-#include "views/backup.hpp"
-#include "views/backup_new.hpp"
 #include "views/variable_set_new.hpp"
-#include "resources/modal.hpp"
+#include "views/not_found.hpp"
 
 #include <crails/front/globals.hpp>
 #include <boost/lexical_cast.hpp>
@@ -33,67 +32,6 @@ using namespace std;
 using namespace Crails::Front;
 
 Puppeteer::Router* Puppeteer::Router::instance = nullptr;
-
-template<typename INDEX, typename SHOW, typename EDIT, typename DELETE>
-void make_routes_for(Puppeteer::Router* router, const std::string& path)
-{
-  router->match(path, [](const Params&)
-  {
-    auto view = std::make_shared<INDEX>();
-
-    MainView::instance->attach(view);
-    view->activate();
-  });
-
-  router->match(path + "/new", [](const Params&)
-  {
-    auto view = std::make_shared<EDIT>();
-
-    MainView::instance->attach(view);
-    view->activate();
-  });
-
-  router->match(path + "/:resource_id", [](const Params& params)
-  {
-    auto view = std::make_shared<SHOW>();
-    auto id   = boost::lexical_cast<unsigned long>(params.at("resource_id"));
-
-    MainView::instance->attach(view);
-    view->activate(id);
-  });
-
-  router->match(path + "/:resource_id/edit", [](const Params& params)
-  {
-    auto view = std::make_shared<EDIT>();
-    auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
-
-    MainView::instance->attach(view);
-    view->activate(id);
-  });
-
-  router->match(path + "/:resource_id/destroy", [router, path](const Params& params)
-  {
-    auto id = boost::lexical_cast<unsigned long>(params.at("resource_id"));
-    auto modal = Modal<DELETE>::make("Removing");
-
-    modal->el.activate(id);
-    modal->open().then([router, path, modal, id]()
-    {
-      if (modal->ok())
-      {
-        modal->el.destroy([router, path](bool success)
-        {
-          if (success)
-            router->navigate(path, true);
-          else
-            Crails::Front::window->alert("resource removal failed");
-        });
-      }
-      else
-        router->navigate(path + '/' + boost::lexical_cast<std::string>(id), false);
-    });
-  });
-}
 
 std::shared_ptr<Views::VariableSetForm> tintin;
 
@@ -108,6 +46,20 @@ static void workaround_router_unexplained_crash(Puppeteer::Router* router)
   router->routes.clear();
 }
 
+static void global_variables_view(const Params& params)
+{
+  auto view = std::make_shared<Views::VariableSetForm>();
+
+  tintin = view;
+  MainView::instance->attach(view);
+  view->activate();
+}
+
+static void dashboard_view(const Params& params)
+{
+  std::cout << "Router route matched" << std::endl;
+}
+
 void Puppeteer::Router::initialize()
 {
   instance = this;
@@ -119,68 +71,18 @@ void Puppeteer::Router::initialize()
   make_routes_for<Views::Instances,   Views::Instance,   Views::InstanceNew,   Views::DeleteInstance>  (instance, "/instances");
   make_routes_for<Views::Recipes,     Views::Recipe,     Views::RecipeNew,     Views::DeleteRecipe>    (instance, "/recipes");
   make_routes_for<Views::Credentials, Views::Credential, Views::CredentialNew, Views::DeleteCredential>(instance, "/credentials");
+  initialize_backup_routes();
+  match("/variables", &global_variables_view);
+  match("/",          &dashboard_view);
 
-  match("/instances/:id/backup", [](const Params& params)
-  {
-    auto id = boost::lexical_cast<unsigned long>(params.at("id"));
-
-    Puppeteer::Backup::fetch_for_instance(id, [id](shared_ptr<Backup> model)
-    {
-      if (model)
-      {
-        auto view = std::make_shared<Views::Backup>();
-
-	MainView::instance->attach(view);
-	view->activate(model);
-      }
-      else
-      {
-        auto view = std::make_shared<Views::BackupNew>();
-
-	view->set_instance_id(id);
-	MainView::instance->attach(view);
-	view->activate();
-      }
-    });
-  });
-
-  match("/instances/:id/backup/edit", [](const Params& params)
-  {
-    auto id = boost::lexical_cast<unsigned long>(params.at("id"));
-
-    Puppeteer::Backup::fetch_for_instance(id, [](shared_ptr<Backup> model)
-    {
-      if (model)
-      {
-        auto view = std::make_shared<Views::BackupNew>();
-
-        MainView::instance->attach(view);
-        view->activate(model);
-      }
-      else
-      {
-        std::cout << "ERROR: no backup settings found for this instance" << std::endl;
-      }
-    });
-  });
-
-  match("/variables", [](const Params& params)
-  {
-    auto view = std::make_shared<Views::VariableSetForm>();
-
-    tintin = view;
-    MainView::instance->attach(view);
-    view->activate();
-  });
-
-  match("/", [](const Params& params)
-  {
-    std::cout << "Router route matched" << std::endl;
-  });
-
-  on_route_executed.connect([](std::string)
+  on_route_executed.connect([](const std::string&)
   {
     MainView::instance->on_route_executed();
+  });
+
+  on_route_not_found.connect([](const std::string& route)
+  {
+    NotFoundModal::make_and_open(route);
   });
 
   std::cout << "Router initialized" << std::endl;
