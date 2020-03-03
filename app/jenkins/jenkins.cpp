@@ -72,7 +72,7 @@ DataTree Jenkins::get_last_builds()
 {
   const string limit = "10";
   const string url   = puppeteer_folder_url() + "/api/json";
-  const string param = "jobs[name,url,builds[number,result,duration,url]{0," + limit + "}]";
+  const string param = "jobs[name,url,builds[number,result,duration,url,timestamp]{0," + limit + "}]";
   DataTree result;
 
   boost::network::http::client::request request(

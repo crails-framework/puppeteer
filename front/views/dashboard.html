@@ -1,5 +1,6 @@
 <template>
   <head>
+    <include src="front/time.hpp" />
     <include src="front/datatree.hpp" />
     <include src="lib/cheerp-html/views/dashboard/dashboard_list.hpp"
              require="HtmlTemplate::DashboardList"
@@ -36,7 +37,7 @@
             </p>
           </div>
         </div>
-	<div class="au-message__item-time"><span text.bind='build["timestamp"].as<std::string>()'></span></div>
+        <div class="au-message__item-time"><span text.bind='get_date_string(build["timestamp"])'></span></div>
       </div>
     </div>
 

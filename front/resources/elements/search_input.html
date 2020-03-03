@@ -13,7 +13,7 @@
     </script>
   </head>
   <body data-active.bind='results ? "true" : "false" & signal:results-changed'>
-    <input class="au-input au-input--xl" type="text" name="search" placeholder="search for machines, instances or builds" style="width:100%" ref="input" />
+    <input class="au-input au-input--xl" type="text" name="search" placeholder="search for machines, instances or builds" style="width:100%" autocomplete="off" ref="input" />
     <button class="au-btn--submit" click.trigger="on_search_clicked()">
       <i class="zmdi zmdi-search"></i>
     </button>

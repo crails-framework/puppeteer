@@ -23,20 +23,13 @@ void Views::Backup::initialize_breadcrumbs()
     std::cerr << "Cannot initialize breadcrumbs without a Backup model" << std::endl;
 }
 
+string get_date_string(time_t, const string&);
+
 string Views::Backup::get_date_string(Object data) const
 {
-  stringstream stream;
-
   if (!data.is_undefined())
-  {
-    std::time_t timestamp  = (std::time_t)(data);
-    std::tm*    tm         = std::localtime(&timestamp);
-
-    stream << std::put_time(tm, "%c %Z");
-  }
-  else
-    stream << "N/A";
-  return stream.str();
+    return get_date_string((std::time_t)(data));
+  return "N/A";
 }
 
 void Views::Backup::refresh_builds()

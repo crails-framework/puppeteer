@@ -29,19 +29,24 @@ void Views::Dashboard::fetch_last_builds()
     {
       last_builds.clear();
       last_builds_response = response->get_response_data();
-      last_builds_response.as_data().each([this](Data job_data) -> bool
+      if (last_builds_response["jobs"].exists())
       {
-        const string job_name = job_data["name"];
-
-        job_data["builds"].each([this, job_name](Data build_data) -> bool
+        last_builds_response["jobs"].each([this](Data job_data) -> bool
         {
-          build_data["name"] = job_name;
-          last_builds.push_back(build_data);
+          const string job_name = job_data["name"];
+
+          job_data["builds"].each([this, job_name](Data build_data) -> bool
+          {
+            build_data["name"] = job_name;
+            last_builds.push_back(build_data);
+            return true;
+          });
           return true;
         });
-        return true;
-      });
-      signaler.trigger("last-builds-changed");
+        signaler.trigger("last-builds-changed");
+      }
+      else
+        std::cerr << "/dashboard/last_builds query returned no jobs" << std::endl;
     }
   });
 }
