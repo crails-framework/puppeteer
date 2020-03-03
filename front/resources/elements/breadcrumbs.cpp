@@ -43,7 +43,7 @@ void Breadcrumbs::done()
 
 void Breadcrumbs::set_machine(ODB::id_type id)
 {
-  instance->set_model<Puppeteer::Machine>(id, "Machine", "Machine");
+  instance->set_model<Puppeteer::Machine>(id, "Machine", "Machines");
 }
 
 void Breadcrumbs::set_instance(ODB::id_type id)
