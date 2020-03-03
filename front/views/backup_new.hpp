@@ -4,6 +4,7 @@
 # include "utility/model_form.hpp"
 # include "lib/cheerp-html/views/backup_new.hpp"
 # include "app/backups.hpp"
+# include "front/resources/elements/breadcrumbs.hpp"
 
 namespace Views
 {
@@ -13,6 +14,15 @@ namespace Views
   public:
     BackupNew()
     {
+    }
+
+    void initialize_breadcrumbs()
+    {
+      Breadcrumbs::reset();
+      Breadcrumbs::set_instance(instance_id);
+      Breadcrumbs::add_crumb("Backups", new_model()->get_path());
+      Breadcrumbs::add_crumb("Edit", "#/");
+      Breadcrumbs::done();
     }
 
     void update_model_attributes()
