@@ -35,6 +35,16 @@ search-input {
           }
         }
       }
+
+      &.hint-no-results {
+        width: 100%;
+        text-align: center;
+
+        > i {
+          color: blue;
+	  padding-right: 5px;
+        }
+      }
     }
   }
 }
