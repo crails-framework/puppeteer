@@ -17,11 +17,17 @@ breadcrumbs {
     display: inline-block;
     padding: 0 15px;
     text-transform: capitalize;
+    font-weight: bold;
+
+    &:last-of-type a {
+      color: black;
+      pointer-events: none;
+    }
 
     &:not(:last-of-type) {
       padding-right: 0;
       &::after {
-        content: "/";
+        content: ">";
         margin-left: 15px;
       }
     }

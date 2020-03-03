@@ -22,6 +22,7 @@ namespace Views
     virtual void activate()
     {
       trigger_binding_updates();
+      initialize_breadcrumbs();
     }
 
     virtual void activate(unsigned long id)
