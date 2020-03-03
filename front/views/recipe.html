@@ -2,13 +2,14 @@
   <head>
     <script>
       virtual void on_pull_clicked() = 0;
+      virtual const std::string get_title() const { return "Recipe"; }
       virtual const std::string get_recipe_url() const = 0;
       virtual const std::string get_recipe_branch() const = 0;
       virtual const std::string get_recipe_tip() const = 0;
     </script>
   </head>
   <body>
-    <model-view cpp::title.bind='"Recipe"' ref="wrapper">
+    <model-view cpp::title.bind="get_title()" ref="wrapper">
       <div slot="content" class="row recipe-view">
         <div class="col-lg-6">
           <card cpp::title.bind='"Informations"'>

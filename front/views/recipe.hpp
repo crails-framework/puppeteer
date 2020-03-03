@@ -19,6 +19,13 @@ namespace Views
     void on_fetched(const Crails::Front::Ajax&);
     void on_fetch_failed(const Crails::Front::Ajax&);
 
+    const std::string get_title() const
+    {
+      if (get_model())
+        return get_model()->get_name();
+      return ModelView::get_title();
+    }
+
     const std::string get_recipe_url() const
     {
       return model ? model->get_git_url() : null_string;
