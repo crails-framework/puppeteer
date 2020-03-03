@@ -21,7 +21,10 @@ public:
   const std::vector<Puppeteer::Build>&    get_builds() const;
 
 private:
+  bool monitor_query();
   void on_results_fetched(std::shared_ptr<SearchQuery>);
+
+  std::string last_query;
 };
 
 #endif

@@ -8,6 +8,7 @@
       virtual const std::vector<Puppeteer::Build>&    get_builds()    const = 0;
 
       virtual void on_search_clicked() = 0;
+      virtual bool monitor_query() = 0;
     </script>
   </head>
   <body data-active.bind='results ? "true" : "false" & signal:results-changed'>
@@ -15,22 +16,28 @@
     <button class="au-btn--submit" click.trigger="on_search_clicked()">
       <i class="zmdi zmdi-search"></i>
     </button>
-    <div class="results" show.bind="results != nullptr & signal:results-changed">
+    <div class="results" show.bind="monitor_query() && results != nullptr & throttle:750">
       <ul>
-        <li><fa-icon cpp::name.bind='"server"' />Machines</li>
-	<li repeat.for="model of [std::vector<Puppeteer::Machine>]get_machines() & signal:results-changed">
+        <li show.bind="get_machines().size() > 0 & signal:results-changed">
+          <fa-icon cpp::name.bind='"server"' />Machines
+        </li>
+        <li repeat.for="model of [std::vector<Puppeteer::Machine>]get_machines() & signal:results-changed">
           <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
-	</li>
+        </li>
 
-        <li><fa-icon cpp::name.bind='"cloud"' />Instances</li>
-	<li repeat.for="model of [std::vector<Puppeteer::Instance>]get_instances() & signal:results-changed">
+        <li show.bind="get_instances().size() > 0 & signal:results-changed">
+          <fa-icon cpp::name.bind='"cloud"' />Instances
+        </li>
+        <li repeat.for="model of [std::vector<Puppeteer::Instance>]get_instances() & signal:results-changed">
           <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
-	</li>
+        </li>
 
-        <li><fa-icon cpp::name.bind='"archive"' />Builds</li>
-	<li repeat.for="model of [std::vector<Puppeteer::Build>]get_builds() & signal:results-changed">
+        <li show.bind="get_builds().size() > 0 & signal:results-changed">
+          <fa-icon cpp::name.bind='"archive"' />Builds
+        </li>
+        <li repeat.for="model of [std::vector<Puppeteer::Build>]get_builds() & signal:results-changed">
           <a href.bind="model.get_path()" text.bind="model.get_name()"></a>
-	</li>
+        </li>
       </ul>
     </div>
   </body>

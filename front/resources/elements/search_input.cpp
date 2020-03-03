@@ -7,6 +7,22 @@ void SearchInput::reset()
 {
   set_results(nullptr);
   signaler.trigger("results-changed");
+  input.value("");
+}
+
+bool SearchInput::monitor_query()
+{
+  const string query = input.get_value();
+
+  if (last_query != query)
+  {
+    if (query.length() > 0)
+      on_search_clicked();
+    else
+      reset();
+    last_query = query;
+  }
+  return true;
 }
 
 void SearchInput::on_search_clicked()
