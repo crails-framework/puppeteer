@@ -8,9 +8,16 @@ search-input {
     position: absolute;
     top: 44px;
     left: 46px;
+    right: 109px;
+    //right: 47px;
     padding: $results-padding;
     padding-bottom: 0;
-    right: 109px;
+
+    @media (max-width: 991px) {
+      left: 17px;
+      right: 79px;
+      //right: 17px;
+    }
 
     ul {
       list-style: none;
