@@ -14,7 +14,7 @@
     <title-1 cpp::title.bind='"Overview"'></title-1>
     <div class="row">
       <div class="col-lg-6">
-        <dashboard-list>
+        <dashboard-list class="last-build-list" cpp::header_background.bind='"/images/jenkins-head.webp"'>
           <h3 slot="title">
             <i class="zmdi zmdi-calendar-note"></i> Last jobs
           </h3>
@@ -30,24 +30,23 @@
           <div class="text">
             <h5 class="name" text.bind='build["name"].as<std::string>()'></h5>
             <p>
-              <a href.bind='build["url"].as<std::string>()'>
+              <a href.bind='build["url"].as<std::string>()' target="_blank">
                 Build number <span text.bind='build["number"].as<std::string>()'></span>
-	      </a>
-              completed in <span text.bind='build["duration"].as<std::string>()'></span>
+              </a>
+              completed in <span text.bind='get_duration_string(build["duration"].as<std::time_t>() / 1000)'></span>
             </p>
           </div>
         </div>
-        <div class="au-message__item-time"><span text.bind='get_date_string(build["timestamp"])'></span></div>
+        <div class="au-message__item-time"><span text.bind='get_date_string(build["timestamp"].as<double>() / 1000, "%R %x")'></span></div>
       </div>
     </div>
-
 
           </div>
         </dashboard-list>
       </div>
 
       <div class="col-lg-6">
-        <dashboard-list>
+        <dashboard-list cpp::header_background.bind='"/images/events-head.webp"'>
           <h3 slot="title">
             <i class="zmdi zmdi-comment-text"></i> Last events
           </h3>

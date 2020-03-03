@@ -5,5 +5,6 @@
 # include <ctime>
 
 std::string get_date_string(std::time_t, const std::string& format = "%c %Z");
+std::string get_duration_string(std::time_t);
 
 #endif
