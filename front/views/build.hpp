@@ -22,6 +22,13 @@ namespace Views
       refresh_builds();
     }
 
+    const std::string get_title() const
+    {
+      if (model)
+        return model->get_name();
+      return HtmlTemplate::Build::get_title();
+    }
+
     std::vector<Crails::Front::Object>& get_builds() { return builds; }
     std::string get_badge_for_build(std::string);
 
