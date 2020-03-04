@@ -27,7 +27,6 @@ namespace Views
 
     virtual void activate(unsigned long id)
     {
-      std::cout << "Activating for id " << id << std::endl;
       fetch_one<MODEL>(id, [this](std::shared_ptr<MODEL> _model)
       {
         activate(_model);

@@ -74,7 +74,7 @@ void Backup::on_change()
     Jenkins jenkins;
     int status = jenkins.push_config(get_name(), get_build_config());
 
-    if (status != 200)
+    if (status >= 400)
     {
       std::cout << "responded with status " << status << std::endl;
       throw std::runtime_error("could not create/update jenkins job");

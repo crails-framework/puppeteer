@@ -4,6 +4,7 @@
 #include "lib/cheerp-html/views/delete/delete_backup_version.hpp"
 #include "lib/cheerp-html/views/backup_restore.hpp"
 #include "front/resources/elements/breadcrumbs.hpp"
+#include "front/time.hpp"
 #include <ctime>
 #include <iomanip>
 
@@ -23,9 +24,7 @@ void Views::Backup::initialize_breadcrumbs()
     std::cerr << "Cannot initialize breadcrumbs without a Backup model" << std::endl;
 }
 
-string get_date_string(time_t, const string&);
-
-string Views::Backup::get_date_string(Object data) const
+string Views::Backup::get_backup_date_string(Object data) const
 {
   if (!data.is_undefined())
     return get_date_string((std::time_t)(data));
