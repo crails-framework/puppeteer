@@ -21,7 +21,7 @@ string Jenkins::get_url() const
   stringstream stream;
 
   stream << protocol << "://"
-         << user << ':' << api_token << '@'
+//       << user << ':' << api_token << '@'
          << hostname << ':' << port;
   return stream.str();
 }
