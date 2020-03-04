@@ -78,6 +78,7 @@ void Puppeteer::Router::initialize()
   initialize_backup_routes();
   match("/variables", &global_variables_view);
   match("/",          &dashboard_view);
+  match("",           &dashboard_view);
 
   on_route_executed.connect([](const std::string&)
   {
