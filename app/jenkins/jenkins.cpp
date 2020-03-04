@@ -69,9 +69,11 @@ bool Jenkins::job_exists(const std::string& jobname)
   return !(status == 404);
 }
 
+#define TO_STRING_MACRO(VAR) #VAR;
+
 DataTree Jenkins::get_last_builds()
 {
-  const string limit = #LAST_BUILDS_LIST_SIZE;
+  const string limit = TO_STRING_MACRO(LAST_BUILDS_LIST_SIZE);
   const string url   = puppeteer_folder_url() + "/api/json";
   const string param = "jobs[name,url,builds[number,result,duration,url,timestamp]{0," + limit + "}]";
   DataTree result;
