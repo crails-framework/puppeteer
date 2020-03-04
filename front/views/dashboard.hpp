@@ -13,6 +13,7 @@ namespace Views
     void activate();
 
     void fetch_last_builds();
+    void aggregate_builds_from_jobs(Data);
 
   private:
     DataTree last_builds_response;

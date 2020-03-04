@@ -1,6 +1,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 #include "jenkins.hpp"
+#include "config/jenkins.hpp"
 #include <sstream>
 #include <crails/http.hpp>
 #include <crails/server.hpp>
@@ -70,7 +71,7 @@ bool Jenkins::job_exists(const std::string& jobname)
 
 DataTree Jenkins::get_last_builds()
 {
-  const string limit = "10";
+  const string limit = #LAST_BUILDS_LIST_SIZE;
   const string url   = puppeteer_folder_url() + "/api/json";
   const string param = "jobs[name,url,builds[number,result,duration,url,timestamp]{0," + limit + "}]";
   DataTree result;

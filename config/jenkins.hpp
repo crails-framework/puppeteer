@@ -1,0 +1,6 @@
+#ifndef  CONFIG_JENKINS_HPP
+# define CONFIG_JENKINS_HPP
+
+# define LAST_BUILDS_LIST_SIZE 10
+
+#endif
