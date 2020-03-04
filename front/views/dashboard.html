@@ -33,7 +33,7 @@
               <a href.bind='build["url"].as<std::string>()' target="_blank">
                 Build number <span text.bind='build["number"].as<std::string>()'></span>
               </a>
-              completed in <span text.bind='get_duration_string(build["duration"].as<std::time_t>() / 1000)'></span>
+              in <fa-icon cpp::name.bind='"clock"' /><span text.bind='get_duration_string(build["duration"].as<std::time_t>() / 1000)'></span>
             </p>
           </div>
         </div>
