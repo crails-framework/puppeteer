@@ -18,11 +18,25 @@ namespace Views
 
     void initialize_breadcrumbs()
     {
-      Breadcrumbs::reset();
-      Breadcrumbs::set_instance(instance_id);
-      Breadcrumbs::add_crumb("Backups", new_model()->get_path());
-      Breadcrumbs::add_crumb("Edit", "#/");
-      Breadcrumbs::done();
+      if (instance_id != ODB_NULL_ID)
+      {
+        Breadcrumbs::reset();
+        Breadcrumbs::set_instance(instance_id);
+        Breadcrumbs::add_crumb("Backups", new_model()->get_path());
+        Breadcrumbs::add_crumb("Edit", "#/");
+        Breadcrumbs::done();
+      }
+    }
+
+    inline void activate()
+    {
+      ModelForm::activate();
+    }
+
+    inline void activate(std::shared_ptr<Puppeteer::Backup> _model)
+    {
+      set_instance_id(_model->get_instance_id());
+      ModelForm::activate(_model);
     }
 
     void update_model_attributes()
