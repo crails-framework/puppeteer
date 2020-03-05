@@ -24,6 +24,13 @@ dashboard-list.last-build-list {
         &.fa-thumbs-down {
           color: red;
         }
+
+	&.fa-hand-paper {
+          color: lightgray;
+	}
+
+	&.fa-spinner {
+	}
       }
     }
 

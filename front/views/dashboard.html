@@ -5,44 +5,14 @@
     <include src="lib/cheerp-html/views/dashboard/dashboard_list.hpp"
              require="HtmlTemplate::DashboardList"
              tag-name="dashboard-list" />
-    <include src="lib/cheerp-html/views/dashboard/dashboard_list_item.hpp"
-             require="HtmlTemplate::DashboardListItem"
-             tag-name="dashboard-list-item" />
-    <attribute type="std::vector<Data>" name="last_builds" />
+    <include src="front/views/dashboard/last_builds_widget.hpp"
+             require="::LastBuildsWidget" />
   </head>
   <body>
     <title-1 cpp::title.bind='"Overview"'></title-1>
     <div class="row">
       <div class="col-lg-6">
-        <dashboard-list class="last-build-list" cpp::header_background.bind='"/images/jenkins-head.webp"'>
-          <h3 slot="title">
-            <i class="zmdi zmdi-calendar-note"></i> Last jobs
-          </h3>
-
-          <div slot="content">
-
-    <div class="au-message__item unread" repeat.for="build of [std::vector<Data>]root->last_builds & signal:last-builds-changed">
-      <div class="au-message__item-inner">
-        <div class="au-message__item-text">
-          <div class="avatar-wrap">
-            <fa-icon cpp::name.bind='build["result"].as<std::string>() == "SUCCESS" ? "thumbs-up" : "thumbs-down"'/>
-          </div>
-          <div class="text">
-            <h5 class="name" text.bind='build["name"].as<std::string>()'></h5>
-            <p>
-              <a href.bind='build["url"].as<std::string>()' target="_blank">
-                Build number <span text.bind='build["number"].as<std::string>()'></span>
-              </a>
-              in <fa-icon cpp::name.bind='"clock"' /><span text.bind='get_duration_string(build["duration"].as<std::time_t>() / 1000)'></span>
-            </p>
-          </div>
-        </div>
-        <div class="au-message__item-time"><span text.bind='get_date_string(build["timestamp"].as<double>() / 1000, "%R %x")'></span></div>
-      </div>
-    </div>
-
-          </div>
-        </dashboard-list>
+        <last-builds-widget ref="last_builds" />
       </div>
 
       <div class="col-lg-6">

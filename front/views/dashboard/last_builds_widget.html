@@ -1,0 +1,58 @@
+<template>
+  <head>
+    <include src="front/time.hpp" />
+    <include src="front/datatree.hpp" />
+    <include src="lib/cheerp-html/views/dashboard/dashboard_list.hpp"
+             require="HtmlTemplate::DashboardList"
+             tag-name="dashboard-list" />
+    <attribute type="std::vector<Data>" name="last_builds" />
+
+    <script>
+      virtual void fetch_last_builds() = 0;
+
+      std::string get_icon_for_build(Data build) const
+      {
+        const std::string result = build["result"];
+        if (result == "SUCCESS") { return "thumbs-up"; }
+        else if (result == "FAILURE") { return "thumbs-down"; }
+        else if (result == "ABORTED") { return "hand-paper"; }
+        return "spinner";
+      }
+    </script>
+  </head>
+  <body>
+    <dashboard-list class="last-build-list" cpp::header_background.bind='"/images/jenkins-head.webp"'>
+      <h3 slot="title">
+        <i class="zmdi zmdi-calendar-note"></i> Last jobs
+      </h3>
+      <button slot="header_action" class="au-btn-plus" click.trigger="root->fetch_last_builds()">
+        <fa-icon cpp::name.bind='"refresh"' />
+      </button>
+
+      <div slot="content">
+
+    <div class="au-message__item unread" repeat.for="build of [std::vector<Data>]root->last_builds & signal:last-builds-changed">
+      <div class="au-message__item-inner">
+        <div class="au-message__item-text">
+          <div class="avatar-wrap">
+            <fa-icon cpp::name.bind="root->get_icon_for_build(build)"
+                     cpp::spinning.bind='root->get_icon_for_build(build) == "spinner"'/>
+          </div>
+          <div class="text">
+            <h5 class="name" text.bind='build["name"].as<std::string>()'></h5>
+            <p>
+              <a href.bind='build["url"].as<std::string>()' target="_blank">
+                Build number <span text.bind='build["number"].as<std::string>()'></span>
+              </a>
+              in <fa-icon cpp::name.bind='"clock"' /><span text.bind='get_duration_string(build["duration"].as<std::time_t>() / 1000)'></span>
+            </p>
+          </div>
+        </div>
+        <div class="au-message__item-time"><span text.bind='get_date_string(build["timestamp"].as<double>() / 1000, "%R %x")'></span></div>
+      </div>
+    </div>
+
+      </div>
+    </dashboard-list>
+  </body>
+</template>

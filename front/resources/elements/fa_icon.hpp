@@ -27,6 +27,14 @@ public:
     return name;
   }
 
+  void set_spinning(bool value)
+  {
+    spinning = value;
+    signaler.trigger("class-changed");
+  }
+
+  bool get_spinning() const { return spinning; }
+
   void set_suffix(const std::string& value)
   {
     suffix = value;
@@ -46,6 +54,7 @@ private:
 
   std::string name = "cirlce";
   std::string suffix;
+  bool        spinning = false;
 };
 
 #endif
