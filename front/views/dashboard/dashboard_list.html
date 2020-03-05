@@ -15,12 +15,12 @@
       <div class="au-card-title" style.bind="get_header_style()">
         <div class="bg-overlay bg-overlay--blue"></div>
 	<slot name="title"></slot>
+	<slot name="header_action"></slot>
       </div>
       <div class="au-inbox-wrap">
         <div class="au-message">
           <div class="au-message__noti">
             <slot name="header"></slot>
-            <slot name="header_action"></slot>
           </div>
           <div class="au-message-list">
             <slot name="content"></slot>
