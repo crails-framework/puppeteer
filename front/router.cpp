@@ -87,7 +87,8 @@ void Puppeteer::Router::initialize()
 
   on_route_not_found.connect([](const std::string& route)
   {
-    NotFoundModal::make_and_open(route);
+    std::cerr << "[router] path `" << route << "` not found" << std::endl;
+    //NotFoundModal::make_and_open(route);
   });
 
   std::cout << "Router initialized" << std::endl;
