@@ -3,8 +3,6 @@ $: << "#{Dir.pwd}/scripts"
 $: << "#{Dir.pwd}"
 
 group :before_compile do
-  guard 'crails-archive'
-
   guard 'comet-html', source: 'app/comet', output: 'lib/comet/html', config: 'config/comet.json' do
     watch(%r{app/comet/.+\.html$})
   end
