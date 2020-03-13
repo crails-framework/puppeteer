@@ -4,7 +4,7 @@
 # include "../utility/model_view.hpp"
 # include "app/comet/models/machine.hpp"
 # include "html/views/machines/show.hpp"
-# include "front/resources/elements/breadcrumbs.hpp"
+# include "app/comet/views/resources/elements/breadcrumbs.hpp"
 
 namespace Views
 {
