@@ -31,14 +31,16 @@ file(GLOB_RECURSE crails_app
      app/git/*.cpp
      app/jenkins/*.cpp
      app/recipe_runners/*.cpp
-     app/routes.cpp
-     app/invalid_request.cpp
      config/*.cpp
      lib/app/*.cpp
      lib/odb/*.cxx
      lib/renderers/*.cpp)
 
-file(GLOB_RECURSE server_files
+file(GLOB crails_app_2
+     app/routes.cpp
+     app/invalid_request.cpp)
+
+file(GLOB server_files
      app/main.cpp)
 
 file(GLOB_RECURSE tests_files
@@ -53,7 +55,7 @@ if (WITH_GANDI)
   add_subdirectory(modules/gandi)
 endif()
 
-add_library(crails-app SHARED ${crails_app})
+add_library(crails-app SHARED ${crails_app} ${crails_app_2})
 add_executable(server ${server_files})
 add_executable(tests  ${tests_files})
 

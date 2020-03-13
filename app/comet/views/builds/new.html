@@ -1,0 +1,51 @@
+<template classname="BuildNew">
+  <head>
+    <include src="app/comet/collections/recipes.hpp" />
+    <include src="app/comet/collections/credentials.hpp" />
+    <include src="app/comet/views/utility/select.hpp"
+             tag-name="recipe-select"
+             require="Views::CollectionSelectWithName<Front::Recipes>" />
+    <include src="app/comet/views/utility/select.hpp"
+             tag-name="credentials-select"
+             require="Views::CollectionSelectWithName<Front::Credentials>" />
+    <script>
+      virtual void on_save_clicked() = 0;
+      virtual std::string   get_title() const = 0;
+      virtual std::string   get_build_name() const = 0;
+      virtual std::string   get_build_git_url() const = 0;
+      virtual std::string   get_build_branch() const = 0;
+      virtual std::string   get_build_options() const = 0;
+      virtual unsigned long get_build_credentials_id() const = 0;
+      virtual unsigned long get_build_recipe_id() const = 0;
+      virtual std::string   get_build_variables() const = 0;
+    </script>
+  </head>
+  <body>
+    <model-form cpp::title.bind="get_title()" cpp::save-clicked.trigger="on_save_clicked()">
+      <div slot="inputs">
+        <form-group cpp::label.bind='"name"' cpp::name.bind='"build_name"' cpp::value.bind="root->get_build_name()">
+        </form-group>
+	<form-group cpp::label.bind='"recipe"' cpp::name.bind='"build_recipe"'>
+          <recipe-select slot="input" name="build_recipe" class="form-control" ref="recipe_input">
+          </recipe-select>
+        </form-group>
+        <form-group cpp::label.bind='"git url"' cpp::name.bind='"build_git"' cpp::value.bind="root->get_build_git_url()">
+        </form-group>
+        <form-group cpp::label.bind='"git branch"' cpp::name.bind='"build_branch"' cpp::value.bind="root->get_build_branch()">
+        </form-group>
+        <form-group cpp::label.bind='"credentials"' cpp::name.bind='"build_credentials"'>
+          <credentials-select slot="input" name="build_credentials" class="form-control" ref="credentials_input">
+          </credentials-select>
+        </form-group>
+        <form-group cpp::label.bind='"build options"' cpp::name.bind='"build_options"'>
+          <textarea slot="input" name="build_options" class="form-control" text.bind="root->get_build_options()">
+          </textarea>
+        </form-group>
+        <form-group cpp::label.bind='"environment variables"'>
+          <variable-list-editor slot="input" ref="variables_input" cpp::value.bind="root->get_build_variables()">
+          </variable-list-editor>
+        </form-group>
+      </div>
+    </model-form>
+  </body>
+</template>

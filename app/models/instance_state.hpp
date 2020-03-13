@@ -1,7 +1,7 @@
 #ifndef  INSTANCE_STATE_HPP
 # define INSTANCE_STATE_HPP
 
-# include <crails/front/archive.hpp>
+# include <crails/archive.hpp>
 # include <crails/utils/string.hpp>
 
 class InstanceState

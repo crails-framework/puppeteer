@@ -1,6 +1,6 @@
 #include <crails/renderers/archive_renderer.hpp>
 
-#include <crails/front/archive.hpp>
+#include <crails/archive.hpp>
 #include "app/models/machine.hpp"
 
 using namespace Crails;

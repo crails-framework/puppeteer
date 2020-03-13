@@ -1,0 +1,22 @@
+<template classname="BackupNew">
+  <head>
+    <include src="app/comet/models/backup.hpp" />
+    <attribute type="std::string" name="title" />
+    <script>
+      virtual void on_save_clicked() = 0;
+      virtual std::shared_ptr<Front::Backup> get_model() const = 0;
+    </script>
+  </head>
+  <body>
+    <model-form cpp::title.bind='"Backup settings"' cpp::save-clicked.trigger="root->on_save_clicked()">
+      <div slot="inputs">
+        <form-group cpp::label.bind='"schedule"' cpp::name.bind='"backup_schedule"'
+                    cpp::value.bind='root->get_model() ? root->get_model()->get_schedule() : ""'>
+        </form-group>
+	<form-group cpp::label.bind='"history size"' cpp::name.bind='"backup_max_history"'
+                    cpp::value.bind='root->get_model() ? boost::lexical_cast<std::string>(root->get_model()->get_max_history()) : "0"'>
+        </form-group>
+      </div>
+    </model-form>
+  </body>
+</template>

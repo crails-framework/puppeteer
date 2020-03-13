@@ -4,7 +4,7 @@
 # include <string>
 # include <map>
 # include <crails/utils/string.hpp>
-# include <crails/front/exception.hpp>
+# include <crails/raise.hpp>
 
 class VariableList : public std::string
 {

@@ -1,0 +1,69 @@
+<template>
+  <head>
+    <include src="app/comet/views/resources/menu_entry.hpp" />
+    <include src="app/comet/views/resources/elements/search_input.hpp" require="::SearchInput" />
+    <include src="app/comet/views/resources/elements/breadcrumbs.hpp" require="::Breadcrumbs" />
+    <script>
+      const std::vector<MenuEntry> menu_entries = {
+        MenuEntry("server",      "Machines",    "#/machines"),
+        MenuEntry("cloud",       "Instances",   "#/instances"),
+        MenuEntry("archive",     "Builds",      "#/builds"),
+        MenuEntry("book",        "Recipes",     "#/recipes"),
+        MenuEntry("dollar-sign", "Variables",   "#/variables"),
+        MenuEntry("key",         "Credentials", "#/credentials")
+      };
+    </script>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <!-- MENU SIDEBAR-->
+      <aside class="menu-sidebar d-none d-lg-block">
+        <div class="logo" style="padding:0">
+          <a href="#/" style="font-size:2em;text-transform:uppercase">
+            <img src="/images/logo.jpg" style="height:75px;filter:invert(90%)"/>
+            <b>P</b><span style="font-size:70%">uppeteer</span>
+          </a>
+        </div>
+        <div class="menu-sidebar__content js-scrollbar1">
+          <nav class="navbar-sidebar">
+            <ul class="list-unstyled navbar__list">
+              <li repeat.for="entry of [std::vector<MenuEntry>]menu_entries">
+                <a href.bind="entry.route">
+                  <i class.bind='"fas fa-" + entry.icon'></i>
+                  <span text.bind="entry.label"></span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+      <!-- END MENU SIDEBAR-->
+
+      <!-- PAGE CONTAINER-->
+      <div class="page-container">
+        <!-- HEADER DESKTOP-->
+        <header class="header-desktop">
+          <div class="section__content section__content--p30">
+            <div class="container-fluid">
+              <div class="header-wrap">
+                <search-input class="form-header" style="width:100%" ref="search_input">
+                </search-input>
+              </div>
+            </div>
+          </div>
+        </header>
+        <!-- HEADER DESKTOP-->
+
+        <!-- MAIN CONTENT-->
+        <div class="main-content" id="page-container">
+          <breadcrumbs ref="breadcrumbs" />
+          <div class="container-fluid">
+            <slot name="content"></slot>
+          </div>
+        </div>
+        <!-- END MAIN CONTENT-->
+        <!-- END PAGE CONTAINER-->
+      </div>
+    </div>
+  </body>
+</template>

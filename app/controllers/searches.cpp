@@ -1,6 +1,6 @@
 #include "lib/odb/application-odb.hxx"
 #include "searches.hpp"
-#include <crails/front/archive.hpp>
+#include <crails/archive.hpp>
 
 using namespace std;
 using namespace Crails;

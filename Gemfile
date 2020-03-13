@@ -9,4 +9,4 @@ gem 'guard-sass'
 #gem 'coffee-script'
 gem 'uglifier'
 
-gem 'nokogiri'
+gem "comet-cpp", git: "https://github.com/crails-framework/comet.cpp.git"

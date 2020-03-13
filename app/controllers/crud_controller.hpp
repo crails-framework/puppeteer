@@ -2,7 +2,7 @@
 # define MY_CRUD_CONTROLLER_HPP
 
 # include "modules/crud/controller.hpp"
-# include <crails/front/archive.hpp>
+# include <crails/archive.hpp>
 
 namespace Crud
 {

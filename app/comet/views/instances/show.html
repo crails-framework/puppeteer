@@ -1,0 +1,64 @@
+<template classname="InstanceShow">
+  <head>
+    <include src="app/comet/views/instances/_action_widget.hpp"  require="InstanceActionWidget" tag-name="action-widget" />
+    <include src="app/comet/views/instances/_state_widget.hpp"   require="InstanceStateWidget"  tag-name="state-widget" />
+    <include src="app/comet/views/instances/_console_output.hpp" require="ConsoleOutput" />
+    <include src="app/comet/models/instance.hpp" />
+  <script>
+    virtual std::shared_ptr<Front::Instance> get_model() const = 0;
+    virtual std::string get_backup_path() const = 0;
+  </script>
+  </head>
+  <body>
+    <model-view cpp::title.bind='get_model() ? get_model()->get_name() : "Instance"' ref="wrapper">
+      <div slot="controls">
+        <div class="btn-group" ref="controls">
+          <a class="au-btn au-btn-icon au-btn--blue"
+	     href.bind="root->get_backup_path() & signal:model-changed">
+            <fa-icon cpp::name.bind='"save"' />
+            Backups
+          </a>
+          <a class="au-btn au-btn-icon au-btn--blue"
+             href.bind="root->wrapper.get_edit_path() & signal:model-changed">
+            <fa-icon cpp::name.bind='"edit"' />
+            Edit
+          </a>
+          <a class="au-btn au-btn-icon au-btn--red"
+             href.bind="root->wrapper.get_destroy_path() & signal:model-changed"
+	     show.bind="root->get_model() && root->get_model()->get_state() == Front::Instance::Uninstalled & signal:model-changed">
+            <fa-icon cpp::name.bind='"times"' />
+            Destroy
+          </a>
+        </div>
+      </div>
+
+      <div slot="content" class="row">
+        <div class="col-lg-6">
+          <card cpp::title.bind='"State"'>
+            <div slot="content">
+              <state-widget cpp::model.bind="root->get_model() & signal:model-changed" ref="state_widget">
+              </state-widget>
+            </div>
+          </card>
+        </div>
+
+        <div class="col-lg-6">
+          <card cpp::title.bind='"Actions"'>
+            <div slot="content">
+              <action-widget cpp::model.bind="root->get_model() & signal:model-changed" ref="action_widget">
+              </action-widget>
+            </div>
+          </card>
+        </div>
+
+        <div class="col-lg-12">
+          <card cpp::title.bind='"Console output"'>
+            <div slot="content" style="height:500px;overflow:auto;background-color:#263238">
+              <console-output ref="console_output" />
+            </div>
+          </card>
+        </div>
+      </div>
+    </model-view>
+  </body>
+</template>

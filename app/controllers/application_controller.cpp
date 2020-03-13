@@ -1,7 +1,7 @@
 #include "application_controller.hpp"
 #include "app/invalid_request.hpp"
 #include <crails/utils/timer.hpp>
-#include <crails/front/archive.hpp>
+#include <crails/archive.hpp>
 
 using namespace std;
 
