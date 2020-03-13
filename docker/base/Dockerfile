@@ -44,12 +44,13 @@ COPY compile-odb.sh compile-odb.sh
 RUN bash ./compile-odb.sh
 # END Crails dependencies
 
+RUN apt-get install -y npm
+
 COPY crails.sh crails.sh
 RUN bash ./crails.sh
 ENV CRAILS_SHARED_DIR /usr/local/share/crails
 
 # BEGIN Dependencies
-RUN apt-get install -y npm
 # END Dependencies
 
 RUN mkdir -p /opt/webapp
