@@ -16,10 +16,7 @@ public:
     return instance;
   }
 
-  static void start()
-  {
-    get();
-  }
+  static void start();
 
   Comet::Router router;
 };

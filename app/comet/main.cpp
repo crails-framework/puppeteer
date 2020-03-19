@@ -6,7 +6,6 @@ using namespace Comet;
 
 void webMain()
 {
-  std::cout << "Coucou petite comete" << std::endl;
+  std::cout << "(!) Starting Comet application..." << std::endl;
   Application::start();
-  Application::get().router.start();
 }

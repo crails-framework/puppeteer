@@ -12,7 +12,7 @@ extern Sync::Tasks* sync_tasks;
 
 InstanceActionWidget::InstanceActionWidget()
 {
-  progress_bar = &progress_bar_el;
+  set_progress_bar(&progress_bar_el);
 }
 
 bool InstanceActionWidget::can_deploy() const
