@@ -14,7 +14,7 @@
                     cpp::value.bind='root->get_model() ? root->get_model()->get_schedule() : ""'>
         </form-group>
 	<form-group cpp::label.bind='"history size"' cpp::name.bind='"backup_max_history"'
-                    cpp::value.bind='root->get_model() ? boost::lexical_cast<std::string>(root->get_model()->get_max_history()) : "0"'>
+                    cpp::value.bind='root->get_model() ? Comet::lexical_cast<std::string>(root->get_model()->get_max_history()) : "0"'>
         </form-group>
       </div>
     </model-form>

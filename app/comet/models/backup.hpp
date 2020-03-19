@@ -3,6 +3,7 @@
 
 # include "application.hpp"
 # include "app/models/backup.hpp"
+# include <comet/lexical_cast.hpp>
 
 namespace Front
 {

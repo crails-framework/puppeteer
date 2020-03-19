@@ -5,6 +5,7 @@
 # include "app/models/instance.hpp"
 # include "app/models/variable_list.hpp"
 # include "app/models/instance_state.hpp"
+# include <comet/lexical_cast.hpp>
 
 namespace Front
 {

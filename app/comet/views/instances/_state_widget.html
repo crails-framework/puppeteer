@@ -10,7 +10,7 @@
       std::string get_deployed_build() const
       {
         return get_model()
-          ? boost::lexical_cast<std::string>(get_model()->get_deployed_build())
+          ? Comet::lexical_cast<std::string>(get_model()->get_deployed_build())
           : "-";
       }
 

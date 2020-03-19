@@ -1,6 +1,7 @@
 #include "_action_widget.hpp"
 #include "app/comet/sync_task.hpp"
 #include <comet/http.hpp>
+#include <comet/lexical_cast.hpp>
 #include "app/comet/collections/builds.hpp"
 #include <iostream>
 
@@ -211,7 +212,7 @@ void InstanceActionWidget::on_deploy_task_progress(Comet::Object response)
   case Sync::Success:
     model->set_state(Instance::Deployed);
     if (deploying_build.length() > 0)
-      model->set_deployed_build(boost::lexical_cast<unsigned int>(deploying_build));
+      model->set_deployed_build(Comet::lexical_cast<unsigned int>(deploying_build));
     model->remote_state_changed.trigger();
     break ;
   case Sync::Abort:
