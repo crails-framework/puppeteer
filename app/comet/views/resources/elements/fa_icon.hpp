@@ -22,7 +22,7 @@ public:
     signaler.trigger("class-changed");
   }
 
-  const std::string& get_name() const
+  inline const std::string& get_name() const
   {
     return name;
   }
@@ -33,7 +33,7 @@ public:
     signaler.trigger("class-changed");
   }
 
-  bool get_spinning() const { return spinning; }
+  inline bool get_spinning() const { return spinning; }
 
   void set_suffix(const std::string& value)
   {
@@ -41,7 +41,7 @@ public:
     signaler.trigger("class-changed");
   }
 
-  const std::string& get_suffix() const
+  inline const std::string& get_suffix() const
   {
     return suffix;
   }
@@ -49,7 +49,11 @@ public:
 private:
   std::string get_class_names()
   {
-    return "fa fa-" + name + ' ' + suffix;
+    std::string result = "fa fa-" + get_name() + ' ' + get_suffix();
+
+    if (get_spinning())
+      result += " fa-spin";
+    return result;
   }
 
   std::string name = "cirlce";
