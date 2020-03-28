@@ -72,8 +72,6 @@ done
 
 # Export assets
 cp -R "$public_source_dir" "$output_dir"
-unlink "$public_dir/assets/application.js"
-cp "$build_dir/front/application.js" "$public_dir/assets"
 
 # Gzip assets
 gzip < "$public_dir/assets/application.js"  > "$public_dir/assets/application.js.gz"
