@@ -20,6 +20,9 @@ void Crails::Router::initialize(void)
   crudify(router, "/recipes",     RecipeController);
   crudify(router, "/credentials", CredentialController);
 
+  SetRoute("GET",    "/machines/:id/state",   MachineController, fetch_state);
+  SetRoute("POST",   "/machines/:id/upgrade", MachineController, upgrade);
+
   SetRoute("GET",    "/instances/:id/state",            InstanceController, fetch_state);
   SetRoute("POST",   "/instances/:id/configure",        InstanceController, configure);
   SetRoute("POST",   "/instances/:id/deploy/:build_id", InstanceController, deploy);

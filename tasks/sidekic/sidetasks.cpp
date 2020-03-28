@@ -4,6 +4,7 @@
 using namespace std;
 using namespace Crails;
 
+void machine_upgrade(Params&);
 void deploy_configuration(Params&);
 void uninstall_configuration(Params&);
 void deploy_build(Params&);
@@ -14,6 +15,7 @@ void run_instance_script(Params&);
 
 // Your tasks go here
 map<string, function<void (Params&)> > sidetasks = {
+  {"machine_upgrade",         machine_upgrade},
   {"deploy_configuration",    deploy_configuration},
   {"uninstall_configuration", uninstall_configuration},
   {"auto_deploy",             auto_deploy},

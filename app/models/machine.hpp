@@ -7,6 +7,7 @@
 class OArchive;
 class IArchive;
 namespace Ssh { class Session; }
+namespace Sync { class Stream; }
 
 # pragma db object pointer(std::shared_ptr)
 class Machine : public Model, public ModelData::Machine
@@ -31,6 +32,13 @@ public:
   bool can_destroy() const;
 
   void open_ssh(std::function<void (Ssh::Session&)> callback) const;
+
+  struct Plugin
+  {
+    virtual void upgrade(const Machine&, Sync::Stream&) const = 0;
+  };
+
+  static const std::vector<std::shared_ptr<Plugin> > plugins;
 #endif
 };
 

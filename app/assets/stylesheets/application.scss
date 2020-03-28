@@ -8,6 +8,10 @@
 @import "instance_view";
 @import "recipe_view";
 
+.hidden {
+  display: none;
+}
+
 button {
   transition: all 100ms ease-in;
 }

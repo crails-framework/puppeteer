@@ -10,6 +10,9 @@ class MachineController : public Crud::ArchiveController<Machine>
   std::string get_view_path() const { return "machine_"; }
 public:
   MachineController(Crails::Params&);
+
+  void fetch_state();
+  void upgrade();
 };
 
 #endif

@@ -82,5 +82,5 @@ void auto_deploy(Params& params)
     }
   }
   else
-    logger << Logger::Error << "Did not found build " << params["build_id"].as<ODB::id_type>() << Logger::endl;
+    logger << Logger::Error << "Did not find build " << params["build_id"].as<ODB::id_type>() << Logger::endl;
 }
