@@ -20,48 +20,57 @@ bool NginxPlugin::recipe_uses_plugin(const std::string& recipe_path) const
   return boost::filesystem::is_regular_file(p);
 }
 
+bool NginxPlugin::ensure_plugin_enabled(const map<string, string>& variables, Sync::Stream& stream) const
+{
+  if (variables.find("NGINX_DISABLED") != variables.end())
+  {
+    if (variables.at("NGINX_DISABLED") == "1")
+    {
+      stream << "(!) NGINX plugin disabled\n";
+      return false;
+    }
+  }
+  return true;
+}
+
 void NginxPlugin::apply(const std::string& package, const std::string& recipe_folder, Instance& instance, const map<string,string>& variables, Sync::Stream& stream) const
 {
   stream << '\n' << "## NGINX plugin\n";
-  if (package == "setup")
-    setup(recipe_folder, instance, variables, stream);
-  else if (package == "uninstall")
-    uninstall(recipe_folder, instance, stream);
+  if (ensure_plugin_enabled(variables, stream))
+  {
+    if (variables.find("NGINX_SERVER_IP") != variables.end())
+    {
+      nginx_machine.set_ip(variables.at("NGINX_SERVER_IP"));
+      if (package == "setup")
+        setup(recipe_folder, instance, variables, stream);
+      else if (package == "uninstall")
+        uninstall(recipe_folder, instance, stream);
+      reload_nginx(stream);
+      if (letsencrypt.recipe_uses_plugin(recipe_folder))
+        letsencrypt.apply(package, recipe_folder, instance, variables, stream);
+    }
+    else
+      stream << "cannot manage nginx configuration: missing NGINX_SERVER_IP environment variable\n";
+  }
 }
 
 void NginxPlugin::setup(const string& recipe_folder, Instance& instance, const map<string,string>& variables, Sync::Stream& stream) const
 {
-  if (variables.find("NGINX_SERVER_IP") != variables.end())
-  {
-    const std::string nginx_server_ip = variables.at("NGINX_SERVER_IP");
-    const std::string config = generate_file_from_template(recipe_folder + "/nginx.conf", variables);
-    Ssh::Session ssh;
+  const std::string config = generate_file_from_template(recipe_folder + "/nginx.conf", variables);
 
-    ssh.should_accept_unknown_hosts(true);
-    ssh.connect(Recipe::remote_user, nginx_server_ip);
-    ssh.authentify_with_pubkey();
+  nginx_machine.open_ssh([&](Ssh::Session& ssh)
+  {
     stream << "scp nginx.conf to " << nginx_site_path << '/' << instance.get_name() << '\n';
     ssh.make_scp_session(nginx_site_path, SSH_SCP_WRITE)
       ->push_text(config, instance.get_name());
-  }
-  else
-    stream << "cannot deploy nginx configuration: missing NGINX_SERVER_IP environment variable\n";
+  });
 }
 
 void NginxPlugin::uninstall(const string& recipe_folder, Instance& instance, Sync::Stream& stream) const
 {
-  std::string nginx_server_ip = Crails::getenv("NGINX_SERVER_IP");
-
-  if (nginx_server_ip.length())
+  nginx_machine.open_ssh([&](Ssh::Session& ssh)
   {
-    Ssh::Session ssh;
-
-    ssh.should_accept_unknown_hosts(true);
-    ssh.connect(Recipe::remote_user, nginx_server_ip);
-    ssh.authentify_with_pubkey();
     stream << "rm " << nginx_site_path << '/' << instance.get_name() << '\n';
     ssh.exec("rm '" + nginx_site_path +  '/' + instance.get_name() + '\'', stream);
-  }
-  else
-    stream << "cannot remove nginx configuration: missing NGINX_SERVER_IP environment variable\n";
+  });
 }
