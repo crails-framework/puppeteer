@@ -3,7 +3,7 @@
 git clone https://github.com/Plaristote/crails.git
 cd crails
 
-git checkout ec7b29cb0018f2621e80bb1b24685f21692d8af2
+git checkout 510fe81b85fc66b19c7ab2c5c2095f72dfed7968
 
 mkdir build
 cd build

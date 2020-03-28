@@ -8,7 +8,7 @@ class OArchive;
 class IArchive;
 
 # pragma db object pointer(std::shared_ptr)
-class Build : public Model, public ModelData::Build
+class Build : public Model, public MetaRecord::Build
 {
   odb_instantiable()
 public:

@@ -10,7 +10,7 @@ namespace Ssh { class Session; }
 namespace Sync { class Task; }
 
 # pragma db object pointer(std::shared_ptr)
-class Instance : public Model, public ModelData::Instance
+class Instance : public Model, public MetaRecord::Instance
 {
   odb_instantiable()
 public:

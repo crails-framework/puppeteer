@@ -8,7 +8,7 @@ class OArchive;
 class IArchive;
 
 # pragma db object pointer(std::shared_ptr)
-class VariableSet : public Model, public ModelData::VariableSet
+class VariableSet : public Model, public MetaRecord::VariableSet
 {
   odb_instantiable()
 public:

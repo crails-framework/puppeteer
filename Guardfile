@@ -3,19 +3,21 @@ $: << "#{Dir.pwd}/scripts"
 $: << "#{Dir.pwd}"
 
 group :before_compile do
-  guard 'comet-html', source: 'app/comet', output: 'lib/comet/html', config: 'config/comet.json' do
-    watch(%r{app/comet/.+\.html$})
-  end
-
-  guard 'crails-models', input: ["app/data"], output: "lib",
-                  generators: [:edit_with_front, :data_with_front, :view, :destroy, :query, :archive] do
-    watch(%r{app/data/.+\.rb$})
+  guard 'metarecord',
+        input: ['app/data'],
+        output: 'lib',
+        generators: ['crails/destroy','crails/query','crails/view','comet/edit','comet/data','archive'] do
+    watch(%r{app/data/.+.rb$})
   end
 
   guard 'crails-odb', backends: [:pgsql],
     output:   "lib/odb",
     at_once:  true do
     watch(%r{app/models/.+.h(pp|xx)?$})
+  end
+
+  guard 'comet-html', source: 'app/comet', output: 'lib/comet/html', config: 'config/comet.json' do
+    watch(%r{app/comet/.+\.html$})
   end
 end
 

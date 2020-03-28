@@ -10,7 +10,7 @@ class IArchive;
 namespace Sync { class Task; }
 
 # pragma db object pointer(std::shared_ptr)
-class Backup : public Model, public ModelData::Backup
+class Backup : public Model, public MetaRecord::Backup
 {
   odb_instantiable()
 public:

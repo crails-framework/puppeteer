@@ -9,4 +9,5 @@ gem 'guard-sass'
 #gem 'coffee-script'
 gem 'uglifier'
 
-gem "comet-cpp", git: "https://github.com/crails-framework/comet.cpp.git"
+gem "comet-cpp",   git: "https://github.com/crails-framework/comet.cpp.git"
+gem "meta-record", git: "https://github.com/crails-framework/meta-record.git"

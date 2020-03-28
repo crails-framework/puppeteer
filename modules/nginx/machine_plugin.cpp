@@ -7,7 +7,7 @@ void MachineLetsencryptPlugin::upgrade(const Machine& machine, Sync::Stream& str
 {
   machine.open_ssh([&](Ssh::Session& ssh)
   {
-    Sync::Stream null_stream:
+    Sync::Stream null_stream;
     bool         has_certbot;
     string       command = "certbot renew -n";
 

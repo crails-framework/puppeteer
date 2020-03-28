@@ -10,7 +10,7 @@ class Instance;
 namespace Sync { class Task; class Stream; }
 
 # pragma db object pointer(std::shared_ptr)
-class Recipe : public Model, public ModelData::Recipe
+class Recipe : public Model, public MetaRecord::Recipe
 {
   odb_instantiable()
 public:
