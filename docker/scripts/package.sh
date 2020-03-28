@@ -23,7 +23,6 @@ mkdir -p "$lib_dir" "$bin_dir" "$public_dir"
 export CC=/usr/bin/cc
 export CCX=/usr/bin/c++
 mkdir -p "$build_dir" && cd "$build_dir"
-cmake_options="-DDEVELOPER_MODE=OFF"
 
 if test -s "$build_config" ; then
   cmake_module_options=`cat $build_config`
