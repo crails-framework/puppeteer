@@ -65,6 +65,7 @@ void Views::MachineShow::on_upgrade_clicked()
 {
   auto request = Http::Request::post(model->get_url() + "/upgrade");
 
+  task_runner.on_performing_action();
   console_container.toggle_class("hidden", false);
   view_container.toggle_class("performing-action", true);
   request->send().then([this, request]()
@@ -92,6 +93,7 @@ void Views::MachineShow::on_upgrade_task_progress(Comet::Object response)
   case Sync::Success:
   case Sync::Abort:
     view_container.toggle_class("performing-action", false);
+    task_runner.on_action_performed();
     break ;
   case Sync::Continue:
     break ;
