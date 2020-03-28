@@ -16,7 +16,7 @@ button {
   transition: all 100ms ease-in;
 }
 
-button.disabled {
+button.disabled, .performing-action button {
   pointer-events: none;
   filter: grayscale(1);
 }
