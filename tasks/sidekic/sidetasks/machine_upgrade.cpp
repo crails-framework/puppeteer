@@ -15,20 +15,24 @@ extern thread_local Sentry sentry;
 void machine_upgrade(Params& params)
 {
   ODB::Connection     database;
-  Sync::Task          sync_task(params["sidekic"]["task_uid"], 10);
+  Sync::Task          sync_task(params["sidekic"]["task_uid"], 4);
   shared_ptr<Machine> machine;
 
   if (database.find_one(machine, params["machine_id"].as<ODB::id_type>()))
   {
     Sync::Stream stream(sync_task);
 
+    sync_task.increment();
     machine->open_ssh([&](Ssh::Session& ssh)
     {
       ssh.exec("apt-get -y update",  stream);
+      sync_task.increment();
       ssh.exec("apt-get -y upgrade", stream);
+      sync_task.increment();
     });
     for (const auto plugin : Machine::plugins)
       plugin->upgrade(*machine, stream);
+    sync_task.increment();
   }
   else
     logger << Logger::Error << "Did not find machine " << params["build_id"].as<ODB::id_type>() << Logger::endl;
