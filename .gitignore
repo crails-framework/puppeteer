@@ -1,5 +1,7 @@
 Gemfile.lock
 build
+.comet-build
+.sass-cache
 .tmp
 .bundle
 
@@ -8,6 +10,9 @@ lib/
 .kdev
 *.kdev4
 .*.sw*
+
+docker/output
+docker/ruby
 
 tasks/odb_migrate/application-schema.cxx
 public/assets/application.js
