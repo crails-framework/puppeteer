@@ -56,12 +56,7 @@ void Instance::deploy(Sync::Task& task, const std::string& build_id)
 
 void Instance::open_ssh(std::function<void (Ssh::Session&)> callback)
 {
-  Ssh::Session ssh;
-
-  ssh.should_accept_unknown_hosts(true);
-  ssh.connect(Recipe::remote_user, get_machine()->get_ip());
-  ssh.authentify_with_pubkey();
-  callback(ssh);
+  get_machine()->open_ssh(callback);
 }
 
 void Instance::start(Sync::Task& task)

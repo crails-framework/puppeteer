@@ -6,6 +6,7 @@
 
 class OArchive;
 class IArchive;
+namespace Ssh { class Session; }
 
 # pragma db object pointer(std::shared_ptr)
 class Machine : public Model, public ModelData::Machine
@@ -28,6 +29,8 @@ public:
 #ifndef __CHEERP_CLIENT__
   void before_destroy();
   bool can_destroy() const;
+
+  void open_ssh(std::function<void (Ssh::Session&)> callback) const;
 #endif
 };
 
