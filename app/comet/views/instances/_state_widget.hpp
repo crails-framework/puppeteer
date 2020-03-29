@@ -8,6 +8,7 @@ class InstanceStateWidget : public HtmlTemplate::StateWidget, public TaskRunner
 {
   typedef std::shared_ptr<Front::Instance> ModelPtr;
   ModelPtr model;
+  bool state_fetched = false;
 public:
   InstanceStateWidget();
 
@@ -16,9 +17,9 @@ public:
   void set_model(ModelPtr value);
   void fetch_state();
 
-  bool is_running() const { return model ? model->get_running() : false ; }
-  bool is_stopped() const { return !is_running(); }
-  bool is_dirty() const { return model ? model->get_state() == Instance::Dirty : false; }
+  bool is_running() const { return state_fetched ? model->get_running() : false ; }
+  bool is_stopped() const { return state_fetched ? !is_running() : false; }
+  bool is_dirty()   const { return state_fetched ? model->get_state() == Instance::Dirty : false; }
 
   void on_start_clicked();
   void on_stop_clicked();

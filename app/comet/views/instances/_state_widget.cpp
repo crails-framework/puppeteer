@@ -107,5 +107,6 @@ void InstanceStateWidget::fetch_state()
 
 void InstanceStateWidget::on_state_fetched()
 {
+  state_fetched = true;
   signaler.trigger("state-changed");
 }

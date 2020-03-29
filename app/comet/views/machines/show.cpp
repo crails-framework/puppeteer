@@ -96,7 +96,7 @@ void Views::MachineShow::on_upgrade_task_progress(Comet::Object response)
     view_container.toggle_class("performing-action", false);
     task_runner.on_action_performed();
     model->set_last_upgrade(chrono::system_clock::to_time_t(chrono::system_clock::now()));
-    signal.trigger("upgraded");
+    signaler.trigger("upgraded");
     break ;
   case Sync::Continue:
     break ;
