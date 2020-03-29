@@ -36,7 +36,8 @@
               <tr>
                 <td>Upgrade</td>
                 <td>
-                  <span class="itme" text.bind='root->get_model() ? get_date_string(root->get_model()->get_last_upgrade()) : "" & signal:upgraded'>
+                  <span class="item" text.bind='root->get_model() ? get_date_string(root->get_model()->get_last_upgrade()) : "" & signal:upgraded'>
+                  </span>
                   <br/>
                   <button class="au-btn au-btn-icon au-btn--blue au-btn--small"
 			  click.trigger="root->on_upgrade_clicked()">
