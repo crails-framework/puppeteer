@@ -23,12 +23,14 @@ mkdir -p "$lib_dir" "$bin_dir" "$public_dir"
 export CC=/usr/bin/cc
 export CCX=/usr/bin/c++
 mkdir -p "$build_dir" && cd "$build_dir"
+cmake_options="-DDEVELOPER_MODE=OFF"
 
 if test -s "$build_config" ; then
   cmake_module_options=`cat $build_config`
   cmake_options="$cmake_options $cmake_module_options"
 fi
 
+echo "+ cmake \"$backend_dir\" $cmake_options"
 cmake "$backend_dir" $cmake_options
 
 # Configure crails-guard
@@ -38,12 +40,13 @@ export CRAILS_RUBY_BUNDLE_PATH="$CRAILS_BUILD_PATH"
 
 # BEGIN Build server
 cd "$backend_dir"
+echo "+ crails compile"
 crails compile before_compile \
                compile \
                tests
 
 retval=$?
-if [[ $retval != 0 ]] ; then
+if [ $retval != 0 ] ; then
   echo "Server build failed ($retval); aborting package.sh"
   exit -1
 else
@@ -53,6 +56,7 @@ fi
 
 # Build faye
 cd "$faye_dir"
+echo "+ preparing faye"
 npm install
 
 # BEGIN Package application

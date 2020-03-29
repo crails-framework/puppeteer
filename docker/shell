@@ -3,9 +3,9 @@
 machine_name="puppeteer_dock"
 docker_build_options="-q"
 docker_options="-it"
-command=""
+command="bash"
 
-while getopts "vac:" option
+while getopts "vac:zh" option
 do
   case $option in
     v)
@@ -16,6 +16,14 @@ do
       ;;
     c)
       command="$OPTARG"
+      ;;
+    h)
+      echo "Usage: $0 [OPTIONS]"
+      echo "  -v        Verbose docker build (quiet by default)"
+      echo "  -a        Disable interactive mode. This option must be set when the command isn't launched from an interactive shell"
+      echo "  -c [CMD]  Will run 'CMD' instead of opening a shell"
+      echo "  -z        Disable automatic update of crails"
+      exit 0
       ;;
   esac
 done
@@ -28,4 +36,4 @@ docker run --net=host $docker_options --rm \
   -v "`pwd`:/opt/webapp" \
   -v "`pwd`/docker/output:/opt/webapp/build" \
   -v "`pwd`/docker/.bundle:/opt/webapp/.bundle" \
-  "$machine_name" bash $command
+  "$machine_name" $command
