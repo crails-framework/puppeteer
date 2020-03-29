@@ -1,4 +1,4 @@
-Model.add "Machine", ["Machine", "app/models/machine.hpp"] do
+Model.add "Machine", hpp: "app/models/machine.hpp" do
   resource_name "machine"
   order_by 'name'
 

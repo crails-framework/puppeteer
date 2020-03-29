@@ -1,4 +1,4 @@
-Model.add "Credential", ["Credential", "app/models/credential.hpp"] do
+Model.add "Credential", hpp: "app/models/credential.hpp" do
   resource_name "credential"
   order_by "name"
 

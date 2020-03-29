@@ -1,8 +1,8 @@
 add_include "app/models/instance.hpp"
-add_include "app/models/recipe.hpp", true
-add_include "app/models/credential.hpp", true
+add_include "app/models/recipe.hpp",     include_in_header: true
+add_include "app/models/credential.hpp", include_in_header: true
 
-Model.add "Build", ["Build", "app/models/build.hpp"] do
+Model.add "Build", hpp: "app/models/build.hpp" do
   resource_name "build"
   order_by 'name'
 

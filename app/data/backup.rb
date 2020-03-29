@@ -1,7 +1,7 @@
-add_include "app/models/instance.hpp", true
+add_include "app/models/instance.hpp", include_in_header: true
 add_include "app/models/backup.hpp"
 
-Model.add "Backup", ["Backup", "app/models/backup.hpp"] do
+Model.add "Backup", hpp: "app/models/backup.hpp" do
   resource_name "backup"
 
   visibility :protected

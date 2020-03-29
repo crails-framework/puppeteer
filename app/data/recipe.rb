@@ -1,6 +1,6 @@
-add_include "app/models/credential.hpp", true
+add_include "app/models/credential.hpp", include_in_header: true
 
-Model.add "Recipe", ["Recipe", "app/models/recipe.hpp"] do
+Model.add "Recipe", hpp: "app/models/recipe.hpp" do
   resource_name "recipe"
   order_by 'name'
 

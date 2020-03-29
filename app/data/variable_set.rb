@@ -1,4 +1,4 @@
-Model.add "VariableSet", ["VariableSet", "app/models/variable_set.hpp"] do
+Model.add "VariableSet", hpp: "app/models/variable_set.hpp" do
   resource_name "variable_set"
 
   visibility :protected

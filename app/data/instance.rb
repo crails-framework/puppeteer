@@ -1,8 +1,8 @@
-add_include "app/models/machine.hpp", true
-add_include "app/models/build.hpp", true
+add_include "app/models/machine.hpp", include_in_header: true
+add_include "app/models/build.hpp",   include_in_header: true
 add_include "app/models/instance.hpp"
 
-Model.add "Instance", ["Instance", "app/models/instance.hpp"] do
+Model.add "Instance", hpp: "app/models/instance.hpp" do
   resource_name "instance"
   order_by 'name'
 
