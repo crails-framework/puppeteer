@@ -33,12 +33,11 @@
                 <td>Memory usage</td>
                 <td text.bind="root->memory & signal:state-fetched"></td>
               </tr>
-              <tr>
+              <tr class="machine-upgrade">
                 <td>Upgrade</td>
                 <td>
-                  <span class="item" text.bind='root->get_model() ? get_date_string(root->get_model()->get_last_upgrade()) : "" & signal:upgraded'>
+                  <span class="time" text.bind='root->get_model() ? get_date_string(root->get_model()->get_last_upgrade()) : "" & signal:upgraded'>
                   </span>
-                  <br/>
                   <button class="au-btn au-btn-icon au-btn--blue au-btn--small"
 			  click.trigger="root->on_upgrade_clicked()">
                     <i class="fa fa-sync"></i>

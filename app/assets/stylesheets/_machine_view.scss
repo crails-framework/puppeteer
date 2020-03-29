@@ -1,0 +1,15 @@
+tr.machine-upgrade {
+  td:last-of-type {
+    display: flex;
+    flex-flow: row;
+
+    @media (max-width: 640px) {
+      flex-flow: column;
+    }
+
+    .time {
+      align-self: center;
+      flex-grow: 2;
+    }
+  }
+}
