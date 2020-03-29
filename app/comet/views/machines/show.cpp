@@ -1,6 +1,7 @@
 #include <comet/http.hpp>
 #include <crails/archive.hpp>
 #include <crails/utils/string.hpp>
+#include <chrono>
 #include "show.hpp"
 #include "app/comet/sync_task.hpp"
 
@@ -94,6 +95,8 @@ void Views::MachineShow::on_upgrade_task_progress(Comet::Object response)
   case Sync::Abort:
     view_container.toggle_class("performing-action", false);
     task_runner.on_action_performed();
+    model->set_last_upgrade(chrono::system_clock::to_time_t(chrono::system_clock::now()));
+    signal.trigger("upgraded");
     break ;
   case Sync::Continue:
     break ;

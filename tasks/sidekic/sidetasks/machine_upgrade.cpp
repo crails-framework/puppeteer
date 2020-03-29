@@ -6,6 +6,7 @@
 #include <crails/sentry.hpp>
 #include <crails/getenv.hpp>
 #include "app/ssh/session.hpp"
+#include <chrono>
 
 using namespace std;
 using namespace Crails;
@@ -33,6 +34,9 @@ void machine_upgrade(Params& params)
     for (const auto plugin : Machine::plugins)
       plugin->upgrade(*machine, stream);
     sync_task.increment();
+    machine->set_last_upgrade(chrono::system_clock::to_time_t(chrono::system_clock::now()));
+    database.save(*machine);
+    database.commit();
   }
   else
     logger << Logger::Error << "Did not find machine " << params["build_id"].as<ODB::id_type>() << Logger::endl;

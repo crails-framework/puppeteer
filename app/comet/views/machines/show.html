@@ -2,6 +2,7 @@
   <head>
     <include src="app/comet/views/instances/_console_output.hpp" require="ConsoleOutput" />
     <include src="app/comet/models/machine.hpp" />
+    <include src="app/comet/time.hpp" />
     <attribute type="std::string" name="operating_system" />
     <attribute type="std::string" name="hdd_space" />
     <attribute type="std::string" name="memory" />
@@ -35,6 +36,8 @@
               <tr>
                 <td>Upgrade</td>
                 <td>
+                  <span class="itme" text.bind='root->get_model() ? get_date_string(root->get_model()->get_last_upgrade()) : "" & signal:upgraded'>
+                  <br/>
                   <button class="au-btn au-btn-icon au-btn--blue au-btn--small"
 			  click.trigger="root->on_upgrade_clicked()">
                     <i class="fa fa-sync"></i>

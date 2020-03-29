@@ -5,4 +5,5 @@ Model.add "Machine", ["Machine", "app/models/machine.hpp"] do
   visibility :protected
   property 'std::string', 'name'
   property 'std::string', 'ip'
+  property 'std::time_t', 'last_upgrade', default: 0
 end

@@ -4,6 +4,7 @@
 # include "app/ssh/session.hpp"
 # include "app/recipe_runners/script_runner.hpp"
 # include <crails/logger.hpp>
+# include <chrono>
 #endif
 #include "variable_list.hpp"
 #include "recipe.hpp"
@@ -65,6 +66,7 @@ void Instance::start(Sync::Task& task)
   auto recipe = build->get_recipe();
 
   recipe->exec_script("start", *this, task);
+  last_start = chrono::system_clock::to_time_t(chrono::system_clock::now()); 
 }
 
 void Instance::stop(Sync::Task& task)

@@ -16,6 +16,8 @@ void MachineLetsencryptPlugin::upgrade(const Machine& machine, Sync::Stream& str
     {
       stream << "\n# Renewing Let's Encrypt certificates\n";
       ssh.exec(command, stream);
+      stream << "\n# Reloading nginx\n";
+      ssh.exec("systemctl reload nginx", stream);
     }
   });
 }

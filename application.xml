@@ -1,4 +1,10 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="16">
+    <alter-table name="Machine">
+      <add-column name="last_upgrade" type="BIGINT" null="false"/>
+    </alter-table>
+  </changeset>
+
   <changeset version="15">
     <alter-table name="Backup">
       <add-column name="max_history" type="SMALLINT" null="false"/>
