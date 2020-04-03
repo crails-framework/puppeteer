@@ -49,7 +49,7 @@
             <tbody slot="tbody">
               <tr repeat.for="build of [std::vector<Comet::Object>]root->get_builds() & signal:builds-fetched">
                 <td text.bind='(std::string)(build["number"])'></td>
-		<td text.bind='root->get_backup_date_string(build["timestamp"])'></td>
+                <td text.bind='root->get_backup_date_string(build["timestamp"])'></td>
                 <td style="text-align:right">
                   <div class="btn-group">
                     <button class="au-btn au-btn-icon au-btn--blue au-btn--small"

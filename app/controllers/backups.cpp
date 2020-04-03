@@ -2,6 +2,7 @@
 #include "backups.hpp"
 #include "app/jenkins/jenkins.hpp"
 #include <boost/filesystem.hpp>
+#include <crails/sidekic.hpp>
 
 using namespace std;
 using namespace Crails;
@@ -104,7 +105,17 @@ void BackupController::builds()
 
 void BackupController::restore()
 {
-  throw runtime_error("not implemented");
+  require_model();
+  if (model)
+  {
+    DataTree    task_params;
+    std::string task_uid;
+
+    task_params["backup_id"] = model->get_id();
+    task_params["build_name"] = params["number"].as<string>();
+    task_uid = Sidekic::async_task("restore", task_params.as_data());
+    Crails::Controller::render(TEXT, task_uid);
+  }
 }
 
 void BackupController::remove_build()

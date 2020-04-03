@@ -3,12 +3,13 @@
 #include <crails/utils/string.hpp>
 #include <chrono>
 #include "show.hpp"
-#include "app/comet/sync_task.hpp"
+#include "app/comet/views/resources/elements/async_tasks.hpp"
 
 using namespace std;
 using namespace Comet;
 
 extern Sync::Tasks* sync_tasks;
+extern AsyncTasksWidget* async_tasks_widget;
 
 Views::MachineShow::MachineShow()
 {
@@ -77,10 +78,12 @@ void Views::MachineShow::on_upgrade_clicked()
     {
       string task_uid = response->get_response_text();
 
-      sync_tasks->listen_to(
-        task_uid,
-        std::bind(&MachineShow::on_upgrade_task_progress, this, std::placeholders::_1)
-      );
+      task_runner.task_listener_id =
+        sync_tasks->listen_to(
+          task_uid,
+          std::bind(&MachineShow::on_upgrade_task_progress, this, std::placeholders::_1)
+        );
+      async_tasks_widget->add_task("Upgrading " + model->get_name(), task_uid);
     }
     else
       view_container.toggle_class("performing-action", false);

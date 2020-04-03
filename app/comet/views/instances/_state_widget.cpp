@@ -36,7 +36,8 @@ void InstanceStateWidget::on_start_clicked()
     auto task_uid = response->get_response_text();
 
     on_performing_action();
-    sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_start_task_progress, this, std::placeholders::_1));
+    task_listener_id =
+      sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_start_task_progress, this, std::placeholders::_1));
   })._catch([]()
   {
     std::cout << "RESTART FAILED TO HAPPEN" << std::endl;
@@ -54,7 +55,8 @@ void InstanceStateWidget::on_stop_clicked()
     auto task_uid = response->get_response_text();
 
     on_performing_action();
-    sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_stop_task_progress, this, std::placeholders::_1));
+    task_listener_id =
+      sync_tasks->listen_to(task_uid, std::bind(&InstanceStateWidget::on_stop_task_progress, this, std::placeholders::_1));
   })._catch([]()
   {
     std::cout << "STOP FAILED TO HAPPEN" << std::endl;

@@ -3,6 +3,7 @@
 
 # include "_console_output.hpp"
 # include "html/views/resources/elements/progress_bar.hpp"
+# include "app/comet/sync_task.hpp"
 
 namespace Sync
 {
@@ -16,11 +17,14 @@ namespace Sync
 
 struct TaskRunner
 {
+  virtual ~TaskRunner();
+
   Comet::Signal<bool> performing_action_signal;
 
   ConsoleOutput*             console_output = nullptr;
   HtmlTemplate::ProgressBar* progress_bar   = nullptr;
   bool performing_action = false;
+  Sync::Tasks::ListenerId task_listener_id;
 
   Sync::TaskState on_task_progress(Comet::Object);
   virtual void on_performing_action();

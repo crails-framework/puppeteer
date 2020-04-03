@@ -4,12 +4,15 @@
 #include "html/views/backups/delete_backup_version.hpp"
 #include "html/views/backups/restore.hpp"
 #include "app/comet/views/resources/elements/breadcrumbs.hpp"
+#include "app/comet/views/resources/elements/async_tasks.hpp"
 #include "app/comet/time.hpp"
 #include <ctime>
 #include <iomanip>
 
 using namespace std;
 using namespace Comet;
+
+extern AsyncTasksWidget* async_tasks_widget;
 
 void Views::BackupShow::initialize_breadcrumbs()
 {
@@ -56,11 +59,26 @@ void Views::BackupShow::on_restore_build_clicked(string build_number)
 {
   auto modal = Modal<HtmlTemplate::BackupRestore>::make("Restoring from backup " + build_number);
 
-  modal->open().then([modal, build_number]()
+  modal->open().then([this, modal, build_number]()
   {
     if (modal->ok())
     {
-      std::cout << "Backup restore not implemented yet" << std::endl;
+      auto request = Http::Request::post(model->get_url() + "/restore/" + build_number);
+
+      request->send().then([request, build_number]()
+      {
+        auto response = request->get_response();
+
+	if (response->ok())
+	{
+          string task_uid = response->get_response_text();
+
+          std::cout << "Successfully triggered build restore" << std::endl;
+          async_tasks_widget->add_task("Restoring backup", task_uid);
+	}
+	else
+	  std::cout << "Failed to trigger build restore" << std::endl;
+      });
     }
   });
 }

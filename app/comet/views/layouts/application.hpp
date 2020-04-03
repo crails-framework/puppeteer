@@ -6,6 +6,9 @@
 class ApplicationLayout : public HtmlTemplate::Application
 {
 public:
+  ApplicationLayout();
+  ~ApplicationLayout();
+
   inline void reset_search_input()
   {
     search_input.reset();

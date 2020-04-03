@@ -2,6 +2,7 @@
   <head>
     <attribute type="float" name="progress" value="0.f" />
     <attribute type="std::string" name="label" />
+    <attribute type="std::string" name="theme" value='"info"' />
     <script>
       void set_active(bool active)
       {
@@ -17,17 +18,22 @@
         }
       }
 
-      std::string get_style()
+      std::string get_style() const
       {
         std::stringstream stream;
 
         stream << "width:" << (progress * 100) << '%';
         return stream.str();
       }
+
+      std::string get_classes() const
+      {
+        return "progress-bar progress-bar-striped progress-bar-animated bg-" + theme;
+      }
     </script>
   </head>
   <body class="progress mb-3">
-    <div class="progress-bar bg-info progress-bar-striped progress-bar-animated"
+    <div class.bind="get_classes()"
          style.bind="get_style() & signal:progress-changed"
          ref="el">
       <span text.bind="label & signal:progress-changed"></span>

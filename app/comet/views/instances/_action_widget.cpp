@@ -3,6 +3,7 @@
 #include <comet/http.hpp>
 #include <comet/lexical_cast.hpp>
 #include "app/comet/collections/builds.hpp"
+#include "app/comet/views/resources/elements/async_tasks.hpp"
 #include <iostream>
 
 using namespace Comet;
@@ -10,6 +11,7 @@ using namespace Comet;
 using namespace std;
 
 extern Sync::Tasks* sync_tasks;
+extern AsyncTasksWidget* async_tasks_widget;
 
 InstanceActionWidget::InstanceActionWidget()
 {
@@ -174,7 +176,9 @@ void InstanceActionWidget::on_uninstall_start(const Comet::Http::Response& respo
 
   progress_bar->set_label("Uninstalling...");
   progress_bar->update_progress(0);
-  sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_uninstall_task_progress, this, std::placeholders::_1));
+  task_listener_id =
+    sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_uninstall_task_progress, this, std::placeholders::_1));
+  async_tasks_widget->add_task("Uninstalling " + model->get_name(), task_uid);
 }
 
 void InstanceActionWidget::on_uninstall_task_progress(Comet::Object response)
@@ -197,7 +201,9 @@ void InstanceActionWidget::on_deploy_start(const Comet::Http::Response& response
 
   progress_bar->set_label("Deployment...");
   progress_bar->update_progress(0);
-  sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_deploy_task_progress, this, std::placeholders::_1));
+  task_listener_id =
+    sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_deploy_task_progress, this, std::placeholders::_1));
+  async_tasks_widget->add_task("Deploying " + model->get_name(), task_uid);
 }
 
 void InstanceActionWidget::on_deploy_failure(const Comet::Http::Response&)
@@ -227,7 +233,9 @@ void InstanceActionWidget::on_configure_start(const Comet::Http::Response& respo
 
   progress_bar->set_label("Configure...");
   progress_bar->update_progress(0);
-  sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_configure_task_progress, this, std::placeholders::_1));
+  task_listener_id =
+    sync_tasks->listen_to(task_uid, std::bind(&InstanceActionWidget::on_configure_task_progress, this, std::placeholders::_1));
+  async_tasks_widget->add_task("Configuring " + model->get_name(), task_uid);
 }
 
 void InstanceActionWidget::on_configure_task_progress(Comet::Object response)

@@ -3,6 +3,12 @@
 
 extern Sync::Tasks* sync_tasks;
 
+TaskRunner::~TaskRunner()
+{
+  if (performing_action)
+    sync_tasks->stop_listening(task_listener_id);
+}
+
 void TaskRunner::on_performing_action()
 {
   performing_action = true;
@@ -45,7 +51,7 @@ Sync::TaskState TaskRunner::on_task_progress(Comet::Object response)
     if (status == "abort")
     {
       if (response->hasOwnProperty("id"))
-        sync_tasks->stop_listening((std::string)(response["id"]));
+        sync_tasks->stop_listening(task_listener_id);
       on_action_performed();
       console_output->append_final_line("/!\\ Task aborted");
       return Sync::Abort;
@@ -53,7 +59,7 @@ Sync::TaskState TaskRunner::on_task_progress(Comet::Object response)
     else if (progress == 1)
     {
       if (response->hasOwnProperty("id"))
-        sync_tasks->stop_listening((std::string)(response["id"]));
+        sync_tasks->stop_listening(task_listener_id);
       on_action_performed();
       console_output->append_final_line("(!) Task successfully completed");
       return Sync::Success;

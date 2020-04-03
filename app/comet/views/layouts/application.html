@@ -2,6 +2,7 @@
   <head>
     <include src="app/comet/views/resources/menu_entry.hpp" />
     <include src="app/comet/views/resources/elements/search_input.hpp" require="::SearchInput" />
+    <include src="app/comet/views/resources/elements/async_tasks.hpp" require="::AsyncTasksWidget" />
     <include src="app/comet/views/resources/elements/breadcrumbs.hpp" require="::Breadcrumbs" />
     <script>
       const std::vector<MenuEntry> menu_entries = {
@@ -35,6 +36,7 @@
               </li>
             </ul>
           </nav>
+          <async-tasks-widget ref="tasks" />
         </div>
       </aside>
       <!-- END MENU SIDEBAR-->

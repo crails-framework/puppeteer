@@ -7,41 +7,21 @@ namespace Sync
 {
   class Tasks
   {
+    typedef std::function<void (Comet::Object)> Callback;
+    typedef std::pair<std::string, Callback>    Listener;
   public:
-    Tasks(Sync::Faye& _faye) : faye(_faye)
-    {
-      faye.subscribe("/tasks", std::bind(&Tasks::on_receive, this, std::placeholders::_1));
-    }
+    typedef std::list<Listener>::iterator ListenerId;
 
-    void listen_to(const std::string& id, std::function<void (Comet::Object)> callback)
-    {
-      watchers.insert(std::pair<std::string, std::function<void (Comet::Object)> >(id, callback));
-    }
+    Tasks(Sync::Faye&);
 
-    void stop_listening(const std::string& id)
-    {
-      watchers.erase(id);
-    }
+    ListenerId listen_to(const std::string& id, Callback callback);
+    void       stop_listening(ListenerId);
 
   private:
-    void on_receive(Comet::Object data)
-    {
-      Comet::ObjectImpl<client::String> data_string(*data);
-      auto response = Comet::Object::from_json(*data_string);
-      std::string task_id = response["id"];
-
-      for (const auto& entry : watchers)
-      {
-        if (entry.first == task_id)
-        {
-          entry.second(response);
-          break ;
-        }
-      }
-    }
+    void on_receive(Comet::Object data);
 
     Sync::Faye& faye;
-    std::map<std::string, std::function<void (Comet::Object)> > watchers;
+    std::list<Listener> watchers;
   };
 }
 
