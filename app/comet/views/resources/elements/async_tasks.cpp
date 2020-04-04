@@ -59,11 +59,14 @@ void AsyncTasksWidget::on_task_progress(std::string uid, Comet::Object response)
       (const client::String*)(*response["progress"])
     );
 
+    std::cout << "[AsyncTasksWidget][" << uid << "] progress: " << (progress * 100) << '%' << std::endl;
     progress_bar.update_progress(progress);
     if (status == "abort")
       on_task_done(uid, false);
     else if (progress == 1)
       on_task_done(uid, true);
+    else
+      progress_bar.trigger_binding_updates();
   }
 }
 
