@@ -7,7 +7,6 @@
 
 class InstanceActionWidget : public HtmlTemplate::ActionWidget, public TaskRunner, public Comet::Listener
 {
-    bool performing_action = false;
     std::string deploying_build;
   public:
     InstanceActionWidget();

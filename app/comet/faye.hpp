@@ -30,6 +30,9 @@ namespace Sync
       client->disable("websocket");
     }
 
+    Faye(const Faye&) = delete;
+    Faye& operator=(const Faye&) = delete;
+
     void subscribe(const std::string& path, std::function<void (Comet::Object)> callback)
     {
       client->subscribe(path.c_str(), cheerp::Callback([callback](client::Object* raw_object)
