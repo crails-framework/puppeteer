@@ -24,16 +24,20 @@ int Channel::exec(const string& command, Sync::Stream& output)
 
       if (bytes_read > 0)
       {
+        std::cout << "Channel: reading " << bytes_read << " bytes -> `";
         for (int i = 0 ; i < bytes_read ; ++i)
           output << buffer[i];
-        std::cout << buffer << std::endl;
+        std::cout << '`' << std::endl;
       }
-      is_eof = bytes_read == 0 || ssh_channel_is_eof(handle);
+      else
+        std::cout << "Channel: ssh_channel_read returned " << bytes_read << std::endl;
+      is_eof = bytes_read <= 0 || ssh_channel_is_eof(handle);
     }
     return ssh_channel_get_exit_status(handle);
   }
   else
     logger << Logger::Error << "Ssh::Channel: ssh_channel_request_exec returned with status " << rc << Logger::endl;
+  std::cout << "Ssh::Channel ssh_channel_request_exect ended" << std::endl;
   return -1;
 }
 
