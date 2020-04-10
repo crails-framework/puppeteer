@@ -7,7 +7,7 @@
 
 using namespace std;
 
-struct EmptyPlugin : public Machine::Plugin
+struct EmptyMachinePlugin : public Machine::Plugin
 {
   void upgrade(const Machine&, Sync::Stream&) const { }
 };
@@ -16,5 +16,5 @@ const vector<shared_ptr<Machine::Plugin> > Machine::plugins = {
 #ifdef WITH_NGINX_PLUGIN
   make_shared<MachineLetsencryptPlugin>(),
 #endif
-  make_shared<EmptyPlugin>()
+  make_shared<EmptyMachinePlugin>()
 };
