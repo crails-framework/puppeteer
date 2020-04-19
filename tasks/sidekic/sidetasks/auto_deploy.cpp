@@ -50,6 +50,7 @@ void auto_deploy(Params& params)
         string     task_uid = generate_random_string("abcdefghijklmnopqrstuvwxyz", 10);
         Sync::Task sync_task(task_uid, 10);
 
+        logger << Logger::Info << "(!) Deploying " << build->get_name() << ':' << last_build << " for instance " << instance.get_name() << Logger::endl;
         instance.set_running_task("deploy_build:" + task_uid);
         database.save(instance);
         database.commit();
@@ -58,12 +59,15 @@ void auto_deploy(Params& params)
         database.save(instance);
         database.commit();
 
+        logger << Logger::Info << "(!) Restarting instance " << instance.get_name() << Logger::endl;
         instance.stop(sync_task);
         instance.start(sync_task);
 
+        logger << Logger::Info << "(!) Instaance restarted. Updating status." << Logger::endl;
         instance.set_running_task("");
         database.save(instance);
         database.commit();
+        logger << Logger::Info << "(!) Finished deploying build for " << instance.get_name() << Logger::endl;
       }
       catch (const std::exception& e)
       {
@@ -80,6 +84,7 @@ void auto_deploy(Params& params)
         database.commit();
       }
     }
+    logger << Logger::Info << "Finished auto-deploying build " << build->get_name() << Logger::endl;
   }
   else
     logger << Logger::Error << "Did not find build " << params["build_id"].as<ODB::id_type>() << Logger::endl;
