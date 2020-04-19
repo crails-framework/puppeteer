@@ -63,7 +63,7 @@ void auto_deploy(Params& params)
         instance.stop(sync_task);
         instance.start(sync_task);
 
-        logger << Logger::Info << "(!) Instaance restarted. Updating status." << Logger::endl;
+        logger << Logger::Info << "(!) Instance restarted. Updating status." << Logger::endl;
         instance.set_running_task("");
         database.save(instance);
         database.commit();

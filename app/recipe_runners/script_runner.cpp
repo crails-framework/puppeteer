@@ -45,6 +45,7 @@ int ScriptRunner::run_script(const string& script_name)
   command_stream << "cd '" << get_remote_folder() << "' && " << "./" << script_name<< ".sh 2>&1";
 
   require_remote_folder();
+  logger << Logger::Info << "Executing script " << script_name << Logger::endl;
   status = ssh.exec(command_stream.str(), stream);
   if (status && throw_on_failure_status)
   {
@@ -53,6 +54,7 @@ int ScriptRunner::run_script(const string& script_name)
     throw runtime_error(err_stream.str());
   }
   task.increment();
+  logger << Logger::Info << "Successfully ran script " << script_name << Logger::endl;
   return status;
 }
 

@@ -16,8 +16,9 @@ int Channel::exec(const string& command, Sync::Stream& output)
   {
     bool is_eof = ssh_channel_is_eof(handle);
 
-    std::cout << "Ssh::Channel ssh_channel_request_exec successfull" << std::endl;
-    std::cout << "Ssh::Channel running command `" << command << '`' << std::endl;
+    logger << Logger::Info;
+    logger << "Ssh::Channel ssh_channel_request_exec successfull" << Logger::endl;
+    logger << "Ssh::Channel running command `" << command << '`' << Logger::endl;
     while (!is_eof)
     {
       bytes_read = ssh_channel_read_timeout(handle, buffer, sizeof(buffer), 0, timeout_ms);
@@ -30,14 +31,15 @@ int Channel::exec(const string& command, Sync::Stream& output)
         std::cout << '`' << std::endl;
       }
       else
-        std::cout << "Channel: ssh_channel_read returned " << bytes_read << std::endl;
+        logger << "Channel: ssh_channel_read returned " << bytes_read << Logger::endl;
       is_eof = bytes_read <= 0 || ssh_channel_is_eof(handle);
     }
+    logger << "Ssh::Channel ssh_channel_request_exect ended" << Logger::endl;
     return ssh_channel_get_exit_status(handle);
   }
   else
     logger << Logger::Error << "Ssh::Channel: ssh_channel_request_exec returned with status " << rc << Logger::endl;
-  std::cout << "Ssh::Channel ssh_channel_request_exect ended" << std::endl;
+  logger << Logger::Info << "Ssh::Channel ssh_channel_request_exect ended" << Logger::endl;
   return -1;
 }
 
