@@ -13,6 +13,7 @@ namespace Ssh
   {
     friend class Session;
     ssh_channel handle;
+    int timeout_ms;
   public:
     ~Channel();
 

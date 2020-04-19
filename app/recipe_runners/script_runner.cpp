@@ -1,6 +1,7 @@
 #include "script_runner.hpp"
 #include "app/models/variable_set.hpp"
 #include <crails/logger.hpp>
+#define RUN_SCRIPT_TIMEOUT 120000
 
 using namespace std;
 using namespace Crails;
@@ -46,7 +47,7 @@ int ScriptRunner::run_script(const string& script_name)
 
   require_remote_folder();
   logger << Logger::Info << "Executing script " << script_name << Logger::endl;
-  status = ssh.exec(command_stream.str(), stream);
+  status = ssh.exec(command_stream.str(), stream, RUN_SCRIPT_TIMEOUT);
   if (status && throw_on_failure_status)
   {
     stringstream err_stream;

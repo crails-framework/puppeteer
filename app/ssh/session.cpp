@@ -42,11 +42,12 @@ void Session::authentify_with_pubkey(const string& password)
   }
 }
 
-shared_ptr<Channel> Session::make_channel()
+shared_ptr<Channel> Session::make_channel(int read_timeout)
 {
   auto channel = make_shared<Channel>();
 
   channel->handle = ssh_channel_new(handle);
+  channel->timeout_ms = read_timeout;
   if (channel == NULL)
   {
     std::cout << "Failed to create SSH channel." << std::endl;
@@ -74,9 +75,9 @@ void Session::raise(const string& message)
   throw std::runtime_error(stream.str().c_str());
 }
 
-int Session::exec(const string& command, Sync::Stream& output)
+int Session::exec(const string& command, Sync::Stream& output, int read_timeout)
 {
-  return make_channel()->exec(command, output);
+  return make_channel(read_timeout)->exec(command, output);
 }
 
 std::string Session::get_error()

@@ -5,6 +5,10 @@
 #include <memory>
 #include "stream.hpp"
 
+#ifndef DEFAULT_SSH_READ_TIMEOUT
+# define DEFAULT_SSH_READ_TIMEOUT 1000
+#endif
+
 namespace Ssh
 {
   class Channel;
@@ -25,11 +29,11 @@ namespace Ssh
 
     void connect(const std::string& user, const std::string& ip, const std::string& port = "22");
     void authentify_with_pubkey(const std::string& password = "");
-    std::shared_ptr<Channel> make_channel();
+    std::shared_ptr<Channel> make_channel(int read_timeout = DEFAULT_SSH_READ_TIMEOUT);
     std::shared_ptr<Scp>     make_scp_session(const std::string& path, int mode);
     void raise(const std::string& message);
 
-    int exec(const std::string& command, Sync::Stream& output);
+    int exec(const std::string& command, Sync::Stream& output, int read_timeout = DEFAULT_SSH_READ_TIMEOUT);
 
     std::string get_error();
 
