@@ -6,7 +6,7 @@
 #include "stream.hpp"
 
 #ifndef DEFAULT_SSH_READ_TIMEOUT
-# define DEFAULT_SSH_READ_TIMEOUT 1000
+# define DEFAULT_SSH_READ_TIMEOUT 30000
 #endif
 
 namespace Ssh
