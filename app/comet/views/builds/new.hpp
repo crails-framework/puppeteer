@@ -26,6 +26,7 @@ namespace Views
     unsigned long get_build_credentials_id() const { return model ? model->get_credential_id() : ODB_NULL_ID; }
     unsigned long get_build_recipe_id() const { return model ? model->get_recipe_id() : ODB_NULL_ID; }
     std::string   get_build_variables() const { return model ? model->get_variables() : ""; }
+    unsigned int  get_build_history_size() const { return model ? model->get_history_size() : 50; }
 
     void update_model_attributes();
 

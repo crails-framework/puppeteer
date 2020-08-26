@@ -4,9 +4,11 @@
 # include "instance.hpp"
 # include <crails/password.hpp>
 # include <crails/getenv.hpp>
+# include <crails/logger.hpp>
 # include <crails/read_file.hpp>
 # include "app/jenkins/jenkins.hpp"
 # include <boost/filesystem.hpp>
+# include <boost/lexical_cast.hpp>
 # include <crails/utils/string.hpp>
 #endif
 #include "variable_list.hpp"
@@ -101,6 +103,21 @@ void Build::remove_build(unsigned int build_id)
   tarball_path = tarball_path_stream.str();
   if (boost::filesystem::exists(tarball_path))
     boost::filesystem::remove(tarball_path);
+}
+
+void Build::clear_build_history() const
+{
+  using namespace Crails;
+  auto build_list = get_available_builds();
+
+  while (build_list.size() > get_history_size())
+  {
+    const string& id_str   = *(build_list.rbegin());
+    unsigned int  build_id = boost::lexical_cast<unsigned int>(id_str);
+
+    remove_build(build_id);
+    build_list.pop_back();
+  }
 }
 
 void Build::on_change()

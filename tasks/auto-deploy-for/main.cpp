@@ -15,11 +15,27 @@ int main(int argc, char** argv)
 
   if (argc == 2)
   {
+    ODB::Connection database;
     ODB::id_type build_id = boost::lexical_cast<ODB::id_type>(argv[1]);
+    shared_ptr<Build> build;
 
-    task_params["build_id"] = build_id;
-    Sidekic::async_task("auto_deploy", task_params.as_data());
-    logger << Logger::Info << "Scheduled auto deploy for build " << build_id << Logger::endl;
+    if (database.find_one(build, build_id))
+    {
+      task_params["build_id"] = build_id;
+      Sidekic::async_task("auto_deploy", task_params.as_data());
+      logger << Logger::Info << "Scheduled auto deploy for build " << build->get_name() << Logger::endl;
+      if (build->get_available_builds().size() > build->get_history_size())
+      {
+        logger << Logger::Info << "Maximum build history size reached: clearing surplus builds..." << Logger::endl;
+        build->clear_build_history();
+        logger << Logger::Info << "Cleared surplus builds." << Logger::endl;
+      }
+    }
+    else
+    {
+      logger << Logger::Error << "Build " << build_id << " not found" << Logger::endl;
+      return -2;
+    }
   }
   else
   {

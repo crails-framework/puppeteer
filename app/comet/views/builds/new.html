@@ -18,6 +18,7 @@
       virtual unsigned long get_build_credentials_id() const = 0;
       virtual unsigned long get_build_recipe_id() const = 0;
       virtual std::string   get_build_variables() const = 0;
+      virtual unsigned int  get_build_history_size() const = 0;
     </script>
   </head>
   <body>
@@ -44,6 +45,10 @@
         <form-group cpp::label.bind='"environment variables"'>
           <variable-list-editor slot="input" ref="variables_input" cpp::value.bind="root->get_build_variables()">
           </variable-list-editor>
+        </form-group>
+	<form-group cpp::label.bind='"build history size (set to 0 to disable)"'
+                    cpp::name.bind='"build_history_size"'
+                    cpp::value.bind="Comet::lexical_cast<std::string>(root->get_build_history_size())">
         </form-group>
       </div>
     </model-form>

@@ -25,6 +25,7 @@ void Views::BuildNew::update_model_attributes()
   auto git_input     = find("[name=\"build_git\"")[0];
   auto branch_input  = find("[name=\"build_branch\"")[0];
   auto options_input = find("[name=\"build_options\"")[0];
+  auto history_input = find("[name=\"build_history_size\"")[0];
 
   model->set_name(name_input.get_value());
   model->set_git(git_input.get_value());
@@ -33,4 +34,5 @@ void Views::BuildNew::update_model_attributes()
   model->set_recipe_id(recipe_input.value<ODB::id_type>());
   model->set_options(options_input.get_value());
   model->set_variable_list(variables_input.get_value());
+  model->set_history_size(history_input.value<unsigned int>());
 }

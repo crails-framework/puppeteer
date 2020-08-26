@@ -13,6 +13,7 @@ Model.add "Build", hpp: "app/models/build.hpp" do
   property 'std::string',  'options'
   property 'std::string',  'variables'
   property 'unsigned int', 'last_build', default: 0, db: { column: 'lastbuild' }
+  property 'unsigned int', 'history_size', default: 50
   has_one "Recipe",     "recipe",     joined: false, dependent: :destroy
   has_one "Credential", "credential", joined: false
 end
