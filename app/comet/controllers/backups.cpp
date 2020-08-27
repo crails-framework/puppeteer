@@ -8,20 +8,6 @@
 using namespace std;
 using namespace Comet;
 
-static string get_url_for_instance(ODB::id_type id)
-{
-  stringstream stream;
-
-  stream << "/instances/" << id << "/backup";
-  return stream.str();
-}
-
-static string get_path_for_instance(ODB::id_type id)
-{
-  return '#' + get_url_for_instance(id);
-}
-
-
 BackupsController::BackupsController(const Params& p) : ApplicationController(p)
 {
   instance_id = lexical_cast<unsigned long>(params.at("id"));
@@ -71,7 +57,7 @@ void BackupsController::update()
 
 Promise BackupsController::find_model()
 {
-  const auto url     = get_url_for_instance(instance_id);
+  const auto url     = Front::Backup::get_url_for_instance(instance_id);
   auto       request = Http::Request::get(url);
 
   request->set_headers({
