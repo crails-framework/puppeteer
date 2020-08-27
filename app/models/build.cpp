@@ -85,7 +85,7 @@ std::string Build::get_build_config()
   return generate_file_from_template(source_path, variables);
 }
 
-void Build::remove_build(unsigned int build_id)
+void Build::remove_build(unsigned int build_id) const
 {
   Jenkins jenkins;
   int status = jenkins.delete_build(get_name(), build_id);
