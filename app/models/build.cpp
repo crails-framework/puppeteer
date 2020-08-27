@@ -108,15 +108,19 @@ void Build::remove_build(unsigned int build_id) const
 void Build::clear_build_history() const
 {
   using namespace Crails;
-  auto build_list = get_available_builds();
 
-  while (build_list.size() > get_history_size())
+  if (get_history_size() != 0)
   {
-    const string& id_str   = *(build_list.rbegin());
-    unsigned int  build_id = boost::lexical_cast<unsigned int>(id_str);
+    auto build_list = get_available_builds();
 
-    remove_build(build_id);
-    build_list.pop_back();
+    while (build_list.size() > get_history_size())
+    {
+      const string& id_str   = *(build_list.rbegin());
+      unsigned int  build_id = boost::lexical_cast<unsigned int>(id_str);
+
+      remove_build(build_id);
+      build_list.pop_back();
+    }
   }
 }
 

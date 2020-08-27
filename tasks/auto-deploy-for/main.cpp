@@ -21,10 +21,12 @@ int main(int argc, char** argv)
 
     if (database.find_one(build, build_id))
     {
+      unsigned int history_size = build->get_history_size();
+
       task_params["build_id"] = build_id;
       Sidekic::async_task("auto_deploy", task_params.as_data());
       logger << Logger::Info << "Scheduled auto deploy for build " << build->get_name() << Logger::endl;
-      if (build->get_available_builds().size() > build->get_history_size())
+      if (history_size > 0 && build->get_available_builds().size() > history_size)
       {
         logger << Logger::Info << "Maximum build history size reached: clearing surplus builds..." << Logger::endl;
         build->clear_build_history();
