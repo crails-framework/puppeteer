@@ -203,6 +203,8 @@ public:
 };
 
 template<> bool Data::as<bool>() const;
+template<> std::string Data::as<std::string>() const;
+template<> std::wstring Data::as<std::wstring>() const;
 
 class DataTree
 {

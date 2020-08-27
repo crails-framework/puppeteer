@@ -21,6 +21,8 @@ namespace Comet
   template<typename ARG>
   struct ApplyParamsToString;
 
+  std::wstring to_wstring(client::String*);
+
   class Object
   {
   protected:
@@ -50,6 +52,9 @@ namespace Comet
       ptr = array;
     }
 
+    template<typename FUNCTYPE>
+    Object(std::function<FUNCTYPE> func) { ptr = cheerp::Callback(func); }
+
     static Object from_json(client::String* str)
     {
       return client::JSON.parse(str);
@@ -64,9 +69,6 @@ namespace Comet
     {
       return (std::string)(*static_cast<client::String*>(client::JSON.stringify(ptr)));
     }
-
-    template<typename FUNCTYPE>
-    Object(std::function<FUNCTYPE> func) { ptr = cheerp::Callback(func); }
 
     Object operator[](const char* key)
     {
@@ -89,6 +91,13 @@ namespace Comet
       return (std::string)(*static_cast<client::String*>(ptr));
     }
 
+    operator std::wstring() const
+    {
+      if (!is_of_type("String"))
+        __asm__("throw 'Comet::Object cast to std::string, but type is not String'");
+      return to_wstring(static_cast<client::String*>(ptr));
+    }
+
     operator double()      const { return (double)(*ptr); }
 
     template<typename T>
@@ -96,9 +105,6 @@ namespace Comet
     {
       return to_vector<T>();
     }
-
-    bool is_of_type(const std::string& type) const { return is_of_type(type.c_str()); }
-    bool is_of_type(const char* type) const;
 
     template<typename T>
     std::vector<T> to_vector() const
@@ -114,6 +120,9 @@ namespace Comet
       }
       return result;
     }
+
+    bool is_of_type(const std::string& type) const { return is_of_type(type.c_str()); }
+    bool is_of_type(const char* type) const;
 
     void set(const std::string& str, Object object)
     {
@@ -163,6 +172,8 @@ namespace Comet
         + ',' + _apply_params<ARGS...>(i + 1, args...);
     }
   };
+  template<>
+  std::vector<std::wstring> Object::to_vector() const;
 
   template<typename ARG>
   struct ApplyParamsToString
@@ -183,7 +194,7 @@ namespace Comet
     {
       std::string varname = "_comet_arg_0_";
 
-      varname[18] = i;
+      varname[11] = i;
       Object::set_global(varname.c_str(), object);
       return varname;
     }
@@ -260,6 +271,15 @@ namespace Comet
     String(const wchar_t* str)      { ptr = new client::String(str); }
     String(const std::string& str)  { ptr = new client::String(str.c_str()); }
     String(const std::wstring& str) { ptr = new client::String(str.c_str()); }
+  };
+
+  template<>
+  struct ApplyParamsToString<String>
+  {
+    static std::string func(String arg, char i)
+    {
+      return ApplyParamsToString<Object>::func(Object((client::Object*)(*arg)), i);
+    }
   };
 }
 
