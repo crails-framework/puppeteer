@@ -14,10 +14,10 @@ class Backup : public Model, public MetaRecord::Backup
 {
   odb_instantiable()
 public:
-  #pragma db view pointer(std::shared_ptr) object(Instance)
+  #pragma db view pointer(std::shared_ptr) object(Backup)
   struct Count
   {
-    #pragma db column("count(" + Instance::id + ")")
+    #pragma db column("count(" + Backup::id + ")")
     size_t value;
   };
 
