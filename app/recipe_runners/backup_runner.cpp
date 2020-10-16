@@ -54,7 +54,7 @@ void BackupRunner::run_backup_script()
 
 void BackupRunner::push_tarball(const std::string& source)
 {
-  remote_backup_path = get_backup_tmp_folder() + "/restore.tar.gz";
+  remote_backup_path = get_remote_folder() + "/restore.tar.gz";
   {
     auto scp = ssh.make_scp_session(get_remote_folder(), SSH_SCP_WRITE);
 
