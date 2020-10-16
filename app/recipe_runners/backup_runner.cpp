@@ -25,12 +25,12 @@ void BackupRunner::upload_backup_script(Backup::Action action)
   script << "#!/bin/bash" << std::endl << std::endl;
   script << "source " << get_variable_filepath() << std::endl;
   script << "export BACKUP_DIR=\"" << get_backup_tmp_folder() << "\"" << std::endl;
+  script << "mkdir -p \"$BACKUP_DIR\"" << std::endl;
+  script << "chmod 777 \"$BACKUP_DIR\"" << std::endl;
   switch (action)
   {
   case Backup::BackupAction:
     generate_backup_path();
-    script << "mkdir -p \"$BACKUP_DIR\"" << std::endl;
-    script << "chmod 777 \"$BACKUP_DIR\"" << std::endl;
     script << backup.get_backup_script() << std::endl;
     script << "cd \"$BACKUP_DIR\"" << std::endl;
     script << "tar -czf " << remote_backup_path << " *" << std::endl;
