@@ -37,7 +37,6 @@ void BackupRunner::upload_backup_script(Backup::Action action)
     script << "rm -Rf \"" << get_remote_folder() << "\"" << std::endl;
     break ;
   case Backup::RestoreAction:
-    script << '"' << std::endl;
     script << backup.get_restore_script();
     break ;
   }
