@@ -11,7 +11,7 @@ namespace Views
   {
   public:
     VariableSetForm();
-    ~VariableSetForm();
+    virtual ~VariableSetForm();
 
 
     std::string get_title() const { return "Global variables"; }

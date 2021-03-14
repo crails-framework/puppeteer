@@ -11,6 +11,7 @@ class InstanceStateWidget : public HtmlTemplate::StateWidget, public TaskRunner
   bool state_fetched = false;
 public:
   InstanceStateWidget();
+  virtual ~InstanceStateWidget() {}
 
   ModelPtr get_model() const { return model; }
 

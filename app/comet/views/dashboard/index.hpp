@@ -9,6 +9,8 @@ namespace Views
   class Dashboard : public HtmlTemplate::Dashboard
   {
   public:
+    virtual ~Dashboard() {}
+
     void initialize_breadcrumbs();
     void activate();
   };

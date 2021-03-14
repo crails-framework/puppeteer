@@ -13,6 +13,7 @@ namespace Views
   {
   public:
     MachineShow();
+    virtual ~MachineShow() {}
 
     void initialize_breadcrumbs();
     void fetch_state();

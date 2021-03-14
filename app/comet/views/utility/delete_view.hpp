@@ -11,6 +11,8 @@ namespace Views
   {
     std::shared_ptr<MODEL> model;
   public:
+    virtual ~DeleteView() {}
+
     virtual void activate(std::shared_ptr<MODEL> _model)
     {
       this->model = _model;

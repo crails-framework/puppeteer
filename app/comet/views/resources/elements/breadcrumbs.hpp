@@ -9,7 +9,7 @@ class Breadcrumbs : public HtmlTemplate::Breadcrumbs
   static Breadcrumbs* instance;
 public:
   Breadcrumbs();
-  ~Breadcrumbs();
+  virtual ~Breadcrumbs();
 
   static void reset();
   static void done();

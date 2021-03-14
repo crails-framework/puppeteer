@@ -10,6 +10,8 @@ namespace Views
   class ModelView : public VIEW
   {
   public:
+    virtual ~ModelView() {}
+
     virtual void initialize_breadcrumbs() {}
 
     void activate(unsigned long model_id)

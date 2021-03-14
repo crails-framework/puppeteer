@@ -12,6 +12,8 @@ namespace Views
   {
     const std::string null_string;
   public:
+    virtual ~RecipeShow() {}
+
     void initialize_breadcrumbs();
 
     void on_pull_clicked();

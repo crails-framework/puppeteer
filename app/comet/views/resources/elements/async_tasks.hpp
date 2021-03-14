@@ -18,6 +18,7 @@ class AsyncTasksWidget : public Comet::CustomElement
 
 public:
   AsyncTasksWidget();
+  virtual ~AsyncTasksWidget() {}
 
   void add_task(const std::string& name,  const std::string& uid);
   void render_tasks();

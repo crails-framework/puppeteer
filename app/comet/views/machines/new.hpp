@@ -10,6 +10,8 @@ namespace Views
   class MachineNew : public ModelForm<Front::Machine, HtmlTemplate::MachineNew>
   {
   public:
+    virtual ~MachineNew() {}
+
     void initialize_breadcrumbs();
 
     std::string get_title()        const { return model ? model->get_name() : "New machine"; }

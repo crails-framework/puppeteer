@@ -18,7 +18,7 @@ namespace Views
       operator*()->addEventListener("click", listener);
     }
 
-    ~Button()
+    virtual ~Button()
     {
       operator*()->removeEventListener("click", listener);
     }

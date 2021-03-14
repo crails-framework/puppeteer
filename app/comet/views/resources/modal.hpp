@@ -20,7 +20,7 @@ public:
     container > el;
   }
 
-  ~Modal()
+  virtual ~Modal()
   {
     std::cout << "Modal destroyed" << std::endl;
   }

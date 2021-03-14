@@ -10,6 +10,7 @@ class InstanceActionWidget : public HtmlTemplate::ActionWidget, public TaskRunne
     std::string deploying_build;
   public:
     InstanceActionWidget();
+    virtual ~InstanceActionWidget() {}
 
     Actions get_visible_actions();
     bool can_deploy() const;

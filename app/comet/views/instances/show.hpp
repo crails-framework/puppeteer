@@ -16,6 +16,7 @@ namespace Views
   {
   public:
     InstanceShow();
+    virtual ~InstanceShow() {}
 
     void initialize_breadcrumbs();
     void on_model_received();

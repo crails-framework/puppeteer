@@ -13,6 +13,8 @@ public:
     attr("style", "background-color:#263238;color:white;padding:5px;");
   }
 
+  virtual ~ConsoleOutput() {}
+
   void flush()
   {
     buffer.str(std::string());

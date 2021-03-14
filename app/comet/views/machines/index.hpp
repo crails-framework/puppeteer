@@ -13,6 +13,8 @@ namespace Views
     {
     }
 
+    virtual ~MachineIndex() {}
+
     std::string              get_title() const          { return "Machines"; }
     std::string              get_new_model_path() const { return "#/machines/new"; }
     std::vector<std::string> get_column_labels() const  { return {"name"}; }

@@ -12,6 +12,7 @@ namespace Views
   {
   public:
     VariableListEditor();
+    virtual ~VariableListEditor() {}
 
     void render();
 

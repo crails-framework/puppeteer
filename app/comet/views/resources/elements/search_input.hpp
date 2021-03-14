@@ -7,6 +7,8 @@
 class SearchInput : public HtmlTemplate::SearchInput
 {
 public:
+  virtual ~SearchInput() {}
+
   inline void clear()
   {
     results = nullptr;

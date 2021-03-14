@@ -16,6 +16,8 @@ namespace Views
     {
     }
 
+    virtual ~BackupNew() {}
+
     void initialize_breadcrumbs()
     {
       if (instance_id != ODB_NULL_ID)

@@ -12,6 +12,8 @@ namespace Views
   class InstanceNew : public ModelForm<Front::Instance, HtmlTemplate::InstanceNew>
   {
   public:
+    virtual ~InstanceNew() {}
+
     void initialize_breadcrumbs();
 
     std::string   get_title() const { return model ? model->get_name() : "New instance"; }

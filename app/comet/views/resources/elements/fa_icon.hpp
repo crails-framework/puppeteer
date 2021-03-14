@@ -16,6 +16,8 @@ public:
     bind_attributes();
   }
 
+  virtual ~FaIcon() {}
+
   void set_name(const std::string& value)
   {
     name = value;

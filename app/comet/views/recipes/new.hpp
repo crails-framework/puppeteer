@@ -13,6 +13,7 @@ namespace Views
   {
   public:
     RecipeNew();
+    virtual ~RecipeNew() {}
 
     void initialize_breadcrumbs();
 

@@ -21,6 +21,8 @@ namespace Views
       listen_to(c->synced, [this]() { on_fetched(); });
     }
 
+    virtual ~IndexView() {}
+
     void activate()
     {
       initialize_breadcrumbs();

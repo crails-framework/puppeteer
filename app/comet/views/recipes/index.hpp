@@ -13,6 +13,8 @@ namespace Views
     {
     }
 
+    virtual ~RecipeIndex() {}
+
     std::string              get_title() const          { return "Recipes"; }
     std::string              get_new_model_path() const { return "#/recipes/new"; }
     std::vector<std::string> get_column_labels() const  { return {"name", "git url", "git branch"}; }

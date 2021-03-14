@@ -13,6 +13,8 @@ namespace Views
     {
     }
 
+    virtual ~BuildIndex() {}
+
     std::string              get_title() const          { return "Builds"; }
     std::string              get_new_model_path() const { return "#/builds/new"; }
     std::vector<std::string> get_column_labels() const  { return {"name"}; }

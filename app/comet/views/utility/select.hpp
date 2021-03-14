@@ -18,6 +18,8 @@ namespace Views
     {
     }
 
+    virtual ~CollectionSelect() {}
+
     virtual std::string label_for(const ModelType& model) = 0;
 
     void bind_attributes()

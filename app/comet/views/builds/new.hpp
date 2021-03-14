@@ -15,6 +15,7 @@ namespace Views
   {
   public:
     BuildNew();
+    virtual ~BuildNew() {}
 
     void initialize_breadcrumbs();
 

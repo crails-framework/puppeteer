@@ -15,6 +15,8 @@ namespace Views
     {
     }
 
+    virtual ~BuildShow() {}
+
     void initialize_breadcrumbs();
 
     void on_model_received()
