@@ -1,4 +1,13 @@
 <changelog xmlns="http://www.codesynthesis.com/xmlns/odb/changelog" database="pgsql" version="1">
+  <changeset version="18">
+    <alter-table name="Build">
+      <add-column name="history_size" type="INTEGER" null="false"/>
+    </alter-table>
+    <alter-table name="Instance">
+      <add-column name="recipe_id" type="BIGINT" null="false"/>
+    </alter-table>
+  </changeset>
+
   <changeset version="16">
     <alter-table name="Machine">
       <add-column name="last_upgrade" type="BIGINT" null="false"/>
