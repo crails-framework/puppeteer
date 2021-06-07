@@ -20,7 +20,9 @@ InstanceActionWidget::InstanceActionWidget()
 
 bool InstanceActionWidget::can_deploy() const
 {
-  return model && model->get_state() > 0;
+  return model
+      && model->get_state() > 0
+      && model->get_build_id() != ODB_NULL_ID;
 }
 
 void InstanceActionWidget::fetch_build_versions()
@@ -65,7 +67,8 @@ void InstanceActionWidget::set_model(const std::shared_ptr<Front::Instance>& ins
   signaler.trigger("model-changed");
   if (model)
   {
-    fetch_build_versions();
+    if (model->get_build_id() != ODB_NULL_ID)
+      fetch_build_versions();
     listen_to(model->remote_state_changed, std::bind(&InstanceActionWidget::on_remote_state_changed, this));
     on_remote_state_changed();
   }

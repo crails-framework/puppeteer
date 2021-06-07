@@ -2,12 +2,16 @@
   <head>
     <include src="app/comet/collections/machines.hpp" />
     <include src="app/comet/collections/builds.hpp" />
+    <include src="app/comet/collections/recipes.hpp" />
     <include src="app/comet/views/utility/select.hpp"
              tag-name="machine-select"
              require="Views::CollectionSelectWithName<Front::Machines>" />
     <include src="app/comet/views/utility/select.hpp"
              tag-name="build-select"
              require="Views::CollectionSelectWithName<Front::Builds>" />
+    <include src="app/comet/views/utility/select.hpp"
+             tag-name="recipe-select"
+             require="Views::CollectionSelectWithName<Front::Recipes>" />
     <script>
       virtual void on_save_clicked() = 0;
       virtual std::string   get_title() const = 0;
@@ -15,6 +19,7 @@
       virtual std::string   get_instance_user() const = 0;
       virtual unsigned long get_instance_machine_id() const = 0;
       virtual unsigned long get_instance_build_id() const = 0;
+      virtual unsigned long get_instance_recipe_id() const = 0;
       virtual std::string   get_instance_variables() const = 0;
     </script>
   </head>
@@ -32,6 +37,10 @@
         <form-group cpp::label.bind='"build"' cpp::name.bind='"instance_build"'>
           <build-select slot="input" name="instance_build" class="form-control" ref="build_input">
           </build-select>
+        </form-group>
+        <form-group cpp::label.bind='"build"' cpp::name.bind='"recipe_build"' ref="recipe_form_group">
+          <recipe-select slot="input" name="instance_build" class="form-control" ref="recipe_input">
+          </recipe-select>
         </form-group>
         <form-group cpp::label.bind='"Automatic deployment"' cpp::name.bind='"instance_auto_deploy"'>
           <div slot="input">

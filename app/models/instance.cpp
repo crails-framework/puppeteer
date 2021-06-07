@@ -14,6 +14,13 @@ using namespace Crails;
 
 odb_instantiable_impl(Instance)
 
+static shared_ptr<Recipe> get_instance_recipe(Instance& instance)
+{
+  if (instance.get_build_id() != ODB_NULL_ID)
+    return instance.get_build()->get_recipe();
+  return instance.get_recipe();
+}
+
 #ifndef __CHEERP_CLIENT__
 void Instance::collect_variables(map<string,string>& variables)
 {
@@ -28,7 +35,7 @@ void Instance::collect_variables(map<string,string>& variables)
 
 void Instance::configure(Sync::Task& task)
 {
-  auto recipe = get_build()->get_recipe();
+  auto recipe = get_instance_recipe(*this);
 
   recipe->deploy_for(*this, task);
   if (state == Uninstalled)
@@ -37,7 +44,7 @@ void Instance::configure(Sync::Task& task)
 
 void Instance::uninstall(Sync::Task& task)
 {
-  auto recipe = get_build()->get_recipe();
+  auto recipe = get_instance_recipe(*this);
 
   recipe->uninstall_from(*this, task);
   set_state(Uninstalled);

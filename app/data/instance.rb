@@ -21,4 +21,5 @@ Model.add "Instance", hpp: "app/models/instance.hpp" do
 
   has_one "Machine", "machine", joined: false, dependent: :destroy
   has_one "Build",   "build",   joined: false, dependent: :destroy
+  has_one "Recipe",  "recipe",  joined: false, dependent: :destroy
 end

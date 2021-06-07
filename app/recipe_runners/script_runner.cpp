@@ -73,11 +73,11 @@ void ScriptRunner::upload_script(const string& script_name)
 void ScriptRunner::upload_variables()
 {
   auto scp   = ssh.make_scp_session(get_remote_folder(), SSH_SCP_WRITE);
-  auto build = instance.get_build();
 
   VariableSet::collect_global_variables(variables);
   instance.collect_variables(variables);
-  build->collect_variables(variables);
+  if (instance.get_build_id() != ODB_NULL_ID)
+    instance.get_build()->collect_variables(variables);
   require_remote_folder();
   scp->push_text(generate_variable_file(variables), get_variable_filepath());
   task.increment();
