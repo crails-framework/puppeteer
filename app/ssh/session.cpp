@@ -1,6 +1,7 @@
 #include "session.hpp"
 #include "channel.hpp"
 #include "scp.hpp"
+#include <crails/logger.hpp>
 
 using namespace std;
 using namespace Ssh;
@@ -77,7 +78,11 @@ void Session::raise(const string& message)
 
 int Session::exec(const string& command, Sync::Stream& output, int read_timeout)
 {
-  return make_channel(read_timeout)->exec(command, output);
+  int retval = make_channel(read_timeout)->exec(command, output);
+
+  if (retval == SSH_ERROR)
+    Crails::logger << Crails::Logger::Error << "Ssh::Session::exec failed: " << get_error();
+  return retval;
 }
 
 std::string Session::get_error()
