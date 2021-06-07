@@ -65,9 +65,21 @@ namespace Comet
       return from_json(new client::String(str.c_str()));
     }
 
-    std::string to_json() const
+    static Object from_json(const std::wstring& str)
     {
-      return (std::string)(*static_cast<client::String*>(client::JSON.stringify(ptr)));
+      return from_json(new client::String(str.c_str()));
+    }
+
+    template<typename RETURN_TYPE = std::string>
+    RETURN_TYPE to_json() const
+    {
+      return (RETURN_TYPE)(*static_cast<client::String*>(client::JSON.stringify(ptr)));
+    }
+
+    template<>
+    std::wstring to_json<std::wstring>() const
+    {
+      return to_wstring(static_cast<client::String*>(client::JSON.stringify(ptr)));
     }
 
     Object operator[](const char* key)
@@ -94,7 +106,7 @@ namespace Comet
     operator std::wstring() const
     {
       if (!is_of_type("String"))
-        __asm__("throw 'Comet::Object cast to std::string, but type is not String'");
+        __asm__("throw 'Comet::Object cast to std::wstring, but type is not String'");
       return to_wstring(static_cast<client::String*>(ptr));
     }
 
