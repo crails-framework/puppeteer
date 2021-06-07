@@ -13,7 +13,6 @@ public:
     {
       return get_class_names();
     }).use_mode(Comet::Bindable::SignalBind, "class-changed"));
-    bind_attributes();
   }
 
   virtual ~FaIcon() {}
