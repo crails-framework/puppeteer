@@ -5,7 +5,7 @@ using namespace std;
 
 void Views::MachineNew::initialize_breadcrumbs()
 {
-  auto id = model ? model->get_id() : ODB_NULL_ID;
+  auto id = has_model() ? model->get_id() : ODB_NULL_ID;
 
   Breadcrumbs::reset();
   Breadcrumbs::set_machine(id);

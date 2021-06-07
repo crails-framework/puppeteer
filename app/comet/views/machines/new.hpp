@@ -14,9 +14,9 @@ namespace Views
 
     void initialize_breadcrumbs();
 
-    std::string get_title()        const { return model ? model->get_name() : "New machine"; }
-    std::string get_machine_ip()   const { return model ? model->get_ip() : ""; }
-    std::string get_machine_name() const { return model ? model->get_name() : ""; }
+    std::string get_title()        const { return has_model() ? model->get_name() : "New machine"; }
+    std::string get_machine_ip()   const { return has_model() ? model->get_ip() : ""; }
+    std::string get_machine_name() const { return has_model() ? model->get_name() : ""; }
 
     void update_model_attributes();
   };

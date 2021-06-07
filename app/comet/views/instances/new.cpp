@@ -7,18 +7,19 @@ Views::InstanceNew::InstanceNew()
 {
   build_input.with_empty_option(true);
   build_input.events->on("change", [this]() { update_recipe_input_visibility(); });
+  update_recipe_input_visibility();
 }
 
 void Views::InstanceNew::update_recipe_input_visibility()
 {
   auto build_id = build_input.value<ODB::id_type>();
 
-  recipe_form_group.visible(build_id != ODB_NULL_ID);
+  recipe_form_group.visible(build_id == ODB_NULL_ID, "block");
 }
 
 void Views::InstanceNew::initialize_breadcrumbs()
 {
-  auto id = model ? model->get_id() : ODB_NULL_ID;
+  auto id = has_model() ? model->get_id() : ODB_NULL_ID;
 
   Breadcrumbs::reset();
   Breadcrumbs::set_instance(id);
@@ -27,7 +28,6 @@ void Views::InstanceNew::initialize_breadcrumbs()
   else
     Breadcrumbs::add_crumb("Edit", model->get_path() + "/edit");
   Breadcrumbs::done();
-  
 }
 
 void Views::InstanceNew::update_model_attributes()
@@ -47,7 +47,7 @@ void Views::InstanceNew::update_model_attributes()
 void Views::InstanceNew::trigger_binding_updates()
 {
   ModelForm::trigger_binding_updates();
-  if (model)
+  if (has_model())
   {
     auto_deploy_input.checked(model->get_auto_deploy());
     machine_input.set_value(model->get_machine_id());
