@@ -10,6 +10,7 @@ namespace Views
   class MachineNew : public ModelForm<Front::Machine, HtmlTemplate::MachineNew>
   {
   public:
+    MachineNew();
     virtual ~MachineNew() {}
 
     void initialize_breadcrumbs();

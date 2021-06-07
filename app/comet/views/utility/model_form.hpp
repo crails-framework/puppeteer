@@ -4,6 +4,7 @@
 # include "app/comet/models/application.hpp"
 # include "app/comet/application.hpp"
 # include <comet/globals.hpp>
+# include <iostream>
 
 namespace Views
 {
@@ -13,9 +14,14 @@ namespace Views
   protected:
     std::shared_ptr<MODEL> model;
   public:
+    ModelForm() : model(nullptr) {}
     virtual ~ModelForm() {}
 
-    bool has_model() const { return model.get() != nullptr; }
+    bool has_model() const
+    {
+      std::cout << "ModelForm::has_model(): model is " << model.get() << " (null: " << (model.get() == nullptr) << ')' << std::endl;
+      return model.get() != nullptr;
+    }
 
     virtual void update_model_attributes() = 0;
     virtual void initialize_breadcrumbs() {};

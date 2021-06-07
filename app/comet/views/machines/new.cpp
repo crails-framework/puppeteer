@@ -3,6 +3,11 @@
 
 using namespace std;
 
+Views::MachineNew::MachineNew()
+{
+  model = nullptr;
+}
+
 void Views::MachineNew::initialize_breadcrumbs()
 {
   auto id = has_model() ? model->get_id() : ODB_NULL_ID;

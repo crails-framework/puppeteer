@@ -12,10 +12,10 @@ namespace Views
   public:
     void initialize_breadcrumbs();
 
-    std::string get_title() const { return model ? model->get_name() : "New credentials"; }
-    std::string get_credentials_name() const { return model ? model->get_name() : ""; }
-    std::string get_credentials_user() const { return model ? model->get_username() : ""; }
-    std::string get_credentials_pswd() const { return model ? model->get_password() : ""; }
+    std::string get_title() const { return has_model() ? model->get_name() : "New credentials"; }
+    std::string get_credentials_name() const { return has_model() ? model->get_name() : ""; }
+    std::string get_credentials_user() const { return has_model() ? model->get_username() : ""; }
+    std::string get_credentials_pswd() const { return has_model() ? model->get_password() : ""; }
 
     void update_model_attributes();
   };
