@@ -11,6 +11,21 @@ InstanceController::InstanceController(Params& params) : Super(params)
 {
 }
 
+void InstanceController::by_machine()
+{
+  Query query = Query::machine_id == params["id"].as<ODB::id_type>();
+  odb::result<Instance> results;
+
+  paginator.decorate_query(query);
+  database.find(results, query);
+  models = odb::to_vector<Instance>(results);
+  paginator.decorate_view(vars, [this, query]() {
+    return database.count<Instance>(query);
+  });
+  vars["models"] = &models;
+  render(get_index_view());
+}
+
 void InstanceController::configure()
 {
   DataTree task_params;

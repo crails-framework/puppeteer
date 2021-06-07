@@ -11,6 +11,7 @@ class InstanceController : public Crud::ArchiveController<Instance>
 public:
   InstanceController(Crails::Params&);
 
+  void by_machine();
   void configure();
   void uninstall();
   void deploy();
