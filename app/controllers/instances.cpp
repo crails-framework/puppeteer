@@ -16,7 +16,7 @@ void InstanceController::by_machine()
   Query query = Query::machine_id == params["id"].as<ODB::id_type>();
   odb::result<Instance> results;
 
-  paginator.decorate_query(query);
+  //paginator.decorate_query(query);
   database.find(results, query);
   models = odb::to_vector<Instance>(results);
   paginator.decorate_view(vars, [this, query]() {

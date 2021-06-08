@@ -1,16 +1,18 @@
 <template>
   <head>
-  <script>
-    virtual std::string              get_title() const = 0;
-    virtual std::string              get_new_model_path() const = 0;
-    virtual std::vector<std::string> get_column_labels() const = 0;
-  </script>
+    <attribute type="bool" name="add_enabled" value="true" />
+    <script>
+      virtual std::string              get_title() const = 0;
+      virtual std::string              get_new_model_path() const = 0;
+      virtual std::vector<std::string> get_column_labels() const = 0;
+    </script>
   </head>
   <body>
     <title-1 cpp::title.bind="get_title()">
       <div slot="controls">
         <a class="au-btn au-btn-icon au-btn--blue"
-           href.bind="root->get_new_model_path()">
+           href.bind="root->get_new_model_path()"
+           show.bind="root->add_enabled">
           <i class="zmdi zmdi-plus"></i>
           Add
         </a>

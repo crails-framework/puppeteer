@@ -1,6 +1,7 @@
 <template classname="MachineShow">
   <head>
     <include src="app/comet/views/instances/_console_output.hpp" require="ConsoleOutput" />
+    <include src="app/comet/views/instances/index.hpp" require="Views::InstanceIndex" tag-name="instance-list" />
     <include src="app/comet/models/machine.hpp" />
     <include src="app/comet/time.hpp" />
     <attribute type="std::string" name="operating_system" />
@@ -54,6 +55,8 @@
               </div>
             </div>
           </card>
+	  <instance-list ref="instances_el">
+	  </instance-list>
         </div>
       </div>
     </model-view>

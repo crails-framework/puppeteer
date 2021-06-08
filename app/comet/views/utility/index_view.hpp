@@ -16,12 +16,24 @@ namespace Views
 
     virtual Elements make_columns_for(std::shared_ptr<Model>) const = 0;
 
-    IndexView(std::shared_ptr<COLLECTION> c) : collection(c)
+    IndexView(std::shared_ptr<COLLECTION> c)
     {
-      listen_to(c->synced, [this]() { on_fetched(); });
+      set_collection(c);
+    }
+
+    IndexView()
+    {
     }
 
     virtual ~IndexView() {}
+
+    void set_collection(std::shared_ptr<COLLECTION> c)
+    {
+      if (collection.get() != nullptr)
+        stop_listening(&(collection->synced));
+      collection = c;
+      listen_to(collection->synced, [this]() { on_fetched(); });
+    }
 
     void activate()
     {
@@ -37,13 +49,16 @@ namespace Views
     void render_rows()
     {
       tbody.empty();
-      collection->each([this](std::shared_ptr<Model> model)
+      if (collection.get() != nullptr)
       {
-        Comet::Element row("tr");
+        collection->each([this](std::shared_ptr<Model> model)
+        {
+          Comet::Element row("tr");
 
-        row.inner(make_columns_for(model));
-        tbody > row;
-      });
+          row.inner(make_columns_for(model));
+          tbody > row;
+        });
+      }
     }
 
     virtual void initialize_breadcrumbs()

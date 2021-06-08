@@ -13,6 +13,9 @@ extern AsyncTasksWidget* async_tasks_widget;
 
 Views::MachineShow::MachineShow()
 {
+  instances = std::make_shared<Front::MachineInstances>();
+  instances_el.set_collection(instances);
+  instances_el.set_add_enabled(false);
   trigger_binding_updates();
   task_runner.set_console_output(&console_output);
   console_container.toggle_class("hidden", true);
@@ -26,6 +29,14 @@ void Views::MachineShow::initialize_breadcrumbs()
     Breadcrumbs::set_machine(model->get_id());
     Breadcrumbs::done();
   }
+}
+
+void Views::MachineShow::on_model_received()
+{
+  ModelView::on_model_received();
+  fetch_state();
+  instances->set_machine_id(model->get_id());
+  instances->fetch();
 }
 
 static void format_free_return(string& memory)

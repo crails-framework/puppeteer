@@ -13,6 +13,8 @@ namespace Views
     {
     }
 
+    InstanceIndex() {}
+
     virtual ~InstanceIndex() {}
 
     std::string              get_title() const          { return "Instances"; }
