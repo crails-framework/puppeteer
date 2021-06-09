@@ -19,6 +19,7 @@ public:
   void stop();
 
   void fetch_state();
+  void fetch_logs();
 private:
   void schedule_task(const std::string& task_name, Data task_params);
   void on_task_started(const std::string& task_name, const std::string& task_uid);

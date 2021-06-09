@@ -11,6 +11,7 @@ Views::InstanceShow::InstanceShow()
   state_widget .set_console_output(&console_output);
   action_widget.performing_action_signal.connect(std::bind(&InstanceShow::on_action_state_update, this, std::placeholders::_1));
   state_widget .performing_action_signal.connect(std::bind(&InstanceShow::on_action_state_update, this, std::placeholders::_1));
+  displayLogs();
 }
 
 void Views::InstanceShow::initialize_breadcrumbs()
@@ -38,6 +39,7 @@ void Views::InstanceShow::on_action_state_update(bool is_busy)
 
   for (auto button : buttons)
     button.toggle_class("disabled", is_busy);
+  displayConsole();
 }
 
 string Views::InstanceShow::get_backup_path() const

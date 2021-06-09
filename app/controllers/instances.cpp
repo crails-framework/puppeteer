@@ -105,6 +105,31 @@ void InstanceController::fetch_state()
   }
 }
 
+void InstanceController::fetch_logs()
+{
+  require_model();
+  if (model)
+  {
+    std::shared_ptr<Build>  build = model->get_build();
+    std::shared_ptr<Recipe> recipe;
+
+    if (build)
+      recipe = build->get_recipe();
+    else
+      recipe = model->get_recipe();
+    if (recipe)
+    {
+      OArchive     archive;
+      unsigned int lineCount = 0;
+      string       text;
+
+      recipe->fetch_logs(*model, lineCount, text);
+      archive & lineCount & text;
+      render(archive);
+    }
+  }
+}
+
 void InstanceController::on_task_started(const string& task_name, const string& task_uid)
 {
   if (model)

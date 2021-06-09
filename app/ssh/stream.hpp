@@ -9,10 +9,11 @@ namespace Sync
 {
   class Stream
   {
-    Sync::Task*       task   = nullptr;
-    std::ostream*     output = nullptr;
     std::stringstream stream;
   public:
+    Sync::Task*       task   = nullptr;
+    std::ostream*     output = nullptr;
+
     Stream(Sync::Task& task) : task(&task)
     {}
 

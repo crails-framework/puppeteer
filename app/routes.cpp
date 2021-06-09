@@ -25,6 +25,7 @@ void Crails::Router::initialize(void)
   SetRoute("POST",   "/machines/:id/upgrade",   MachineController,  upgrade);
 
   SetRoute("GET",    "/instances/:id/state",            InstanceController, fetch_state);
+  SetRoute("GET",    "/instances/:id/logs",             InstanceController, fetch_logs);
   SetRoute("POST",   "/instances/:id/configure",        InstanceController, configure);
   SetRoute("POST",   "/instances/:id/deploy/:build_id", InstanceController, deploy);
   SetRoute("POST",   "/instances/:id/deploy",           InstanceController, deploy);

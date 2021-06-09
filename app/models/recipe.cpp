@@ -12,6 +12,7 @@
 # include "app/recipe_runners/script_runner.hpp"
 # include "app/recipe_runners/deploy_runner.hpp"
 # include <boost/filesystem.hpp>
+# include <regex>
 #endif
 
 using namespace std;
@@ -226,6 +227,45 @@ void Recipe::exec_script(const std::string& script_name, Instance& instance, Syn
     runner.run_script(script_name);
     runner.cleanup();
   });
+}
+
+static void extract_logs(std::stringstream& stream, unsigned int& line_count, std::string& output)
+{
+  std::string line;
+  bool got_line_count = false;
+
+  while (std::getline(stream, line))
+  {
+    if (line[0] == '+')
+      continue ;
+    if (got_line_count)
+      output += line + '\n';
+    else if (std::regex_match(line.c_str(), std::regex("^[0-9]+$")))
+    {
+      line_count = boost::lexical_cast<unsigned int>(line);
+      got_line_count = true;
+    }
+  }
+}
+
+void Recipe::fetch_logs(Instance& instance, unsigned int& line_count, std::string& output)
+{
+  static const std::string script_name = "logreader";
+  stringstream stream;
+  Sync::Task foo_task(3);
+
+  instance.open_ssh([&](Ssh::Session& ssh)
+  {
+    ScriptRunner runner(ssh, *this, instance, foo_task);
+
+    runner.stream.task = nullptr;
+    runner.stream.output = &stream;
+    runner.upload_variables();
+    runner.upload_script(script_name);
+    runner.run_script(script_name);
+    runner.cleanup();
+  });
+  extract_logs(stream, line_count, output);
 }
 
 void Recipe::deploy_build_for(Instance& instance, Sync::Task& task, const string& build_id)

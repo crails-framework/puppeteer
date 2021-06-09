@@ -3,10 +3,20 @@
     <include src="app/comet/views/instances/_action_widget.hpp"  require="InstanceActionWidget" tag-name="action-widget" />
     <include src="app/comet/views/instances/_state_widget.hpp"   require="InstanceStateWidget"  tag-name="state-widget" />
     <include src="app/comet/views/instances/_console_output.hpp" require="ConsoleOutput" />
+    <include src="app/comet/views/instances/_log_widget.hpp"     require="LogWidget" />
     <include src="app/comet/models/instance.hpp" />
   <script>
     virtual std::shared_ptr<Front::Instance> get_model() const = 0;
     virtual std::string get_backup_path() const = 0;
+
+    void displayConsole() { toggleBottomWidget(true); }
+    void displayLogs() { toggleBottomWidget(false); }
+
+    void toggleBottomWidget(bool value)
+    {
+      console_container.visible(value);
+      log_container.visible(!value);
+    }
   </script>
   </head>
   <body>
@@ -51,13 +61,26 @@
           </card>
         </div>
 
-        <div class="col-lg-12">
+        <div class="btn-group" style="margin:0 auto 10px">
+          <button class="au-btn au-btn--blue" click.trigger="root->displayLogs()" ref="show_logs_button">Application logs</button>
+          <button class="au-btn au-btn--blue" click.trigger="root->displayConsole()" ref="show_console_button">Console output</button>
+        </div>
+
+        <div class="col-lg-12" ref="console_container">
           <card cpp::title.bind='"Console output"'>
             <div slot="content" style="height:500px;overflow:auto;background-color:#263238">
               <console-output ref="console_output" />
             </div>
           </card>
         </div>
+
+        <div class="col-lg-12" ref="log_container">
+          <card cpp::title.bind='"Application logs"'>
+            <div slot="content" style="height:500px;overflow:auto;background-color:#263238">
+              <log-widget cpp::model.bind="root->get_model() & signal:model-changed" ref="log_widget" />
+            </div>
+          </card>
+	</div>
       </div>
     </model-view>
   </body>
