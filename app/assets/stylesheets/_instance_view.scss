@@ -62,6 +62,29 @@ state-widget {
   }
 }
 
+.console-container, .log-container {
+  height:500px;
+  overflow:auto;
+}
+
+.console-container {
+  background-color:#263238
+}
+
+.log-container {
+  background-color: beige;
+}
+
+console-output {
+  color: white;
+  padding: 5px;
+}
+
+log-widget {
+  color: black;
+  padding: 5px;
+}
+
 .console-result-line {
   color: orange;
   font-weight: bold;

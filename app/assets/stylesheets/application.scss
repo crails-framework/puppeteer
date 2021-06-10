@@ -22,6 +22,10 @@ button.disabled, .performing-action button {
   filter: grayscale(1);
 }
 
+.au-btn--blue.selected {
+  background-color: #3868cd;
+}
+
 responsive-table[role="build-table"] td.status {
   width: 150px;
   padding: 12px 5px;

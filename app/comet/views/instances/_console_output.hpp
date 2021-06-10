@@ -10,7 +10,6 @@ class ConsoleOutput : public Comet::CustomElement
 public:
   ConsoleOutput()
   {
-    attr("style", "background-color:#263238;color:white;padding:5px;");
   }
 
   virtual ~ConsoleOutput() {}

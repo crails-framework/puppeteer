@@ -7,7 +7,6 @@ using namespace std;
   
 LogWidget::LogWidget() : last_line_count(0)
 {
-  attr("style", "background-color:#263238;color:white;padding:5px;");
 }
 
 void LogWidget::set_model(ModelPtr value)
