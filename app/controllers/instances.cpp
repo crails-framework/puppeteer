@@ -120,11 +120,12 @@ void InstanceController::fetch_logs()
     if (recipe)
     {
       OArchive     archive;
-      unsigned int lineCount = 0;
+      unsigned int last_line_count = params["last_count"].defaults_to<unsigned int>(0);
+      unsigned int line_count = 0;
       string       text;
 
-      recipe->fetch_logs(*model, lineCount, text);
-      archive & lineCount & text;
+      recipe->fetch_logs(*model, last_line_count, line_count, text);
+      archive & line_count & text;
       render(archive);
     }
   }

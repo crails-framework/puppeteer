@@ -25,8 +25,13 @@ void LogWidget::set_model(ModelPtr value)
 
 void LogWidget::fetch_logs()
 {
-  auto request = Http::Request::get(model->get_url() + "/logs");
-
+  Http::Request::Ptr request;
+  stringstream url;
+  
+  url << model->get_url() << "/logs";
+  if (last_line_count > 0)
+    url << "?last_count=" << last_line_count;
+  request = Http::Request::get(url.str());
   request->set_headers({{"Accept", Archive::mimetype}});
   request->send().then([this, request]()
   {
@@ -49,20 +54,16 @@ void LogWidget::fetch_logs()
 
 void LogWidget::append_new_lines(const std::string& text, unsigned int new_line_count)
 {
-  auto lines = Crails::split(text, '\n');
-  auto it = lines.begin();
-
   if (last_line_count > new_line_count)
     last_line_count = 0;
-  if (last_line_count != 0)
+  else
   {
-    unsigned int skip_count = lines.size() - (new_line_count - last_line_count);
+    auto lines = Crails::split(text, '\n');
 
-    std::advance(it, skip_count);
+    for (auto it = lines.begin() ; it != lines.end() ; ++it)
+      *this > Comet::Element("div", {{"class","console-output-line console-wide-line"}}).text(*it);
+    last_line_count = new_line_count;
   }
-  last_line_count = new_line_count;
-  for (; it != lines.end() ; ++it)
-    *this > Comet::Element("div", {{"class","console-output-line console-wide-line"}}).text(*it);
 }
 
 void LogWidget::scroll_to_bottom()

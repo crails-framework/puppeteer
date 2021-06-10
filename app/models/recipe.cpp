@@ -248,7 +248,7 @@ static void extract_logs(std::stringstream& stream, unsigned int& line_count, st
   }
 }
 
-void Recipe::fetch_logs(Instance& instance, unsigned int& line_count, std::string& output)
+void Recipe::fetch_logs(Instance& instance, unsigned int old_line_count, unsigned int& line_count, std::string& output)
 {
   static const std::string script_name = "logreader";
   stringstream stream;
@@ -260,6 +260,7 @@ void Recipe::fetch_logs(Instance& instance, unsigned int& line_count, std::strin
 
     runner.stream.task = nullptr;
     runner.stream.output = &stream;
+    runner.variables["LAST_LOG_LINE"] = boost::lexical_cast<std::string>(old_line_count);
     runner.upload_variables();
     runner.upload_script(script_name);
     runner.run_script(script_name);
