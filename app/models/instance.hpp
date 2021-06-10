@@ -39,6 +39,8 @@ public:
   void serialize(OArchive&);
   void serialize(IArchive&);
 
+  std::shared_ptr<Recipe> get_instance_recipe();
+
 # ifndef __CHEERP_CLIENT__
   void collect_variables(std::map<std::string,std::string>&);
   void configure(Sync::Task&);

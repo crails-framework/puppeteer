@@ -14,11 +14,11 @@ using namespace Crails;
 
 odb_instantiable_impl(Instance)
 
-static shared_ptr<Recipe> get_instance_recipe(Instance& instance)
+shared_ptr<Recipe> Instance::get_instance_recipe()
 {
-  if (instance.get_build_id() != ODB_NULL_ID)
-    return instance.get_build()->get_recipe();
-  return instance.get_recipe();
+  if (get_build_id() != ODB_NULL_ID)
+    return get_build()->get_recipe();
+  return get_recipe();
 }
 
 #ifndef __CHEERP_CLIENT__
@@ -35,7 +35,7 @@ void Instance::collect_variables(map<string,string>& variables)
 
 void Instance::configure(Sync::Task& task)
 {
-  auto recipe = get_instance_recipe(*this);
+  auto recipe = get_instance_recipe();
 
   recipe->deploy_for(*this, task);
   if (state == Uninstalled)
@@ -44,7 +44,7 @@ void Instance::configure(Sync::Task& task)
 
 void Instance::uninstall(Sync::Task& task)
 {
-  auto recipe = get_instance_recipe(*this);
+  auto recipe = get_instance_recipe();
 
   recipe->uninstall_from(*this, task);
   set_state(Uninstalled);
@@ -52,7 +52,7 @@ void Instance::uninstall(Sync::Task& task)
 
 void Instance::deploy(Sync::Task& task, const std::string& build_id)
 {
-  auto recipe = get_instance_recipe(*this);
+  auto recipe = get_instance_recipe();
 
   recipe->deploy_build_for(*this, task, build_id);
   set_state(Deployed);
@@ -70,7 +70,7 @@ void Instance::open_ssh(std::function<void (Ssh::Session&)> callback)
 void Instance::start(Sync::Task& task)
 {
   auto build  = get_build();
-  auto recipe = get_instance_recipe(*this);
+  auto recipe = get_instance_recipe();
 
   recipe->exec_script("start", *this, task);
   last_start = chrono::system_clock::to_time_t(chrono::system_clock::now()); 
@@ -79,7 +79,7 @@ void Instance::start(Sync::Task& task)
 void Instance::stop(Sync::Task& task)
 {
   auto build  = get_build();
-  auto recipe = get_instance_recipe(*this);
+  auto recipe = get_instance_recipe();
 
   recipe->exec_script("stop", *this, task);
 }
@@ -89,7 +89,7 @@ void Instance::update_running_state(Sync::Task& task)
   open_ssh([this, &task](Ssh::Session& ssh)
   {
     const string script_name = "state";
-    auto         recipe = get_instance_recipe(*this);
+    auto         recipe = get_instance_recipe();
     ScriptRunner runner(ssh, *recipe, *this, task);
     int          status;
 
@@ -123,7 +123,7 @@ bool Instance::needs_configure()
 {
   if (state == Ready)
   {
-    auto recipe = get_instance_recipe(*this);
+    auto recipe = get_instance_recipe();
 
     return recipe->get_last_tip() != get_last_configure();
   }

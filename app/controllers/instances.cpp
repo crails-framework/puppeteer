@@ -107,28 +107,27 @@ void InstanceController::fetch_state()
 
 void InstanceController::fetch_logs()
 {
+  OArchive     archive;
+  unsigned int last_line_count = params["last_count"].defaults_to<unsigned int>(0);
+  unsigned int line_count = 0;
+  string       text;
+
   require_model();
-  if (model)
+  if (!model)
+    return ;
+  if (model->get_running_task() == "")
   {
-    std::shared_ptr<Build>  build = model->get_build();
-    std::shared_ptr<Recipe> recipe;
+    auto recipe = model->get_instance_recipe();
 
-    if (build)
-      recipe = build->get_recipe();
-    else
-      recipe = model->get_recipe();
     if (recipe)
-    {
-      OArchive     archive;
-      unsigned int last_line_count = params["last_count"].defaults_to<unsigned int>(0);
-      unsigned int line_count = 0;
-      string       text;
-
       recipe->fetch_logs(*model, last_line_count, line_count, text);
-      archive & line_count & text;
-      render(archive);
-    }
+    else
+      line_count = last_line_count;
   }
+  else
+    line_count = last_line_count;
+  archive & line_count & text;
+  render(archive);
 }
 
 void InstanceController::on_task_started(const string& task_name, const string& task_uid)
